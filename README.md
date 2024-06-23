@@ -1,10 +1,10 @@
-# Simulador da Arquitetura MIPS (Versão 8 bits)
+# Simulador da Arquitetura MIPS (Versão 8 bits) Pipeline
 
-Este repositório contém o código-fonte e a documentação para o Simulador da Arquitetura MIPS em sua versão compacta de 8 bits, desenvolvido como parte do projeto integrador das disciplinas Projeto Integrador II e Algoritmos e Estrutura de Dados.
+Este repositório contém o código-fonte e a documentação para o Simulador da Arquitetura MIPS Pipeline em sua versão compacta de 8 bits, desenvolvido como parte do projeto integrador das disciplinas Projeto Integrador II e Algoritmos e Estrutura de Dados.
 
 ## Resumo
 
-O projeto aborda o processo de construção e planejamento do Simulador da Arquitetura MIPS em uma versão mais compacta de 8 bits, implementada inteiramente na linguagem C. Desenvolvido com base nos princípios ensinados até o terceiro semestre do curso de Engenharia de Computação da UNIPAMPA - Campus Bagé, o simulador inclui os principais componentes de uma arquitetura MIPS, como Memória de Instruções, Unidade de Controle, Contador de Programa (PC), Banco de Registradores, Unidade Lógica e Aritmética (ULA) e Memória de Dados.
+O projeto aborda o processo de construção e planejamento do Simulador da Arquitetura MIPS Pipeline em uma versão mais compacta de 8 bits, implementada inteiramente na linguagem C. Desenvolvido com base nos princípios ensinados até o terceiro semestre do curso de Engenharia de Computação da UNIPAMPA - Campus Bagé, o simulador inclui os principais componentes de uma arquitetura MIPS, como Memória de Instruções, Unidade de Controle, Contador de Programa (PC), Banco de Registradores, Unidade Lógica e Aritmética (ULA) e Memória de Dados.
 
 ## Introdução
 
