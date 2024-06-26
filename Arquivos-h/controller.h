@@ -10,7 +10,7 @@
 #include "imprimeSimulador.h"
 #include "menu.h"
 
-int controller(int op, int *state, instrucao **memoriaInst, int tamLinhas, int **regs, MemoriaDados **md, int *program_counter, type_instruc **instrucoesDecodificadas);
-void backstep(int *state, instrucao **memoriaInst, int tamLinhas, int **regs, MemoriaDados **md, int *program_counter, type_instruc **instrucoesDecodificadas);
+int controller(int op, int *state, instrucao *memoriaInst, int tamLinhas, int *regs, MemoriaDados *md, int *program_counter, type_instruc *instrucoesDecodificadas);
+void backstep(int *state, instrucao *memoriaInst, int tamLinhas, int *regs, MemoriaDados *md, int *program_counter, type_instruc *instrucoesDecodificadas);
 
 #endif

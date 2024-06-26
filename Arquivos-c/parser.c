@@ -1,7 +1,7 @@
 #include "../Arquivos-h/parser.h"
 
 //RESPONSAVEL POR ABRIR O ARQUIVO E ENCHER A MEMORIA DE INSTRUÇÕES
-int parser(instrucao **memoriaInst, int *tamanho_linhas){
+int parser(instrucao *memoriaInst, int *tamanho_linhas){
     char linha[100], nome_arquivo[200];
     int contador_de_linhas = 0, opcao;
     instrucao p;
@@ -40,9 +40,6 @@ int parser(instrucao **memoriaInst, int *tamanho_linhas){
 
         *tamanho_linhas = contador_de_linhas;
 
-        //alocaçao de memoria que minha variavel memoriaInst terá será = ao tanto de linhas do arquivo lido
-        *memoriaInst = malloc(256 * sizeof(instrucao));
-
         if (!memoriaInst) { //se memoriaInst nao ter nada alocado, dará erro.
             fprintf(stderr, "Falha na alocação de memória para instruções.\n"); //stderr envia mensagem de erro
             //separadamente do fluxo principal de saída de um programa
@@ -61,12 +58,12 @@ int parser(instrucao **memoriaInst, int *tamanho_linhas){
             linha[strcspn(linha, "\r\n")] = '\0';
 
             // Copia a linha para a estrutura memoriaInst
-            strncpy((*memoriaInst)[i].instruc, linha, 17);
-            (*memoriaInst)[i].instruc[sizeof((*memoriaInst)[i].instruc) - 1] = '\0'; // certifica-se de que a string termina com null terminator
+            strncpy(memoriaInst[i].instruc, linha, 17);
+            memoriaInst[i].instruc[sizeof(memoriaInst[i].instruc) - 1] = '\0'; // certifica-se de que a string termina com null terminator
         }
         if(contador_de_linhas <=256){
             for(int j=contador_de_linhas;j < 256; j++){
-                strncpy((*memoriaInst)[j].instruc, "0000000000000000", 17);
+                strncpy(memoriaInst[j].instruc, "0000000000000000", 17);
             }
 
         }

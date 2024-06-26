@@ -8,7 +8,7 @@
 
 
 
-int parser(instrucao **memoriaInst, int *tamanho_linhas);
+int parser(instrucao *memoriaInst, int *tamanho_linhas);
 
 
 #endif

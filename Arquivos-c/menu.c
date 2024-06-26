@@ -7,18 +7,22 @@ int main(){
 
 int menu(){
     Assembly *AssemblyInst;
-    MemoriaDados *md;
+    MemoriaDados *md = NULL;
     unsigned int escolha, tamLinhas, program_counter = 0, cont = 0; //UNSIGNED IMPOSSIBILITA QUE PROGRAM_COUNTER CHEGUE A MENOR QUE 0
     int state = 0;
-    instrucao *memoriaInst; //RESPONSAVEL POR COLETAR  A INSTRUÇÃO
-    int *regs; //registradores como um inteiro mesmo
+    IFID if_id;
+    IDEX id_ex;
+    EXMEM ex_mem;
+    MEMWB mem_wb;
+    instrucao *memoriaInst = NULL; //RESPONSAVEL POR COLETAR  A INSTRUÇÃO
+    int *regs = NULL; //registradores como um inteiro mesmo
     char dat[300]; //Recebe o nome do arquivo.dat
     regs = (int*)malloc(8 * sizeof(int));
     for (int i=0;i<8;i++){ //zerando registradores, caso contrario dá números inconsistentes
         regs[i] = 0;
     }
 
-    type_instruc **instrucoesDecodificadas = malloc(sizeof(type_instruc*));
+    type_instruc *instrucoesDecodificadas = NULL;
     md = (MemoriaDados*)calloc(256, sizeof(MemoriaDados));
 
     printf("\n  ___________________________________________ ==ATENÇÃO== ____________________________________________\n\n");
@@ -49,6 +53,9 @@ int menu(){
         case 0:
             free(md);
             free(memoriaInst);
+            for(int i=0;i<8;i++){
+                regs[i] = 0;
+            }
             free(regs);
             free(AssemblyInst);
             free(instrucoesDecodificadas);
@@ -56,20 +63,27 @@ int menu(){
             printf("Programa Encerrado!\n");
             break;
             
-        case 1: //Carregar memória de Instruções
-            parser(&memoriaInst, &tamLinhas);
-            *instrucoesDecodificadas = malloc(tamLinhas * sizeof(type_instruc));
-            if (*instrucoesDecodificadas == NULL) {
+        case 1: //Carregar memória de Instruções e inicializa tudo
+            memoriaInst = inicializaMemInst(); //inicializa memoria de instruções
+            parser(memoriaInst, &tamLinhas);
+            md = inicializaMemDados(); //inicializa memoria de dados
+            instrucoesDecodificadas = calloc(tamLinhas, sizeof(type_instruc));
+            if (instrucoesDecodificadas == NULL) {
                 fprintf(stderr, "Falha ao alocar memória para instruções decodificadas.\n");
                 return -1;
             }
             
             AssemblyInst = calloc((tamLinhas + 1), sizeof(Assembly));
-
+            
             if (AssemblyInst == NULL) {
                 fprintf(stderr, "Falha ao alocar memória para instrucoes assembly.\n");
                 return -1;
             }
+            // Inicialize os registradores do pipeline
+            memset(&if_id, 0, sizeof(IFID));
+            memset(&id_ex, 0, sizeof(IDEX));
+            memset(&ex_mem, 0, sizeof(EXMEM));
+            memset(&mem_wb, 0, sizeof(MEMWB));
             break;
 
         case 2: //Carregar Memória de Dados
@@ -121,12 +135,12 @@ int menu(){
 
         case 10: //Chamar função responsável pela execução do programa
             program_counter = 0;
-            controller(1, &state, &memoriaInst, tamLinhas, &regs, &md, &program_counter, instrucoesDecodificadas);
+            controller(1, &state, memoriaInst, tamLinhas, regs, md, &program_counter, instrucoesDecodificadas);
             AsmCopy(instrucoesDecodificadas, &AssemblyInst, tamLinhas);
             break;
 
         case 11: //Chamar função responsável pela execução do programa passo a passo
-            controller(2, &state, &memoriaInst, tamLinhas, &regs, &md, &program_counter, instrucoesDecodificadas);
+            controller(2, &state, memoriaInst, tamLinhas, regs, md, &program_counter, instrucoesDecodificadas);
             AsmCopy(instrucoesDecodificadas, &AssemblyInst, tamLinhas);
             printf("\n");
             puts(AssemblyInst[program_counter-1].InstructsAssembly);
@@ -143,7 +157,7 @@ int menu(){
                 recarregarmd(&md, dat);
             }
 
-            backstep(&state, &memoriaInst, tamLinhas, &regs, &md, &program_counter, instrucoesDecodificadas);
+            backstep(&state, memoriaInst, tamLinhas, regs, md, &program_counter, instrucoesDecodificadas);
             if (program_counter == 0){
                 printf("Voltamos para o inicio do programa.");
                 break;
