@@ -13,6 +13,7 @@
 #include "ULA.h"
 #include "inicializadores.h"
 #include "carregaMemoriaDados.h"
+#include "Terminal.h"
 
 int main();
 int menu();

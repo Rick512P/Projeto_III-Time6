@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <ncurses.h>
+
 
 //instrucao da memoria de instruções
 typedef struct{
