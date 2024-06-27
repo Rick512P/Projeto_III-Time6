@@ -9,7 +9,8 @@ int menu(){
     Assembly *AssemblyInst;
     MemoriaDados *md = NULL;
     unsigned int escolha, tamLinhas, program_counter = 0, cont = 0; //UNSIGNED IMPOSSIBILITA QUE PROGRAM_COUNTER CHEGUE A MENOR QUE 0
-    int state = 0;
+    int Etapa = 1, StateForBack = -1, i, auxiliar;
+    Sinais *sinal = NULL;
     IFID *ifid = NULL;
     IDEX *idex = NULL;
     EXMEM *exmem = NULL;
@@ -20,11 +21,10 @@ int menu(){
     //int *regs = NULL; //registradores como um inteiro mesmo
     char dat[300]; //Recebe o nome do arquivo.dat
     //regs = (int*)malloc(8 * sizeof(int));
-    for (int i=0;i<8;i++){ //zerando registradores, caso contrario dá números inconsistentes
+    for (i=0;i<8;i++){ //zerando registradores, caso contrario dá números inconsistentes
         regs[i] = 0;
     }
 
-    
     //md = (MemoriaDados*)calloc(256, sizeof(MemoriaDados));
     do{
         
@@ -35,10 +35,9 @@ int menu(){
         case 0:
             free(md);
             free(memoriaInst);
-            for(int i=0;i<8;i++){
+            for(i=0;i<8;i++){
                 regs[i] = 0;
             }
-            free(regs);
             free(AssemblyInst);
             free(instrucoesDecodificadas);
             system("clear");
@@ -114,38 +113,43 @@ int menu(){
 
         case 10: //Chamar função responsável pela execução do programa
             program_counter = 0;
-            controller(1, &state, memoriaInst, tamLinhas, regs, md, &program_counter, instrucoesDecodificadas);
-            AsmCopy(instrucoesDecodificadas, &AssemblyInst, tamLinhas);
+            controller(1, &StateForBack, tamLinhas, regs, memoriaInst, md, &program_counter, instrucoesDecodificadas, ifid, idex, exmem, memwb, sinal, Etapa);
+            AsmCopy(instrucoesDecodificadas, AssemblyInst, tamLinhas);
             break;
 
         case 11: //Chamar função responsável pela execução do programa passo a passo
-            controller(2, &state, memoriaInst, tamLinhas, regs, md, &program_counter, instrucoesDecodificadas);
-            AsmCopy(instrucoesDecodificadas, &AssemblyInst, tamLinhas);
+            controller(2, &StateForBack, tamLinhas, regs, memoriaInst, md, &program_counter, instrucoesDecodificadas, ifid, idex, exmem, memwb, sinal, Etapa);
+            AsmCopy(instrucoesDecodificadas, AssemblyInst, tamLinhas);
             printf("\n");
             puts(AssemblyInst[program_counter-1].InstructsAssembly);
             break;
 
         case 12: //Chamar função responsável por retornar uma instrução (PC--)
-            if (state <= 0){
-                fprintf(stderr, "Usuario ja esta no inicio do programa.");
+            printf("StateforBack: %d\n", StateForBack--);
+            if(memoriaInst == NULL){
+                printf("Instrucoes nao carregadas\n");
                 break;
             }
-            memset(md, 0, sizeof(md)); //anula todo conteudo de md
-
-            if (cont == 1){
-                recarregarmd(md, dat);
-            }
-
-            backstep(&state, memoriaInst, tamLinhas, regs, md, &program_counter, instrucoesDecodificadas);
-            if (program_counter == 0){
-                printf("Voltamos para o inicio do programa.");
+            if (StateForBack <= -1){
+                fprintf(stderr, "Usuario ja esta no inicio do programa.\n");
+                StateForBack = -1;
                 break;
             }
-
-            else{
-                printf("Voltamos para a instrucao: \t"); puts(AssemblyInst[program_counter-1].InstructsAssembly);
-                break;
+            for(i = 0; i < 256 ; i++){
+                strcpy(md[i].dados, "\0");
             }
+            for (i = 0; i<8; i++){
+                regs[i]=0;
+            }
+            Etapa = 1;
+            auxiliar = StateForBack--;
+
+            program_counter = 0; //PROGRAM COUNTER COMO 0 PARA REINICIAR TUDO
+            StateForBack = -1;
+
+            /*Etapa = controller(3, &StateForBack, auxiliar, regs, memorias, &program_counter, instrucoesDecodificadas, aux, &sinal, Etapa);*/
+            Etapa = backstep(auxiliar, &StateForBack, auxiliar, regs, memoriaInst, md, &program_counter, instrucoesDecodificadas, ifid, idex, exmem, memwb, sinal, Etapa);
+            break;
 
         default:
             printf("Opcao invalida.\n");

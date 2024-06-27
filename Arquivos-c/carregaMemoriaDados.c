@@ -49,7 +49,7 @@ char* carregamd(MemoriaDados *md){
 
             // Copia a linha para a estrutura memoria de Dados
             strncpy(md[i].dados, linha, 9);
-            *md[i].dados[sizeof(md[i].dados) - 1] = '\0'; // certifica-se de que a string termina com null terminator
+            md[i].dados[sizeof(md[i].dados) - 1] = '\0'; // certifica-se de que a string termina com null terminator
             
         }
         fclose(setmd);

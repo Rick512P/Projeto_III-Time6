@@ -4,7 +4,7 @@ void AsmCopy(type_instruc *instrucoesDecodificadas, Assembly *A, int tamLinhas){
     char Opcode[10], rd[5], rs[5], rt[5], imediato[8];
 
 
-    if (*A == NULL) {
+    if (A == NULL) {
         fprintf(stderr, "Falha na alocação de memória\n");
         return;
     }
