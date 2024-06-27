@@ -16,11 +16,23 @@ MemoriaDados *inicializaMemDados(){
     return memDados;
 }
 
-registradoresPipeline *inicializaRegsPipe(registradoresPipeline *RegsPipe){
-    RegsPipe->registradorBI = 0;
-    RegsPipe->registradorDI = 0;
-    RegsPipe->registradorEX = 0;
-    RegsPipe->registradorMEM = 0;
-    RegsPipe->registradorER = 0;
-    return RegsPipe;
+void inicializaRegsPipe(IFID *ifid, IDEX *idex, EXMEM *exmem, MEMWB *memwb){
+    ifid->instr = '\0';
+    ifid->pc = 0;
+
+    idex->instr = "\0";
+    idex->pc = 0;
+    idex->readData1 = 0;
+    idex->readData2 = 0;
+    idex->signExtend = "\0";
+
+    exmem->instr = "\0";
+    exmem->pc = 0;
+    exmem->readData2 = 0;
+    exmem->aluResult = 0;
+
+    memwb->instr = "\0";
+    memwb->pc = 0;
+    memwb->readData = 0;
+    memwb->aluResult = 0;
 }

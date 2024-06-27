@@ -5,6 +5,6 @@
 
 instrucao *inicializaMemInst();
 MemoriaDados *inicializaMemDados();
-registradoresPipeline *inicializaRegsPipe(registradoresPipeline *RegsPipe);
+void inicializaRegsPipe(IFID *ifid, IDEX *idex, EXMEM *exmem, MEMWB *memwb);
 
 #endif

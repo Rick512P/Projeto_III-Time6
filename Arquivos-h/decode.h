@@ -6,6 +6,6 @@
 
 #include "memoria_instruc.h"
 
-type_instruc decoder(instrucao **memoriaInst, int contador);
+type_instruc decoder(instrucao *memoriaInst, int contador);
 
 #endif

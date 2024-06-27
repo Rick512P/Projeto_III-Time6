@@ -10,20 +10,22 @@ int menu(){
     MemoriaDados *md = NULL;
     unsigned int escolha, tamLinhas, program_counter = 0, cont = 0; //UNSIGNED IMPOSSIBILITA QUE PROGRAM_COUNTER CHEGUE A MENOR QUE 0
     int state = 0;
-    IFID if_id;
-    IDEX id_ex;
-    EXMEM ex_mem;
-    MEMWB mem_wb;
+    IFID *ifid = NULL;
+    IDEX *idex = NULL;
+    EXMEM *exmem = NULL;
+    MEMWB *memwb = NULL;
     instrucao *memoriaInst = NULL; //RESPONSAVEL POR COLETAR  A INSTRUÇÃO
-    int *regs = NULL; //registradores como um inteiro mesmo
+    type_instruc *instrucoesDecodificadas = NULL;
+    int regs[8];
+    //int *regs = NULL; //registradores como um inteiro mesmo
     char dat[300]; //Recebe o nome do arquivo.dat
-    regs = (int*)malloc(8 * sizeof(int));
+    //regs = (int*)malloc(8 * sizeof(int));
     for (int i=0;i<8;i++){ //zerando registradores, caso contrario dá números inconsistentes
         regs[i] = 0;
     }
 
-    type_instruc *instrucoesDecodificadas = NULL;
-    md = (MemoriaDados*)calloc(256, sizeof(MemoriaDados));
+    
+    //md = (MemoriaDados*)calloc(256, sizeof(MemoriaDados));
     do{
         
         escolha = print_menu();
@@ -48,6 +50,7 @@ int menu(){
             parser(memoriaInst, &tamLinhas);
             md = inicializaMemDados(); //inicializa memoria de dados
             instrucoesDecodificadas = calloc(tamLinhas, sizeof(type_instruc));
+            inicializaRegsPipe(ifid, idex, exmem, memwb);
             if (instrucoesDecodificadas == NULL) {
                 fprintf(stderr, "Falha ao alocar memória para instruções decodificadas.\n");
                 return -1;
@@ -59,16 +62,12 @@ int menu(){
                 fprintf(stderr, "Falha ao alocar memória para instrucoes assembly.\n");
                 return -1;
             }
-            // Inicialize os registradores do pipeline
-            memset(&if_id, 0, sizeof(IFID));
-            memset(&id_ex, 0, sizeof(IDEX));
-            memset(&ex_mem, 0, sizeof(EXMEM));
-            memset(&mem_wb, 0, sizeof(MEMWB));
+
             break;
 
         case 2: //Carregar Memória de Dados
             if (program_counter == 0){
-                strcpy(dat,carregamd(&md));
+                strcpy(dat,carregamd(md));
                 printf("\n");
                 puts(dat);
                 printf("\n");
@@ -134,7 +133,7 @@ int menu(){
             memset(md, 0, sizeof(md)); //anula todo conteudo de md
 
             if (cont == 1){
-                recarregarmd(&md, dat);
+                recarregarmd(md, dat);
             }
 
             backstep(&state, memoriaInst, tamLinhas, regs, md, &program_counter, instrucoesDecodificadas);

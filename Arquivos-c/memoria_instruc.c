@@ -1,7 +1,7 @@
 #include "../Arquivos-h/memoria_instruc.h"
 
 
-type_instruc memInstruc(int contador, instrucao **memoriaInst, int *tamLinhas){
+type_instruc memInstruc(int contador, instrucao *memoriaInst, int *tamLinhas){
     type_instruc traduzido; //DECOMPOE A INSTRUÇÃO EM OPCODE, RS, RT, RD, FUNCT, IMM OU ADDR
 
             //PC PASSA O ENDEREÇO, INCREMENTANDO +1

@@ -1,7 +1,7 @@
 #include "../Arquivos-h/carregaMemoriaDados.h"
 
 
-char* carregamd(MemoriaDados **md){
+char* carregamd(MemoriaDados *md){
     FILE *setmd;
     char linha[1024];
     char* nome_arquivo = (char*)malloc(300 * sizeof(char));
@@ -38,14 +38,6 @@ char* carregamd(MemoriaDados **md){
                 
             contador_de_linhas++;
         }
-
-        
-        if (md == NULL)
-            *md = malloc(256 * sizeof(MemoriaDados));
-
-        if (md == NULL) {
-                fprintf(stderr, "Falha ao alocar memória para memoria de dados.\n");
-            }
         
         rewind(setmd);
         
@@ -56,8 +48,8 @@ char* carregamd(MemoriaDados **md){
             linha[strcspn(linha, "\r\n")] = '\0';
 
             // Copia a linha para a estrutura memoria de Dados
-            strncpy((*md)[i].dados, linha, 9);
-            (*md)[i].dados[sizeof((*md)[i].dados) - 1] = '\0'; // certifica-se de que a string termina com null terminator
+            strncpy(md[i].dados, linha, 9);
+            *md[i].dados[sizeof(md[i].dados) - 1] = '\0'; // certifica-se de que a string termina com null terminator
             
         }
         fclose(setmd);
@@ -74,7 +66,7 @@ char* carregamd(MemoriaDados **md){
     }
 }
 
-void recarregarmd(MemoriaDados **md, char *nome_arquivo){
+void recarregarmd(MemoriaDados *md, char *nome_arquivo){
     FILE *setmd;
     char linha[1024];
     int contador_de_linhas = 0, opcao;
@@ -87,11 +79,6 @@ void recarregarmd(MemoriaDados **md, char *nome_arquivo){
         while(fgets(linha, sizeof(linha), setmd) != NULL){
             contador_de_linhas++;
         }
-
-        
-        if (md == NULL)
-            *md = malloc(256 * sizeof(MemoriaDados));
-        
         rewind(setmd);
         
         for (int i=0;i<contador_de_linhas;i++){
@@ -101,8 +88,8 @@ void recarregarmd(MemoriaDados **md, char *nome_arquivo){
             linha[strcspn(linha, "\r\n")] = '\0';
 
             // Copia a linha para a estrutura memoria de Dados
-            strncpy((*md)[i].dados, linha, 9);
-            (*md)[i].dados[sizeof((*md)[i].dados) - 1] = '\0'; // certifica-se de que a string termina com null terminator
+            strncpy(md[i].dados, linha, 9);
+            md[i].dados[sizeof(md[i].dados) - 1] = '\0'; // certifica-se de que a string termina com null terminator
             
         }
         fclose(setmd);        
