@@ -1,23 +1,22 @@
 {
   "configurations": [
-    {
-      "name": "Win32",
-      "includePath": [
-        "${workspaceFolder}/**",
-        "C:/MinGW/include",
-        "C:/MinGW/include/ncurses"  // Adicione este caminho se necessário
-      ],
-      "defines": [
-        "_DEBUG",
-        "UNICODE",
-        "_UNICODE"
-      ],
-      "windowsSdkVersion": "10.0.19041.0",
-      "compilerPath": "C:/MinGW/bin/gcc.exe",
-      "intelliSenseMode": "windows-gcc-x86",
-      "cppStandard": "c++17",
-      "cStandard": "c11"
-    }
+      {
+          "name": "MSYS2",
+          "includePath": [
+              "${workspaceFolder}/**",
+              "C:/msys64/mingw64/include",
+              "C:/msys64/mingw64/include/ncurses"
+          ],
+          "defines": [
+              "DEBUG",
+              "UNICODE",
+              "_UNICODE"
+          ],
+          "compilerPath": "C:/msys64/mingw64/bin/gcc.exe",
+          "cStandard": "c11",
+          "cppStandard": "c++17",
+          "intelliSenseMode": "gcc-x64"
+      }
   ],
   "version": 4
 }
