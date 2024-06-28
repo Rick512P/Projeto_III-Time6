@@ -182,7 +182,7 @@ int controller(int op, int *StateForBack, int NumeroLinhas, int *regs, instrucao
             //verifica se sera um instrucao ou dado
             aux->PC = *program_counter; // Declaro que o registrador auxiliar PC recebe o valor de program_counter, pois irei incrementar o program_counter nesta etapa
             
-            if(memoria[aux->PC].uso == 0){
+            if(memInst[aux->PC].uso == 0){
                 strcpy(aux->registradorInst, memoria[aux->PC].mem);
                 if (strcmp(aux->registradorInst, memoria[aux->PC].mem) == 0){
                     printf("Instrucao coletada com sucesso! Foi lido %s\n", aux->registradorInst);
@@ -205,6 +205,16 @@ int controller(int op, int *StateForBack, int NumeroLinhas, int *regs, instrucao
             break;
             
         case 2://Etapa 2 -> Decodifico as instruções, gero os sinais e Adiciono valores aos registradores auxiliares        
+            switch (ETAPA)//Etapas
+            {
+            case 1: //Realiza Etapa de IF (Instruction Fetch)
+                /* code */
+                break;
+            
+            default:
+                break;
+            }
+            //
             printf("Etapa %d\n", ProxEtapa);
             freesinal;
             sinal = inicializaSinais();

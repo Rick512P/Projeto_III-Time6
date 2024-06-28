@@ -1,5 +1,5 @@
-#ifndef __MENU_H_
-#define __MENU_H_
+#ifndef __TERMINAL_H_
+#define __TERMINAL_H_
 
 #include "bibliotecas.h"
 

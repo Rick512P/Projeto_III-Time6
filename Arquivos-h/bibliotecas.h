@@ -59,8 +59,8 @@ typedef struct{
 
 
 typedef struct {
-    unsigned int pc;       // Contador de programa (program counter)
-    char instruc[17];      // Instrução buscada
+    unsigned int pc;// Contador de programa (program counter)
+    char instruc[17];// Instrução buscada
 } IFID;
 
 typedef struct {
