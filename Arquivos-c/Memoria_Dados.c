@@ -11,13 +11,13 @@ void escreveDado(MemoriaDados *mem, int contador, char *valor) {
     }
 }
 
-void imprimeDados(MemoriaDados *md, int tamLinhas){
+void imprimeDados(MemoriaDados *memDados, int tamLinhas){
 	for (int i = 0; i < 256; i++) {
-		printf("Dado armazenado no endereco %d da MD: [%s]\n", i, md[i].dados);
+		printf("Dado armazenado no endereco %d da MD: [%s]\n", i, memDados[i].dados);
 	}
 }
 
-void escreverArquivoMemoria(MemoriaDados *md) {
+void escreverArquivoMemoria(MemoriaDados *memDados) {
 	FILE *arquivo;
 	arquivo = fopen("./DATA.dat", "w");
 	
@@ -26,7 +26,7 @@ void escreverArquivoMemoria(MemoriaDados *md) {
 	}
 	
 	for (int i=0; i<256; i++){
-		fprintf(arquivo, "%s\n", md[i].dados);
+		fprintf(arquivo, "%s\n", memDados[i].dados);
 	}
 	
 	fclose(arquivo);

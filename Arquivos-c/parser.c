@@ -59,11 +59,12 @@ int parser(instrucao *memoriaInst, int *tamanho_linhas){
 
             // Copia a linha para a estrutura memoriaInst
             strncpy(memoriaInst[i].instruc, linha, 17);
-            memoriaInst[i].instruc[sizeof(memoriaInst[i].instruc) - 1] = '\0'; // certifica-se de que a string termina com null terminator
+            memoriaInst[i].instruc[17] = '\0'; // certifica-se de que a string termina com null terminator
         }
         if(contador_de_linhas <=256){
             for(int j=contador_de_linhas;j < 256; j++){
                 strncpy(memoriaInst[j].instruc, "0000000000000000", 17);
+                memoriaInst[j].instruc[17] = '\0';
             }
 
         }
@@ -73,6 +74,8 @@ int parser(instrucao *memoriaInst, int *tamanho_linhas){
     }
     
 
-    else
+    else{
         fprintf(stderr, "Erro ao abrir arquivo de instrucoes.");
+        
+    }
 }

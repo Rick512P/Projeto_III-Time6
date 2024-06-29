@@ -7,7 +7,10 @@ int main(){
 
 int menu(){
     Assembly *AssemblyInst;
-    MemoriaDados *md = NULL;
+    MemoriaDados *memDados = NULL;
+    Backup *backup = NULL;
+    NodoPilha *NodoPilha = NULL;
+    descPilha *descPilha = NULL;
     unsigned int escolha, tamLinhas, program_counter = 0, cont = 0; //UNSIGNED IMPOSSIBILITA QUE PROGRAM_COUNTER CHEGUE A MENOR QUE 0
     int Etapa = 1, StateForBack = -1, i, auxiliar;
     Sinais *sinal = NULL;
@@ -25,16 +28,29 @@ int menu(){
     for (i=0;i<8;i++){ //zerando registradores, caso contrario dá números inconsistentes
         regs[i] = 0;
     }
-
-    //md = (MemoriaDados*)calloc(256, sizeof(MemoriaDados));
     do{
         
-        escolha = print_menu();
-
+        //escolha = print_menu();
+        printf("\n\n");
+        printf("                                 _____________________________________\n");
+        printf("                                |1  +  Carregar memória instruções   +|\n");
+        printf("                                |2  +    Carregar memoria dados      +|\n");
+        printf("                                |3  +        Imprimir memória        +|\n");
+        printf("                                |4  +      Imprimir registradores    +|\n");
+        printf("                                |5  +      Imprimir estatisticas     +|\n");
+        printf("                                |6  +  Imprimir instrucoes Assembly  +|\n");
+        printf("                                |7  +    Imprimir todo o simulador   +|\n");
+        printf("                                |8  +          Salvar .asm           +|\n");
+        printf("                                |9  +          Salvar .dat           +|\n");
+        printf("                                |10 +     Executa Programa (run)     +|\n");
+        printf("                                |11 +    Executa instrucao (step)    +|\n");
+        printf("                                |12 +   Volta uma instrucao (back)   +|\n");
+        printf("                                |0  +              Sair              +|\n");
+        scanf("%d", &escolha);
         switch (escolha)
         {
         case 0:
-            free(md);
+            free(memDados);
             free(memoriaInst);
             for(i=0;i<8;i++){
                 regs[i] = 0;
@@ -48,9 +64,14 @@ int menu(){
         case 1: //Carregar memória de Instruções e inicializa tudo
             memoriaInst = inicializaMemInst(); //inicializa memoria de instruções
             parser(memoriaInst, &tamLinhas);
-            md = inicializaMemDados(); //inicializa memoria de dados
+            regif = (IF*)malloc(sizeof(regif));
+            id = (ID*)malloc(sizeof(id));
+            ex = (EX*)malloc(sizeof(ex));
+            mem = (MEM*)malloc(sizeof(mem));
+            wb = (WB*)malloc(sizeof(wb));
+            memDados = inicializaMemDados(); //inicializa memoria de dados
+            descPilha = inicializaBackup();
             instrucoesDecodificadas = calloc(tamLinhas, sizeof(type_instruc));
-            inicializaRegsPipe(regif, id, ex, mem, wb);
             if (instrucoesDecodificadas == NULL) {
                 fprintf(stderr, "Falha ao alocar memória para instruções decodificadas.\n");
                 return -1;
@@ -67,7 +88,7 @@ int menu(){
 
         case 2: //Carregar Memória de Dados
             if (program_counter == 0){
-                strcpy(dat,carregamd(md));
+                strcpy(dat,carregamemDados(memDados));
                 printf("\n");
                 puts(dat);
                 printf("\n");
@@ -81,7 +102,7 @@ int menu(){
 
         case 3: //Imprimir memória de instruções e memória de dados
             imprimeMemInstruc(memoriaInst, tamLinhas);
-            imprimeDados(md, tamLinhas);
+            imprimeDados(memDados, tamLinhas);
             break;
 
         case 4: //Imprimir registradores
@@ -99,7 +120,7 @@ int menu(){
         case 7: //imprimir todo o simulador
             imprimeEstatisticas(memoriaInst, tamLinhas, instrucoesDecodificadas);
             imprimeSimulador(tamLinhas, instrucoesDecodificadas, memoriaInst);      
-            imprimeDados(md, tamLinhas);
+            imprimeDados(memDados, tamLinhas);
             imprimirASM(AssemblyInst, tamLinhas);
             imprimeRegistradores(regs);
             break;
@@ -109,49 +130,39 @@ int menu(){
             break;
 
         case 9: //Salvar arquivo DATA.dat
-            escreverArquivoMemoria(md);
+            escreverArquivoMemoria(memDados);
             break;
 
         case 10: //Chamar função responsável pela execução do programa
             program_counter = 0;
-            controller(1, &StateForBack, tamLinhas, regs, memoriaInst, md, &program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, Etapa);
+            controller(1, &StateForBack, tamLinhas, regs, memoriaInst, memDados, &program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, Etapa);
             AsmCopy(instrucoesDecodificadas, AssemblyInst, tamLinhas);
+            //FAZ UM "BACKUP" PARA O BACKSTEP   
+                backup = ColetaTudo(regs, memDados, regif, id, ex, mem, wb, sinal, AssemblyInst, &program_counter);
+                NodoPilha = inicializaNodo(backup);
+                descPilha = PUSH(descPilha, NodoPilha);
+                descPilha->tamanho = tamLinhas;
             break;
 
         case 11: //Chamar função responsável pela execução do programa passo a passo
             if (memoriaInst == NULL){
                 printf("Carregue a memoria com instrucoes antes.\n");
             }
-            Etapa = controller(2, &StateForBack, tamLinhas, regs, memoriaInst, md, &program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, Etapa);
+            Etapa = controller(2, &StateForBack, tamLinhas, regs, memoriaInst, memDados, &program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, Etapa);
             AsmCopy(instrucoesDecodificadas, AssemblyInst, tamLinhas);
             printf("\n");
             puts(AssemblyInst[regif->pc].InstructsAssembly);
+            //FAZ UM "BACKUP" PARA O BACKSTEP   
+                backup = ColetaTudo(regs, memDados, regif, id, ex, mem, wb, sinal, AssemblyInst, &program_counter);
+                NodoPilha = inicializaNodo(backup);
+                descPilha = PUSH(descPilha, NodoPilha);
             break;
 
         case 12: //Chamar função responsável por retornar uma instrução (PC--)
-            printf("StateforBack: %d\n", StateForBack--);
-            if(memoriaInst == NULL){
-                printf("Instrucoes nao carregadas\n");
-                break;
-            }
-            if (StateForBack <= -1){
-                fprintf(stderr, "Usuario ja esta no inicio do programa.\n");
-                StateForBack = -1;
-                break;
-            }
-            for(i = 0; i < 256 ; i++){
-                strcpy(md[i].dados, "\0");
-            }
-            for (i = 0; i<8; i++){
-                regs[i]=0;
-            }
-            Etapa = 1;
-            auxiliar = StateForBack--;
-
-            program_counter = 0; //PROGRAM COUNTER COMO 0 PARA REINICIAR TUDO
-            StateForBack = -1;
-
-            Etapa = backstep(auxiliar, &StateForBack, auxiliar, regs, memoriaInst, md, &program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, Etapa);
+            descPilha = Realoca(descPilha, regs, memDados, regif, id, ex, mem, wb, sinal, AssemblyInst, &program_counter);
+            if(descPilha->Topo != NULL){
+                 printf("Retornamos para:\n IF-Instrucao:[%s]\t\tID-Instrucao:[%s]\nEX-Instrucao:[%s]\t\tMEM-Instrucao[%s]\nWB-Instrucao:[%s]\n", regif->instruc, id->instruc, ex->instruc, mem->instruc, wb->instruc);
+            }  
             break;
 
         default:

@@ -81,9 +81,9 @@ void imprimeRegsPipeline(IF *regif, ID *id, EX *ex, MEM *mem, int etapa){
         
         case 2:
             printf("Instrucao: %s", id->instruc);
-            printf("Instrucao: %s", id->pc);
-            printf("Dado 1: %s", id->readData1);
-            printf("Dado 2: %s", id->readData2);
+            printf("Instrucao: %d", id->pc);
+            printf("Dado 1: %d", id->readData1);
+            printf("Dado 2: %d", id->readData2);
             printf("\n");
     }
 }

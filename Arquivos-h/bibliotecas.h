@@ -5,10 +5,13 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-//#include <ncurses.h><-LINUX
-#include <ncurses/ncurses.h>//<-WINDOWS
+//#include <ncurses.h>//<-LINUX
+//#include <ncurses/ncurses.h>//<-WINDOWS
 //#include <menu.h>
 
+typedef struct backup Backup;
+typedef struct desc_Pilha descPilha;
+typedef struct nodo_Pilha NodoPilha;
 
 //instrucao da memoria de instruções
 typedef struct{
@@ -71,6 +74,7 @@ typedef struct {
     char instruc[17];
     int readData1; // Valor lido do registrador rs
     int readData2; // Valor lido do registrador rt
+    Sinais *sinal;
 } ID;
 
 typedef struct {
@@ -79,6 +83,7 @@ typedef struct {
     int aluResult; // Resultado da ALU
     int readData1;
     int readData2; // Valor lido do registrador rt (usado para operações de memória)
+    Sinais *sinal;
 } EX;
 
 typedef struct {
@@ -86,14 +91,38 @@ typedef struct {
     char instruc[17];
     char readData[9];  // Dados lidos da memória
     int aluResult; // Resultado da ALU (se não for operação de memória)
+    Sinais *sinal;
 } MEM;
 
 typedef struct {
     unsigned int pc; 
     char instruc[17];
     int aluResult; // Resultado da ALU (se não for operação de memória)
+    Sinais *sinal;
 } WB;
 
+struct backup{
+    int regs[8];
+    MemoriaDados *memDados;
+    IF *regif;
+    ID *id;
+    EX *ex;
+    MEM *mem;
+    WB *wb;
+    Sinais *sinal;
+    Assembly *AssemblyInst;
+    int PC;
+};
+
+struct nodo_Pilha{
+    NodoPilha *prox;
+    Backup *info;
+};
+
+struct desc_Pilha{
+    NodoPilha *Fundo, *Topo;
+    int tamanho;
+};
 
 
 #endif

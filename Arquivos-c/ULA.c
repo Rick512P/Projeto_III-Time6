@@ -1,7 +1,7 @@
 #include "../Arquivos-h/ULA.h"
 
 
-int ULA(type_instruc *instrucoesDecodificadas, int *contador, MemoriaDados *md, int *regs) {
+int ULA(type_instruc *instrucoesDecodificadas, int *contador, MemoriaDados *memDados, int *regs) {
   
     int address, rs, rt, rd;
 
@@ -79,7 +79,7 @@ int ULA(type_instruc *instrucoesDecodificadas, int *contador, MemoriaDados *md, 
         int immediate, dados;
         immediate = bin_to_decimal(instrucoesDecodificadas[*contador].imm);
         //Agora sei qual a posicao Immediate em decimal:
-        dados = bin_to_decimal(md[immediate].dados);
+        dados = bin_to_decimal(memDados[immediate].dados);
         //Agora sei qual o valor contido na posição 4 da memoria em decimal:
         return dados;
     }
@@ -97,12 +97,12 @@ int ULA(type_instruc *instrucoesDecodificadas, int *contador, MemoriaDados *md, 
                 strcpy(conteudo_bin, "01111111"); //Escreve 32
             else
                 strcpy(conteudo_bin, "10000001"); //Escreve -32
-            escreveDado(md, immediate, conteudo_bin);
+            escreveDado(memDados, immediate, conteudo_bin);
             return -1;
         }
 
         decimalToBinary(conteudo, conteudo_bin);
-        escreveDado(md, immediate, conteudo_bin);
+        escreveDado(memDados, immediate, conteudo_bin);
     }
 
     else if(strcmp(instrucoesDecodificadas[*contador].opcode,"0010") == 0){ // j -> jump to specified address
