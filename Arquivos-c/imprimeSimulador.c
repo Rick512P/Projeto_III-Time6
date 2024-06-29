@@ -72,6 +72,18 @@ void imprimeEstatisticas(instrucao *memoriaInst, int tamLinhas, type_instruc *in
 }
 
 
-void imprimeRegsPipeline(IFID *ifid, IDEX *idex, EXMEM *exmem, MEMWB *memwb){
-    
+void imprimeRegsPipeline(IF *regif, ID *id, EX *ex, MEM *mem, int etapa){
+    switch(etapa){
+        case 1:
+            printf("Instrucao: %s", regif->instruc);
+            printf("PC: %d\n", regif->pc);
+            break;
+        
+        case 2:
+            printf("Instrucao: %s", id->instruc);
+            printf("Instrucao: %s", id->pc);
+            printf("Dado 1: %s", id->readData1);
+            printf("Dado 2: %s", id->readData2);
+            printf("\n");
+    }
 }

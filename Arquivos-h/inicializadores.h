@@ -6,7 +6,7 @@
 
 instrucao *inicializaMemInst();
 MemoriaDados *inicializaMemDados();
-void inicializaRegsPipe(IFID *ifid, IDEX *idex, EXMEM *exmem, MEMWB *memwb);
+void inicializaRegsPipe(IF *regif, ID *id, EX *ex, MEM *mem, WB *wb);
 Sinais *inicializaSinais();
 Sinais *AddSinais(type_instruc inst, Sinais *sinal);
 

@@ -14,6 +14,7 @@
 #include "inicializadores.h"
 #include "carregaMemoriaDados.h"
 #include "Terminal.h"
+#include "sinais.h"
 
 int main();
 int menu();

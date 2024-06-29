@@ -9,7 +9,6 @@
 #include "../Arquivos-h/ULA.h"
 
 
-type_instruc memInstruc(int contador, instrucao *memoriaInst, int *tamLinhas);
 void imprimeMemInstruc(instrucao *memoriaInst, int tamLinhas);
 
 

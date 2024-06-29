@@ -11,10 +11,11 @@ int menu(){
     unsigned int escolha, tamLinhas, program_counter = 0, cont = 0; //UNSIGNED IMPOSSIBILITA QUE PROGRAM_COUNTER CHEGUE A MENOR QUE 0
     int Etapa = 1, StateForBack = -1, i, auxiliar;
     Sinais *sinal = NULL;
-    IFID *ifid = NULL;
-    IDEX *idex = NULL;
-    EXMEM *exmem = NULL;
-    MEMWB *memwb = NULL;
+    IF *regif = NULL;
+    ID *id = NULL;
+    EX *ex = NULL;
+    MEM *mem = NULL;
+    WB *wb = NULL;
     instrucao *memoriaInst = NULL; //RESPONSAVEL POR COLETAR  A INSTRUÇÃO
     type_instruc *instrucoesDecodificadas = NULL;
     int regs[8];
@@ -49,7 +50,7 @@ int menu(){
             parser(memoriaInst, &tamLinhas);
             md = inicializaMemDados(); //inicializa memoria de dados
             instrucoesDecodificadas = calloc(tamLinhas, sizeof(type_instruc));
-            inicializaRegsPipe(ifid, idex, exmem, memwb);
+            inicializaRegsPipe(regif, id, ex, mem, wb);
             if (instrucoesDecodificadas == NULL) {
                 fprintf(stderr, "Falha ao alocar memória para instruções decodificadas.\n");
                 return -1;
@@ -113,15 +114,18 @@ int menu(){
 
         case 10: //Chamar função responsável pela execução do programa
             program_counter = 0;
-            controller(1, &StateForBack, tamLinhas, regs, memoriaInst, md, &program_counter, instrucoesDecodificadas, ifid, idex, exmem, memwb, sinal, Etapa);
+            controller(1, &StateForBack, tamLinhas, regs, memoriaInst, md, &program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, Etapa);
             AsmCopy(instrucoesDecodificadas, AssemblyInst, tamLinhas);
             break;
 
         case 11: //Chamar função responsável pela execução do programa passo a passo
-            controller(2, &StateForBack, tamLinhas, regs, memoriaInst, md, &program_counter, instrucoesDecodificadas, ifid, idex, exmem, memwb, sinal, Etapa);
+            if (memoriaInst == NULL){
+                printf("Carregue a memoria com instrucoes antes.\n");
+            }
+            Etapa = controller(2, &StateForBack, tamLinhas, regs, memoriaInst, md, &program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, Etapa);
             AsmCopy(instrucoesDecodificadas, AssemblyInst, tamLinhas);
             printf("\n");
-            puts(AssemblyInst[program_counter-1].InstructsAssembly);
+            puts(AssemblyInst[regif->pc].InstructsAssembly);
             break;
 
         case 12: //Chamar função responsável por retornar uma instrução (PC--)
@@ -147,8 +151,7 @@ int menu(){
             program_counter = 0; //PROGRAM COUNTER COMO 0 PARA REINICIAR TUDO
             StateForBack = -1;
 
-            /*Etapa = controller(3, &StateForBack, auxiliar, regs, memorias, &program_counter, instrucoesDecodificadas, aux, &sinal, Etapa);*/
-            Etapa = backstep(auxiliar, &StateForBack, auxiliar, regs, memoriaInst, md, &program_counter, instrucoesDecodificadas, ifid, idex, exmem, memwb, sinal, Etapa);
+            Etapa = backstep(auxiliar, &StateForBack, auxiliar, regs, memoriaInst, md, &program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, Etapa);
             break;
 
         default:

@@ -15,7 +15,14 @@
           "compilerPath": "C:/msys64/mingw64/bin/gcc.exe",
           "cStandard": "c11",
           "cppStandard": "c++17",
-          "intelliSenseMode": "gcc-x64"
+          "intelliSenseMode": "gcc-x64",
+          "browse": {
+              "path": [
+                  "${workspaceFolder}",
+                  "C:/msys64/mingw64/include" // Caminho para os cabeçalhos do MSYS2
+              ],
+              "limitSymbolsToIncludedHeaders": true
+          }
       }
   ],
   "version": 4

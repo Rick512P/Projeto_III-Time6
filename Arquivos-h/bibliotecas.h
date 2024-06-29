@@ -5,7 +5,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-#include <ncurses.h>
+//#include <ncurses.h><-LINUX
+#include <ncurses/ncurses.h>//<-WINDOWS
+//#include <menu.h>
 
 
 //instrucao da memoria de instruções
@@ -61,28 +63,37 @@ typedef struct{
 typedef struct {
     unsigned int pc;// Contador de programa (program counter)
     char instruc[17];// Instrução buscada
-} IFID;
+} IF;
+
 
 typedef struct {
     unsigned int pc;
     char instruc[17];
     int readData1; // Valor lido do registrador rs
     int readData2; // Valor lido do registrador rt
-    char signExtend[17]; // Valor estendido do imediato
-} IDEX;
+} ID;
 
 typedef struct {
     unsigned int pc; 
     char instruc[17];
     int aluResult; // Resultado da ALU
+    int readData1;
     int readData2; // Valor lido do registrador rt (usado para operações de memória)
-} EXMEM;
+} EX;
 
 typedef struct {
     unsigned int pc; 
     char instruc[17];
     char readData[9];  // Dados lidos da memória
     int aluResult; // Resultado da ALU (se não for operação de memória)
-} MEMWB;
+} MEM;
+
+typedef struct {
+    unsigned int pc; 
+    char instruc[17];
+    int aluResult; // Resultado da ALU (se não for operação de memória)
+} WB;
+
+
 
 #endif

@@ -97,12 +97,12 @@ int ULA(type_instruc *instrucoesDecodificadas, int *contador, MemoriaDados *md, 
                 strcpy(conteudo_bin, "01111111"); //Escreve 32
             else
                 strcpy(conteudo_bin, "10000001"); //Escreve -32
-            escreveDado(md, &immediate, conteudo_bin);
+            escreveDado(md, immediate, conteudo_bin);
             return -1;
         }
 
         decimalToBinary(conteudo, conteudo_bin);
-        escreveDado(md, &immediate, conteudo_bin);
+        escreveDado(md, immediate, conteudo_bin);
     }
 
     else if(strcmp(instrucoesDecodificadas[*contador].opcode,"0010") == 0){ // j -> jump to specified address
