@@ -16,33 +16,42 @@ MemoriaDados *inicializaMemDados(){
     return memDados;
 }
 
-void inicializaRegsPipe(IF *regif, ID *id, EX *ex, MEM *mem, WB *wb){
-    
+PipeRegisters inicializaRegsPipe() {
+    PipeRegisters pipes;
 
-    strcpy(regif->instruc, "\0");
-    regif->pc = 0;
+    pipes.regif = (IF*)malloc(sizeof(IF));
+    pipes.id = (ID*)malloc(sizeof(ID));
+    pipes.ex = (EX*)malloc(sizeof(EX));
+    pipes.mem = (MEM*)malloc(sizeof(MEM));
+    pipes.wb = (WB*)malloc(sizeof(WB));
 
-    
-    strcpy(id->instruc, "\0");
-    id->pc = 0;
-    id->readData1 = 0;
-    id->readData2 = 0;
+    // Inicializa os structs
+    strcpy(pipes.regif->instruc, "\0");
+    pipes.regif->pc = 0;
 
-    
-    strcpy(ex->instruc, "\0");
-    ex->pc = 0;
-    ex->readData1 = 0;
-    ex->readData2 = 0;
-    ex->aluResult = 0;
+    strcpy(pipes.id->instruc, "\0");
+    pipes.id->pc = 0;
+    pipes.id->readData1 = 0;
+    pipes.id->readData2 = 0;
+    pipes.id->sinal = NULL;
 
-    
-    strcpy(mem->instruc, "\0");
-    mem->pc = 0;
-    mem->readData[0] = '0';
-    mem->aluResult = 0;
+    strcpy(pipes.ex->instruc, "\0");
+    pipes.ex->pc = 0;
+    pipes.ex->sinal = NULL;
+    pipes.ex->readData1 = 0;
+    pipes.ex->readData2 = 0;
+    pipes.ex->aluResult = 0;
 
-    
-    strcpy(wb->instruc, "\0");
-    wb->pc = 0;
-    wb->aluResult = 0;
+    strcpy(pipes.mem->instruc, "\0");
+    pipes.mem->pc = 0;
+    pipes.mem->readData[0] = '0';
+    pipes.mem->aluResult = 0;
+    pipes.mem->sinal = NULL;
+
+    strcpy(pipes.wb->instruc, "\0");
+    pipes.wb->pc = 0;
+    pipes.wb->aluResult = 0;
+    pipes.wb->sinal = NULL;
+
+    return pipes;
 }

@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-//#include <ncurses.h>//<-LINUX
+#include <ncurses.h>//<-LINUX
 //#include <ncurses/ncurses.h>//<-WINDOWS
 //#include <menu.h>
 
@@ -101,17 +101,26 @@ typedef struct {
     Sinais *sinal;
 } WB;
 
-struct backup{
-    int regs[8];
-    MemoriaDados *memDados;
+typedef struct {
     IF *regif;
     ID *id;
     EX *ex;
     MEM *mem;
     WB *wb;
-    Sinais *sinal;
-    Assembly *AssemblyInst;
+} PipeRegisters;
+
+struct backup{
+    int regs[8];
+    MemoriaDados memDados;
+    IF regif;
+    ID id;
+    EX ex;
+    MEM mem;
+    WB wb;
+    Sinais sinal;
+    Assembly AssemblyInst;
     int PC;
+    int Etapa;
 };
 
 struct nodo_Pilha{

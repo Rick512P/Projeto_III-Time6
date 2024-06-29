@@ -6,7 +6,7 @@ int main(){
 }
 
 int menu(){
-    Assembly *AssemblyInst;
+    Assembly *AssemblyInst = NULL;
     MemoriaDados *memDados = NULL;
     Backup *backup = NULL;
     NodoPilha *NodoPilha = NULL;
@@ -14,6 +14,7 @@ int menu(){
     unsigned int escolha, tamLinhas, program_counter = 0, cont = 0; //UNSIGNED IMPOSSIBILITA QUE PROGRAM_COUNTER CHEGUE A MENOR QUE 0
     int Etapa = 1, StateForBack = -1, i, auxiliar;
     Sinais *sinal = NULL;
+    PipeRegisters pipes;
     IF *regif = NULL;
     ID *id = NULL;
     EX *ex = NULL;
@@ -50,13 +51,7 @@ int menu(){
         switch (escolha)
         {
         case 0:
-            free(memDados);
-            free(memoriaInst);
-            for(i=0;i<8;i++){
-                regs[i] = 0;
-            }
-            free(AssemblyInst);
-            free(instrucoesDecodificadas);
+            freeALL(regs, AssemblyInst, memoriaInst, memDados, instrucoesDecodificadas, regif, id, ex, mem, wb , sinal);
             system("clear");
             printf("Programa Encerrado!\n");
             break;
@@ -64,11 +59,18 @@ int menu(){
         case 1: //Carregar memória de Instruções e inicializa tudo
             memoriaInst = inicializaMemInst(); //inicializa memoria de instruções
             parser(memoriaInst, &tamLinhas);
-            regif = (IF*)malloc(sizeof(regif));
+            pipes = inicializaRegsPipe();
+            IF *regif = pipes.regif;
+            ID *id = pipes.id;
+            EX *ex = pipes.ex;
+            MEM *mem = pipes.mem;
+            WB *wb = pipes.wb;
+            /*regif = (IF*)malloc(sizeof(regif));
             id = (ID*)malloc(sizeof(id));
             ex = (EX*)malloc(sizeof(ex));
             mem = (MEM*)malloc(sizeof(mem));
-            wb = (WB*)malloc(sizeof(wb));
+            wb = (WB*)malloc(sizeof(wb));*/
+            inicializaRegsPipe(regif, id, ex, mem, wb);
             memDados = inicializaMemDados(); //inicializa memoria de dados
             descPilha = inicializaBackup();
             instrucoesDecodificadas = calloc(tamLinhas, sizeof(type_instruc));
@@ -83,7 +85,10 @@ int menu(){
                 fprintf(stderr, "Falha ao alocar memória para instrucoes assembly.\n");
                 return -1;
             }
-
+            //FAZ UM "BACKUP" PARA O BACKSTEP   
+                backup = ColetaTudo(regs, memDados, regif, id, ex, mem, wb, sinal, AssemblyInst, &program_counter, &Etapa);
+                NodoPilha = inicializaNodo(backup);
+                descPilha = PUSH(descPilha, NodoPilha);
             break;
 
         case 2: //Carregar Memória de Dados
@@ -138,7 +143,7 @@ int menu(){
             controller(1, &StateForBack, tamLinhas, regs, memoriaInst, memDados, &program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, Etapa);
             AsmCopy(instrucoesDecodificadas, AssemblyInst, tamLinhas);
             //FAZ UM "BACKUP" PARA O BACKSTEP   
-                backup = ColetaTudo(regs, memDados, regif, id, ex, mem, wb, sinal, AssemblyInst, &program_counter);
+                backup = ColetaTudo(regs, memDados, regif, id, ex, mem, wb, sinal, AssemblyInst, &program_counter, &Etapa);
                 NodoPilha = inicializaNodo(backup);
                 descPilha = PUSH(descPilha, NodoPilha);
                 descPilha->tamanho = tamLinhas;
@@ -153,13 +158,13 @@ int menu(){
             printf("\n");
             puts(AssemblyInst[regif->pc].InstructsAssembly);
             //FAZ UM "BACKUP" PARA O BACKSTEP   
-                backup = ColetaTudo(regs, memDados, regif, id, ex, mem, wb, sinal, AssemblyInst, &program_counter);
+                backup = ColetaTudo(regs, memDados, regif, id, ex, mem, wb, sinal, AssemblyInst, &program_counter, &Etapa);
                 NodoPilha = inicializaNodo(backup);
                 descPilha = PUSH(descPilha, NodoPilha);
             break;
 
         case 12: //Chamar função responsável por retornar uma instrução (PC--)
-            descPilha = Realoca(descPilha, regs, memDados, regif, id, ex, mem, wb, sinal, AssemblyInst, &program_counter);
+            descPilha = Realoca(descPilha, regs, memDados, regif, id, ex, mem, wb, sinal, AssemblyInst, &program_counter, &Etapa);
             if(descPilha->Topo != NULL){
                  printf("Retornamos para:\n IF-Instrucao:[%s]\t\tID-Instrucao:[%s]\nEX-Instrucao:[%s]\t\tMEM-Instrucao[%s]\nWB-Instrucao:[%s]\n", regif->instruc, id->instruc, ex->instruc, mem->instruc, wb->instruc);
             }  

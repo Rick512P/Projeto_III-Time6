@@ -6,6 +6,6 @@
 
 instrucao *inicializaMemInst();
 MemoriaDados *inicializaMemDados();
-void inicializaRegsPipe(IF *regif, ID *id, EX *ex, MEM *mem, WB *wb);
+PipeRegisters inicializaRegsPipe();
 
 #endif
