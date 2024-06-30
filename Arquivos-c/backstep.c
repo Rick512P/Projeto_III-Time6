@@ -29,25 +29,6 @@ descPilha *PUSH(descPilha *pilha, NodoPilha *nodo){
     return pilha;
 }
 
-descPilha *POP(descPilha *pilha){
-    if(pilha->Topo == NULL){
-        printf("Lista vazia");
-        return NULL;
-    }
-    else{
-        NodoPilha *aux = pilha->Topo;
-        pilha->Topo = aux->prox;
-        free(aux->info);
-        free(aux);
-        pilha->tamanho--;
-        if(pilha->tamanho == 0){
-            pilha->Fundo = NULL;
-        }
-        //printf("\nItem retirado do topo\n");
-        return pilha;
-    }
-}
-
 Backup *ColetaTudo(int *regs, MemoriaDados *memDados, IF *regif, ID *id, EX *ex, MEM *mem, WB *wb, Sinais *sinal, Assembly *AssemblyInst, int *program_counter, int *Etapa) {
     Backup *coleta = (Backup*) malloc(sizeof(Backup));
 
@@ -72,7 +53,7 @@ Backup *ColetaTudo(int *regs, MemoriaDados *memDados, IF *regif, ID *id, EX *ex,
 }
 
 descPilha *Realoca(descPilha *pilha, int *regs, MemoriaDados *memDados, IF *regif, ID *id, EX *ex, MEM *mem, WB *wb, Sinais *sinal, Assembly *AssemblyInst, int *program_counter, int *Etapa){
-    if (pilha->Topo == NULL) {
+    if (pilha->tamanho == 0) {
         return pilha;
     }
 
@@ -97,6 +78,7 @@ descPilha *Realoca(descPilha *pilha, int *regs, MemoriaDados *memDados, IF *regi
     *program_counter = aux->info->PC;
     *Etapa = aux->info->Etapa;
 
+    free(aux->info);
     free(aux);
     pilha->tamanho--;
 

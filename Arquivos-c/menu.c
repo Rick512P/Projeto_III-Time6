@@ -148,13 +148,12 @@ int menu(){
                 break;
             }
             program_counter = 0;
-            Etapa = controller(1, tamLinhas, regs, memInst, memDados, &program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, Etapa);
+            Etapa = controller(1, tamLinhas, regs, memInst, memDados, &program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, Etapa, descPilha, backup, NodoPilha, AssemblyInst);
             AsmCopy(instrucoesDecodificadas, AssemblyInst, tamLinhas);
             //FAZ UM "BACKUP" PARA O BACKSTEP   
                 backup = ColetaTudo(regs, memDados, regif, id, ex, mem, wb, sinal, AssemblyInst, &program_counter, &Etapa);
                 NodoPilha = inicializaNodo(backup);
                 descPilha = PUSH(descPilha, NodoPilha);
-                descPilha->tamanho = tamLinhas;
             break;
 
         case 11: //Chamar função responsável pela execução do programa passo a passo
@@ -166,7 +165,7 @@ int menu(){
                 printf("MIPS ja executou as instrucoes\n");
                 break;
             }
-            Etapa = controller(2, tamLinhas, regs, memInst, memDados, &program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, Etapa);
+            Etapa = controller(2, tamLinhas, regs, memInst, memDados, &program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, Etapa, descPilha, backup, NodoPilha, AssemblyInst);
             AsmCopy(instrucoesDecodificadas, AssemblyInst, tamLinhas);
             printf("\n");
             puts(AssemblyInst[regif->pc].InstructsAssembly);
