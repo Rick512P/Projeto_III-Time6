@@ -17,9 +17,9 @@ void imprimeDados(MemoriaDados *memDados){
 	}
 }
 
-void imprimeMemInstruc(instrucao *memoriaInst){
+void imprimeMemInstruc(instrucao *memInst){
     for (int i=0; i<256;i++){
-                printf("Instrucao armazenada no endereco %d da MI: [%s]\n", i, memoriaInst[i].instruc);
+                printf("Instrucao armazenada no endereco %d da MI: [%s]\n", i, memInst[i].instruc);
             }
     printf("\n");
 }

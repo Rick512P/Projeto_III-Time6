@@ -6,7 +6,7 @@
 
 void escreveDado(MemoriaDados *mem, int contador, char *valor);
 void imprimeDados(MemoriaDados *memDados);
-void imprimeMemInstruc(instrucao *memoriaInst);
+void imprimeMemInstruc(instrucao *memInst);
 void escreverArquivoMemoria(MemoriaDados *memDados);
 
 

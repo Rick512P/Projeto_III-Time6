@@ -12,7 +12,7 @@ int menu(){
     NodoPilha *NodoPilha = NULL;
     descPilha *descPilha = NULL;
     unsigned int escolha, tamLinhas, program_counter = 0, cont = 0; //UNSIGNED IMPOSSIBILITA QUE PROGRAM_COUNTER CHEGUE A MENOR QUE 0
-    int Etapa = 1, StateForBack = -1, i, auxiliar;
+    int Etapa = 1, i, auxiliar;
     Sinais *sinal = NULL;
     PipeRegisters pipes;
     IF *regif = NULL;
@@ -20,7 +20,7 @@ int menu(){
     EX *ex = NULL;
     MEM *mem = NULL;
     WB *wb = NULL;
-    instrucao *memoriaInst = NULL; //RESPONSAVEL POR COLETAR  A INSTRUÇÃO
+    instrucao *memInst = NULL; //RESPONSAVEL POR COLETAR  A INSTRUÇÃO
     type_instruc *instrucoesDecodificadas = NULL;
     int regs[8];
     //int *regs = NULL; //registradores como um inteiro mesmo
@@ -51,18 +51,18 @@ int menu(){
         switch (escolha)
         {
         case 0:
-            freeALL(regs, AssemblyInst, memoriaInst, memDados, instrucoesDecodificadas, regif, id, ex, mem, wb , sinal);
+            freeALL(regs, AssemblyInst, memInst, memDados, instrucoesDecodificadas, regif, id, ex, mem, wb , sinal);
             system("clear");
             printf("Programa Encerrado!\n");
             break;
             
         case 1: //Carregar memória de Instruções e inicializa tudo
-            if(memoriaInst != NULL){
+            if(memInst != NULL){
                 printf("Memoria ja preenchida\n");
                 break;
             }
-            memoriaInst = inicializaMemInst(); //inicializa memoria de instruções
-            parser(memoriaInst, &tamLinhas);
+            memInst = inicializaMemInst(); //inicializa memoria de instruções
+            parser(memInst, &tamLinhas);
             pipes = inicializaRegsPipe();
             IF *regif = pipes.regif;
             ID *id = pipes.id;
@@ -105,7 +105,7 @@ int menu(){
             break;
 
         case 3: //Imprimir memória de instruções e memória de dados
-            imprimeMemInstruc(memoriaInst);
+            imprimeMemInstruc(memInst);
             imprimeDados(memDados);
             break;
 
@@ -114,7 +114,7 @@ int menu(){
             break;
 
         case 5: //Imprimir estatísticas como: quantas intruc, classes, etc;
-            imprimeEstatisticas(memoriaInst, tamLinhas, instrucoesDecodificadas);
+            imprimeEstatisticas(memInst, tamLinhas, instrucoesDecodificadas);
             break;
             
         case 6: // Imprimir Assembly
@@ -122,8 +122,9 @@ int menu(){
             break;
 
         case 7: //imprimir todo o simulador
-            imprimeEstatisticas(memoriaInst, tamLinhas, instrucoesDecodificadas);
-            imprimeSimulador(tamLinhas, instrucoesDecodificadas, memoriaInst);      
+            imprimeEstatisticas(memInst, tamLinhas, instrucoesDecodificadas);
+            imprimeSimulador(tamLinhas, instrucoesDecodificadas, memInst);
+            imprimeMemInstruc(memInst);      
             imprimeDados(memDados);
             imprimirASM(AssemblyInst, tamLinhas);
             imprimeRegistradores(regs);
@@ -138,8 +139,16 @@ int menu(){
             break;
 
         case 10: //Chamar função responsável pela execução do programa
+            if (memInst == NULL){
+                printf("Carregue a memoria com instrucoes antes.\n");
+                break;
+            }
+            if(Etapa == 6){
+                printf("MIPS ja executou as instrucoes\n");
+                break;
+            }
             program_counter = 0;
-            controller(1, &StateForBack, tamLinhas, regs, memoriaInst, memDados, &program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, Etapa);
+            Etapa = controller(1, tamLinhas, regs, memInst, memDados, &program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, Etapa);
             AsmCopy(instrucoesDecodificadas, AssemblyInst, tamLinhas);
             //FAZ UM "BACKUP" PARA O BACKSTEP   
                 backup = ColetaTudo(regs, memDados, regif, id, ex, mem, wb, sinal, AssemblyInst, &program_counter, &Etapa);
@@ -149,14 +158,15 @@ int menu(){
             break;
 
         case 11: //Chamar função responsável pela execução do programa passo a passo
-            if (memoriaInst == NULL){
+            if (memInst == NULL){
                 printf("Carregue a memoria com instrucoes antes.\n");
+                break;
             }
             if(Etapa == 6){
                 printf("MIPS ja executou as instrucoes\n");
                 break;
             }
-            Etapa = controller(2, &StateForBack, tamLinhas, regs, memoriaInst, memDados, &program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, Etapa);
+            Etapa = controller(2, tamLinhas, regs, memInst, memDados, &program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, Etapa);
             AsmCopy(instrucoesDecodificadas, AssemblyInst, tamLinhas);
             printf("\n");
             puts(AssemblyInst[regif->pc].InstructsAssembly);

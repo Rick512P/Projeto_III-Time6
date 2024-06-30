@@ -4,6 +4,6 @@
 #include "bibliotecas.h"
 
 
-type_instruc decoder(instrucao *memoriaInst, int contador);
+type_instruc decoder(instrucao *memInst, int contador);
 
 #endif

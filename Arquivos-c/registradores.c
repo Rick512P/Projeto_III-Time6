@@ -28,7 +28,7 @@ int escritaRegistradores(int *regs, int valor, char posicao[]){
 void imprimeRegistradores(int *regs){
     printf("\n");
     for(int i = 0; i<8;i++){
-            printf("Registrador $%d: %d\t\t", i, regs[i]);
+            printf("Registrador $%d: %d\n", i, regs[i]);
     }
     printf("\n");
 }

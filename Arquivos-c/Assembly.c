@@ -82,4 +82,5 @@ void imprimirASM(Assembly *A, int tamLinhas){
     for (int i = 0; i<tamLinhas; i++){
         printf("\nInstrucao em Assembly: %s", A[i].InstructsAssembly);
     }
+    printf("\n");
 }

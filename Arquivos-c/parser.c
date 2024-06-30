@@ -1,7 +1,7 @@
 #include "../Arquivos-h/parser.h"
 
 //RESPONSAVEL POR ABRIR O ARQUIVO E ENCHER A MEMORIA DE INSTRUÇÕES
-int parser(instrucao *memoriaInst, int *tamanho_linhas){
+int parser(instrucao *memInst, int *tamanho_linhas){
     char linha[100], nome_arquivo[200];
     int contador_de_linhas = 0, opcao;
     instrucao p;
@@ -40,7 +40,7 @@ int parser(instrucao *memoriaInst, int *tamanho_linhas){
 
         *tamanho_linhas = contador_de_linhas;
 
-        if (!memoriaInst) { //se memoriaInst nao ter nada alocado, dará erro.
+        if (!memInst) { //se memInst nao ter nada alocado, dará erro.
             fprintf(stderr, "Falha na alocação de memória para instruções.\n"); //stderr envia mensagem de erro
             //separadamente do fluxo principal de saída de um programa
             return 1;
@@ -57,14 +57,14 @@ int parser(instrucao *memoriaInst, int *tamanho_linhas){
 
             linha[strcspn(linha, "\r\n")] = '\0';
 
-            // Copia a linha para a estrutura memoriaInst
-            strncpy(memoriaInst[i].instruc, linha, 17);
-            memoriaInst[i].instruc[17] = '\0'; // certifica-se de que a string termina com null terminator
+            // Copia a linha para a estrutura memInst
+            strncpy(memInst[i].instruc, linha, 17);
+            memInst[i].instruc[17] = '\0'; // certifica-se de que a string termina com null terminator
         }
         if(contador_de_linhas <=256){
             for(int j=contador_de_linhas;j < 256; j++){
-                strncpy(memoriaInst[j].instruc, "0000000000000000", 17);
-                memoriaInst[j].instruc[17] = '\0';
+                strncpy(memInst[j].instruc, "0000000000000000", 17);
+                memInst[j].instruc[17] = '\0';
             }
 
         }
