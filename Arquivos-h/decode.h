@@ -4,8 +4,6 @@
 #include "bibliotecas.h"
 
 
-#include "memoria_instruc.h"
-
 type_instruc decoder(instrucao *memoriaInst, int contador);
 
 #endif

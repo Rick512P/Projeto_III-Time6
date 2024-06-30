@@ -3,7 +3,6 @@
 
 
 #include "bibliotecas.h"
-#include "memoria_instruc.h"
 
 
 

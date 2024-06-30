@@ -57,6 +57,10 @@ int menu(){
             break;
             
         case 1: //Carregar memória de Instruções e inicializa tudo
+            if(memoriaInst != NULL){
+                printf("Memoria ja preenchida\n");
+                break;
+            }
             memoriaInst = inicializaMemInst(); //inicializa memoria de instruções
             parser(memoriaInst, &tamLinhas);
             pipes = inicializaRegsPipe();
@@ -65,11 +69,6 @@ int menu(){
             EX *ex = pipes.ex;
             MEM *mem = pipes.mem;
             WB *wb = pipes.wb;
-            /*regif = (IF*)malloc(sizeof(regif));
-            id = (ID*)malloc(sizeof(id));
-            ex = (EX*)malloc(sizeof(ex));
-            mem = (MEM*)malloc(sizeof(mem));
-            wb = (WB*)malloc(sizeof(wb));*/
             inicializaRegsPipe(regif, id, ex, mem, wb);
             memDados = inicializaMemDados(); //inicializa memoria de dados
             descPilha = inicializaBackup();
@@ -106,8 +105,8 @@ int menu(){
             break;
 
         case 3: //Imprimir memória de instruções e memória de dados
-            imprimeMemInstruc(memoriaInst, tamLinhas);
-            imprimeDados(memDados, tamLinhas);
+            imprimeMemInstruc(memoriaInst);
+            imprimeDados(memDados);
             break;
 
         case 4: //Imprimir registradores
@@ -125,7 +124,7 @@ int menu(){
         case 7: //imprimir todo o simulador
             imprimeEstatisticas(memoriaInst, tamLinhas, instrucoesDecodificadas);
             imprimeSimulador(tamLinhas, instrucoesDecodificadas, memoriaInst);      
-            imprimeDados(memDados, tamLinhas);
+            imprimeDados(memDados);
             imprimirASM(AssemblyInst, tamLinhas);
             imprimeRegistradores(regs);
             break;
@@ -153,6 +152,10 @@ int menu(){
             if (memoriaInst == NULL){
                 printf("Carregue a memoria com instrucoes antes.\n");
             }
+            if(Etapa == 6){
+                printf("MIPS ja executou as instrucoes\n");
+                break;
+            }
             Etapa = controller(2, &StateForBack, tamLinhas, regs, memoriaInst, memDados, &program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, Etapa);
             AsmCopy(instrucoesDecodificadas, AssemblyInst, tamLinhas);
             printf("\n");
@@ -166,7 +169,10 @@ int menu(){
         case 12: //Chamar função responsável por retornar uma instrução (PC--)
             descPilha = Realoca(descPilha, regs, memDados, regif, id, ex, mem, wb, sinal, AssemblyInst, &program_counter, &Etapa);
             if(descPilha->Topo != NULL){
-                 printf("Retornamos para:\n IF-Instrucao:[%s]\t\tID-Instrucao:[%s]\nEX-Instrucao:[%s]\t\tMEM-Instrucao[%s]\nWB-Instrucao:[%s]\n", regif->instruc, id->instruc, ex->instruc, mem->instruc, wb->instruc);
+                 printf("Retornamos para:\nIF-Instrucao:[%s]\nID-Instrucao:[%s]\nEX-Instrucao:[%s]\nMEM-Instrucao[%s]\nWB-Instrucao:[%s]\n", regif->instruc, id->instruc, ex->instruc, mem->instruc, wb->instruc);
+            }
+            else{
+                printf("Estamos no início do programa.\n");
             }  
             break;
 

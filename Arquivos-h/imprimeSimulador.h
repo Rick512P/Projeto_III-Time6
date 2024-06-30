@@ -2,7 +2,6 @@
 #define __imprimeSimulador_h
 
 #include "decode.h"
-#include "memoria_instruc.h"
 #include "registradores.h"
 #include "bibliotecas.h"
 #include "menu.h"

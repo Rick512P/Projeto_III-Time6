@@ -191,16 +191,15 @@ int controller(int op, int *StateForBack, int NumeroLinhas, int *regs, instrucao
             //Run by Step
             switch (ProxEtapa)
             {
-            case 1:///Etapa IF -> Recebe Instrução e Incrementa program_counter
-                if(*program_counter == NumeroLinhas){
-                    printf("Etapa IF encerrada.\n");
-                    break;
-                }
-                printf("\nEtapa IF: ");
+            case 1:///Etapa IF -> Recebe Instrução e Incrementa program_counter 
                 regif->pc = *program_counter;
                 
+                if(regif->pc == NumeroLinhas){
+                    printf("Etapa IF encerrada.\n");
+                    return 2;
+                }
                 strcpy(regif->instruc, memInst[regif->pc].instruc);
-                printf("%s\n", regif->instruc);
+                printf("\nEtapa IF: %s\n", regif->instruc);
                 increment_PC(program_counter, 1);
                     
                 increment_State(StateForBack, 1); 
@@ -209,13 +208,14 @@ int controller(int op, int *StateForBack, int NumeroLinhas, int *regs, instrucao
                 break;
                 
             case 2://Etapa ID -> Decodifico as instruções, gero os sinais e Adiciono valores aos registradores auxiliares
+                         
+                strcpy(id->instruc, regif->instruc);
+                printf("\nEtapa ID: %s\n", id->instruc);
+                id->pc = regif->pc;
                 if(id->pc == NumeroLinhas){
                     printf("Etapa ID encerrada.\n");
-                    break;
+                    return 3;
                 }
-                printf("\nEtapa ID: %s\n", id->instruc);
-                strcpy(id->instruc, regif->instruc);
-                id->pc = regif->pc;
                 //chamo controller pra rodar a primeira etapa, ja que ela esta livre.
                 controller(2, StateForBack, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 1);  
             
@@ -233,16 +233,16 @@ int controller(int op, int *StateForBack, int NumeroLinhas, int *regs, instrucao
                 break;
                     
             case 3: //Etapa EX --> Executa tipo R e Addi, Calcula Endereço LW e SW 
-                if(ex->pc == NumeroLinhas){
-                    printf("Etapa EX encerrada.\n");
-                    break;
-                }
-                printf("\nEtapa EX: %s\n", ex->instruc);
                 strcpy(ex->instruc, id->instruc);
+                printf("\nEtapa EX: %s\n", ex->instruc);
                 ex->pc = id->pc;
                 ex->readData1 = id->readData1;
                 ex->readData2 = id->readData2;
                 ex->sinal = id->sinal;
+                if(ex->pc == NumeroLinhas){
+                    printf("Etapa EX encerrada.\n");
+                    return 4;
+                }
                 controller(2, StateForBack, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 2);
                 
                 if (ex->sinal->tipo == 1)//verifica se é Jump
@@ -272,31 +272,31 @@ int controller(int op, int *StateForBack, int NumeroLinhas, int *regs, instrucao
                 
                 else if (ex->sinal->tipo == 5)//verifica se é beq
                 {
-                    ULA(instrucoesDecodificadas, &pc, memDados, regs);
+                    pc = ex->pc;
+                    ex->aluResult = ULA(instrucoesDecodificadas, &pc, memDados, regs);
                     if (ex->readData1 == ex->readData2){
                         *program_counter = ex->aluResult;
                         
                         increment_State(StateForBack, 1); 
-                        return 1;
+                        return 5;
                     }
                     else {
-                        return 1;
+                        return 5;
                     }
                 }
 
                 break;
                     
-            case 4: // Se a instrução envolve leitura ou escrita na memória de dados, essa operação é realizada neste estágio
-                if(mem->pc == NumeroLinhas){
-                    printf("Etapa MEM encerrada.\n");
-                    break;
-                }
-                printf("\nEtapa MEM: %s\n", mem->instruc);
+            case 4: // MEM-> Se a instrução envolve leitura ou escrita na memória de dados, essa operação é realizada neste estágio
                 mem->pc = ex->pc;
                 strcpy(mem->instruc, ex->instruc);
+                printf("\nEtapa MEM: %s\n", mem->instruc);
                 mem->aluResult = ex->aluResult;
                 mem->sinal = ex->sinal;
-
+                if(mem->pc == NumeroLinhas){
+                    printf("Etapa MEM encerrada.\n");
+                    return 5;
+                }
                 controller(2, StateForBack, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 3);
                 
                 if (mem->sinal->tipo == 3) // lw (load word)
@@ -332,41 +332,42 @@ int controller(int op, int *StateForBack, int NumeroLinhas, int *regs, instrucao
                         (*StateForBack)++;
                         return 1;
                 }
+                return 5;
                 break;
 
-                case 5: //Etapa WB (write back) -> O resultado da operação é escrito de volta no registrador destino no banco de registradores. 
-                    if(wb->pc == NumeroLinhas){
-                        printf("Etapa WB encerrada.\n");
-                        break;
-                    }         
-                    printf("\nEtapa WB: %s\n", wb->instruc);
+                case 5: //Etapa WB (write back) -> O resultado da operação é escrito de volta no registrador destino no banco de registradores.          
                     wb->pc = mem->pc;
                     strcpy(wb->instruc, mem->instruc);
+                    printf("\nEtapa WB: %s\n", wb->instruc);
                     wb->aluResult = mem->aluResult;
                     wb->sinal = mem->sinal;
+                    if(wb->pc == NumeroLinhas){
+                        printf("Etapa WB encerrada.\n");
+                        return 6;
+                    }
                     controller(2, StateForBack, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 4);    
                     
                     if (wb->sinal->tipo == 3){ // lw (load word)
-                        decimalToBinary(sinal->RT, posicao);
+                        decimalToBinary(wb->sinal->RT, posicao);
                         escritaRegistradores(regs, wb->aluResult, posicao); // Load: Reg[IR[20:16]] <= memoriaR    
                         increment_State(StateForBack, 1); 
-                        return 1;
+                        return 5;
                     }
 
                     else if (wb->sinal->tipo == 0) // R-type
                     {
-                        decimalToBinary(sinal->RD, posicao);
+                        decimalToBinary(wb->sinal->RD, posicao);
                         escritaRegistradores(regs, wb->aluResult, posicao);
                         (*StateForBack)++;
-                        return 1;
+                        return 5;
                     }
 
                     else if (wb->sinal->tipo == 2) // addi
                     {
-                        decimalToBinary(sinal->RT, posicao);
+                        decimalToBinary(wb->sinal->RT, posicao);
                         escritaRegistradores(regs, wb->aluResult, posicao);
                         (*StateForBack)++;                                   
-                        return 1;
+                        return 5;
                     }
                     break;
                 }

@@ -3,7 +3,6 @@
 #define BITS 17
 
 #include "decode.h"
-#include "memoria_instruc.h"
 #include "parser.h"
 #include "Memoria_Dados.h"
 #include "bibliotecas.h"

@@ -2,7 +2,6 @@
 #define CONTROLLER_H
 
 #include "bibliotecas.h"
-#include "memoria_instruc.h"
 #include "registradores.h"
 #include "decode.h"
 #include "PC.h"

@@ -9,7 +9,6 @@
 #include "decode.h"
 #include "inicializadores.h"
 #include "Memoria_Dados.h"
-#include "memoria_instruc.h"
 #include "parser.h"
 #include "PC.h"
 #include "registradores.h"
