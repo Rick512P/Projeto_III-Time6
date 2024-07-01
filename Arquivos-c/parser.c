@@ -49,24 +49,31 @@ int parser(instrucao *memInst, int *tamanho_linhas){
         // Reinicia o arquivo para ler desde a 1° linha
         rewind(arq);
 
-
-        for (int i=0;i<contador_de_linhas;i++){
-            if (fgets(linha, sizeof(linha), arq) == NULL)
+        int i = 0;
+        
+        while((i<contador_de_linhas) && (i<=255)){
+            if (fgets(linha, sizeof(linha), arq) == NULL){
+                remove_newline(linha);
                 break;
-            
+            }
 
-            linha[strcspn(linha, "\r\n")] = '\0';
-
-            // Copia a linha para a estrutura memInst
-            strncpy(memInst[i].instruc, linha, 17);
-            memInst[i].instruc[17] = '\0'; // certifica-se de que a string termina com null terminator
-        }
+            if(linha[0] == '\n'){
+                strncpy(memInst[i].instruc, "0000000000000000", 17);
+                memInst[i].instruc[16] = '\0';
+                i++;
+            }
+            else{
+                // Copia a linha para a estrutura memInst
+                strncpy(memInst[i].instruc, linha, 17);
+                memInst[i].instruc[16] = '\0'; // certifica-se de que a string termina com null terminator
+                i++;
+            }
+                   }
         if(contador_de_linhas <=256){
             for(int j=contador_de_linhas;j < 256; j++){
                 strncpy(memInst[j].instruc, "0000000000000000", 17);
-                memInst[j].instruc[17] = '\0';
+                memInst[j].instruc[16] = '\0';
             }
-
         }
         
         fclose(arq);
@@ -77,5 +84,12 @@ int parser(instrucao *memInst, int *tamanho_linhas){
     else{
         fprintf(stderr, "Erro ao abrir arquivo de instrucoes.");
         
+    }
+}
+
+void remove_newline(char *line) { //remove a quebra de linha
+    size_t len = strcspn(line, "\n");
+    if (line[len] == '\n') {
+        line[len] = '\0';
     }
 }

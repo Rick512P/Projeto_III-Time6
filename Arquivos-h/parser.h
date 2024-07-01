@@ -8,6 +8,7 @@
 
 
 int parser(instrucao *memInst, int *tamanho_linhas);
+void remove_newline(char *line);
 
 
 #endif

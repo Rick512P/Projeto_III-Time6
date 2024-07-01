@@ -6,7 +6,7 @@ char* carregamemDados(MemoriaDados *memDados){
     char linha[1024];
     char* nome_arquivo = (char*)malloc(300 * sizeof(char));
     int contador_de_linhas = 0, opcao, error = 0;
-    strcpy(nome_arquivo,"./memoria/memDados.dat");
+    strcpy(nome_arquivo,"../memoria/md.dat");
         printf("Digite 1 para utilizar o diretorio padrao ou 2 para entrar com o diretorio do arquivo: ");
         setbuf(stdin, NULL);
         scanf("%d", &opcao);

@@ -16,7 +16,10 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                 {
                 case 1:///Etapa IF -> Recebe Instrução e Incrementa program_counter 
                     regif->pc = *program_counter;
-                    
+                    if(strcmp(memInst[regif->pc].instruc, "0000000000000000")){
+                        increment_PC(program_counter, 1);
+                        controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 1, descPilha, backup, NodoPilha, AssemblyInst);
+                    }
                     if(regif->pc == NumeroLinhas){
                         printf("\nEtapa IF encerrada.\n");
                         controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 2, descPilha, backup, NodoPilha, AssemblyInst);
@@ -195,7 +198,10 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
             {
             case 1:///Etapa IF -> Recebe Instrução e Incrementa program_counter 
                 regif->pc = *program_counter;
-                
+                if(strcmp(memInst[regif->pc].instruc, "0000000000000000")){
+                        increment_PC(program_counter, 1);
+                        controller(2, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 1, descPilha, backup, NodoPilha, AssemblyInst);
+                    }
                 if(regif->pc == NumeroLinhas){
                     printf("\nEtapa IF encerrada.");
                     printf("\n╚═════════════════════════╝");

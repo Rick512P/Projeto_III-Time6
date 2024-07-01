@@ -122,12 +122,10 @@ int menu(){
             break;
 
         case 7: //imprimir todo o simulador
-            imprimeEstatisticas(memInst, tamLinhas, instrucoesDecodificadas);
             imprimeSimulador(tamLinhas, instrucoesDecodificadas, memInst);
-            imprimeMemInstruc(memInst);      
-            imprimeDados(memDados);
+            imprimeEstatisticas(memInst, tamLinhas, instrucoesDecodificadas);
+            paineis(memDados, memInst, regs);
             imprimirASM(AssemblyInst, tamLinhas);
-            imprimeRegistradores(regs);
             break;
 
         case 8: //salvar arquivo .asm (com as instruções traduzidas para a linguagem intermediária Assembly)
