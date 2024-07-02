@@ -11,7 +11,8 @@ int menu(){
     Backup *backup = NULL;
     NodoPilha *NodoPilha = NULL;
     descPilha *descPilha = NULL;
-    unsigned int escolha, tamLinhas, program_counter = 0, cont = 0; //UNSIGNED IMPOSSIBILITA QUE PROGRAM_COUNTER CHEGUE A MENOR QUE 0
+    char escolha;
+    unsigned int tamLinhas, program_counter = 0, cont = 0; //UNSIGNED IMPOSSIBILITA QUE PROGRAM_COUNTER CHEGUE A MENOR QUE 0
     int Etapa = 1, i, auxiliar;
     Sinais *sinal = NULL;
     PipeRegisters pipes;
@@ -43,20 +44,20 @@ int menu(){
         printf("                                |7  +    Imprimir todo o simulador   +|\n");
         printf("                                |8  +          Salvar .asm           +|\n");
         printf("                                |9  +          Salvar .dat           +|\n");
-        printf("                                |10 +     Executa Programa (run)     +|\n");
-        printf("                                |11 +    Executa instrucao (step)    +|\n");
-        printf("                                |12 +   Volta uma instrucao (back)   +|\n");
+        printf("                                |A +     Executa Programa (run)     +|\n");
+        printf("                                |B +    Executa instrucao (step)    +|\n");
+        printf("                                |C +   Volta uma instrucao (back)   +|\n");
         printf("                                |0  +              Sair              +|\n");
-        scanf("%d", &escolha);
+        scanf(" %c", &escolha);
         switch (escolha)
         {
-        case 0:
+        case '0':
             freeALL(regs, AssemblyInst, memInst, memDados, instrucoesDecodificadas, regif, id, ex, mem, wb , sinal);
             system("clear");
             printf("Programa Encerrado!\n");
             break;
             
-        case 1: //Carregar memória de Instruções e inicializa tudo
+        case '1': //Carregar memória de Instruções e inicializa tudo
             if(memInst != NULL){
                 printf("Memoria ja preenchida\n");
                 break;
@@ -90,7 +91,7 @@ int menu(){
                 descPilha = PUSH(descPilha, NodoPilha);
             break;
 
-        case 2: //Carregar Memória de Dados
+        case '2': //Carregar Memória de Dados
             if (program_counter == 0){
                 strcpy(dat,carregamemDados(memDados));
                 printf("\n");
@@ -104,39 +105,40 @@ int menu(){
                 printf("Programa nao deve ja ter sido inicializado.");
             break;
 
-        case 3: //Imprimir memória de instruções e memória de dados
+        case '3': //Imprimir memória de instruções e memória de dados
             imprimeMemInstruc(memInst);
             imprimeDados(memDados);
             break;
 
-        case 4: //Imprimir registradores
+        case '4': //Imprimir registradores
             imprimeRegistradores(regs);
             break;
 
-        case 5: //Imprimir estatísticas como: quantas intruc, classes, etc;
+        case '5': //Imprimir estatísticas como: quantas intruc, classes, etc;
             imprimeEstatisticas(memInst, tamLinhas, instrucoesDecodificadas);
             break;
             
-        case 6: // Imprimir Assembly
+        case '6': // Imprimir Assembly
             imprimirASM(AssemblyInst, tamLinhas);
             break;
 
-        case 7: //imprimir todo o simulador
+        case '7': //imprimir todo o simulador
             imprimeSimulador(tamLinhas, instrucoesDecodificadas, memInst);
             imprimeEstatisticas(memInst, tamLinhas, instrucoesDecodificadas);
             paineis(memDados, memInst, regs);
             imprimirASM(AssemblyInst, tamLinhas);
             break;
 
-        case 8: //salvar arquivo .asm (com as instruções traduzidas para a linguagem intermediária Assembly)
+        case '8': //salvar arquivo .asm (com as instruções traduzidas para a linguagem intermediária Assembly)
             SaveASM(AssemblyInst, tamLinhas);
             break;
 
-        case 9: //Salvar arquivo DATA.dat
+        case '9': //Salvar arquivo DATA.dat
             escreverArquivoMemoria(memDados);
             break;
 
-        case 10: //Chamar função responsável pela execução do programa
+        case 'A':
+        case 'a': //Chamar função responsável pela execução do programa
             if (memInst == NULL){
                 printf("Carregue a memoria com instrucoes antes.\n");
                 break;
@@ -154,7 +156,8 @@ int menu(){
                 descPilha = PUSH(descPilha, NodoPilha);
             break;
 
-        case 11: //Chamar função responsável pela execução do programa passo a passo
+        case 'B':
+        case 'b': //Chamar função responsável pela execução do programa passo a passo
             if (memInst == NULL){
                 printf("Carregue a memoria com instrucoes antes.\n");
                 break;
@@ -173,7 +176,8 @@ int menu(){
                 descPilha = PUSH(descPilha, NodoPilha);
             break;
 
-        case 12: //Chamar função responsável por retornar uma instrução (PC--)
+        case 'C':
+        case 'c': //Chamar função responsável por retornar uma instrução (PC--)
             descPilha = Realoca(descPilha, regs, memDados, regif, id, ex, mem, wb, sinal, AssemblyInst, &program_counter, &Etapa);
             if(descPilha->Topo != NULL){
                  printf("Retornamos para:\nIF-Instrucao:[%s]\nID-Instrucao:[%s]\nEX-Instrucao:[%s]\nMEM-Instrucao[%s]\nWB-Instrucao:[%s]\n", regif->instruc, id->instruc, ex->instruc, mem->instruc, wb->instruc);
@@ -187,7 +191,7 @@ int menu(){
             printf("Opcao invalida.\n");
             break;
         }
-    }while(escolha != 0);
+    }while(escolha != '0');
 
     return 0;
 }

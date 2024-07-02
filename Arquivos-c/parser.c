@@ -58,8 +58,6 @@ int parser(instrucao *memInst, int *tamanho_linhas){
             }
 
             if(linha[0] == '\n'){
-                strncpy(memInst[i].instruc, "0000000000000000", 17);
-                memInst[i].instruc[16] = '\0';
                 i++;
             }
             else{
@@ -69,12 +67,6 @@ int parser(instrucao *memInst, int *tamanho_linhas){
                 i++;
             }
                    }
-        if(contador_de_linhas <=256){
-            for(int j=contador_de_linhas;j < 256; j++){
-                strncpy(memInst[j].instruc, "0000000000000000", 17);
-                memInst[j].instruc[16] = '\0';
-            }
-        }
         
         fclose(arq);
         printf("Arquivo lido com sucesso!");
