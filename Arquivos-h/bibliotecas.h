@@ -28,6 +28,7 @@ typedef struct{
   int funct;
   int imm;
   int address;
+  int bolha;
 }Sinais;
 
 //intrucao traduzida

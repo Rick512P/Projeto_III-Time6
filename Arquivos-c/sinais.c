@@ -10,6 +10,7 @@ Sinais *inicializaSinais(){
     sinal->RD = -1; //0 A 7
     sinal->funct = -1; //0 A 7
     sinal->tipo = -1; //TIPO R = 0 ; TIPO J = 1; ADDI = 2; LW = 3; SW = 4; BEQ = 5
+    sinal->bolha = 0; //0 = SEM BOLHA; 1 = COM BOLHA;
     return sinal;
 }
 
