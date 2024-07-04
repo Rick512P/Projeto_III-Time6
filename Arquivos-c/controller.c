@@ -64,7 +64,7 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                     instrucoesDecodificadas[id->pc] = decoder(memInst, id->pc); //decodificou
                     id->sinal = AddSinais(instrucoesDecodificadas[id->pc], id->sinal);
 
-                    if(instrucoesDecodificadas[id->pc].opcode == 9){
+                    if(instrucoesDecodificadas[id->pc].opcode == 1){
                         sinal->bolha = 1; //Envia sinal de bolha para a etapa IF
 
                         id->instruc[0] = '\0'; //Invalida a instrução no ID
