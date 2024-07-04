@@ -29,8 +29,8 @@ Sinais *AddSinais(type_instruc inst, Sinais *sinal){
     else if(strcmp(inst.opcode, "0100") == 0){//ADDI
         sinal->tipo = 2;
         sinal->RS = bin_to_decimal(inst.rs);
-        sinal->RT = bin_to_decimal(inst.rt);
-        sinal->RD = bin_to_decimal(inst.rd);
+        sinal->RT = bin_to_decimal(inst.rt); 
+        sinal->RD = -1;
         sinal->imm = bin_to_decimal(inst.imm);
         sinal->address = -1;
         sinal->funct = -1;

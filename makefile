@@ -12,7 +12,7 @@ else
 endif
 
 index:
-	gcc -o executavel Arquivos-c/*.c -lncurses
+	gcc -o executavel Arquivos-c/*.c -lncurses -lpanel -lmenu
 	clear
 	./executavel
 
@@ -21,8 +21,8 @@ testes:
 		rm executavel; \
 	fi
 	clear
-	gcc -o executavel Arquivos-c/*.c -g -lncurses
-	./executavel
+	gcc -o executavel Arquivos-c/*.c -g -lncurses -lpanel -lmenu
+	gdb ./executavel
 
 clear:
 	@if [ -f executavel ]; then \

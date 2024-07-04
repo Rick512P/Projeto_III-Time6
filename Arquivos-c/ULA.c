@@ -84,25 +84,11 @@ int ULA(type_instruc *instrucoesDecodificadas, int *contador, MemoriaDados *memD
         return dados;
     }
 
-    else if(strcmp(instrucoesDecodificadas[*contador].opcode,"1111") == 0){// sw GRAVA CONTEUDO NA MEMORIA DE DADOS
+    else if(strcmp(instrucoesDecodificadas[*contador].opcode,"1111") == 0){// sw Pega o valor do immediate e armazenará na aluResult dos regsPipeline
         //M[$rs + imm] = $rt
-        int immediate, conteudo;
-        char conteudo_bin[9];
-        conteudo_bin[8] = '\0';
-        conteudo = retornoRegs(regs, instrucoesDecodificadas[*contador].rt);
+        int immediate;
         immediate = bin_to_decimal(instrucoesDecodificadas[*contador].imm);
-        if (conteudo > 127 || conteudo < -128){
-            fprintf(stderr, "OVERFLOW. Numero a ser escrito na memoria de dados ultrapassa os 8 bits.\n");
-            if (conteudo > 127)
-                strcpy(conteudo_bin, "01111111"); //Escreve 32
-            else
-                strcpy(conteudo_bin, "10000001"); //Escreve -32
-            escreveDado(memDados, immediate, conteudo_bin);
-            return -1;
-        }
-
-        decimalToBinary(conteudo, conteudo_bin);
-        escreveDado(memDados, immediate, conteudo_bin);
+        return immediate;
     }
 
     else if(strcmp(instrucoesDecodificadas[*contador].opcode,"0010") == 0){ // j -> jump to specified address

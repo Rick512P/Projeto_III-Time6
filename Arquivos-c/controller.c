@@ -196,7 +196,7 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                     else if (mem->sinal->tipo == 4) // sw (store word)
                     {
                         // Armazenar dado na memória
-                        decimalToBinary(sinal->RT, posicao);
+                        decimalToBinary(mem->sinal->RT, posicao);
                         int conteudo = retornoRegs(regs, posicao);
                         char conteudo_bin[9];
                         conteudo_bin[8]='\0';
@@ -252,6 +252,7 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                             escritaRegistradores(regs, wb->aluResult, posicao);                               
                             controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 5, descPilha, backup, NodoPilha, AssemblyInst);
                         }
+                        controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 5, descPilha, backup, NodoPilha, AssemblyInst);
                         break;
                         
                     default:
@@ -432,7 +433,7 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                 else if (mem->sinal->tipo == 4) // sw (store word)
                 {
                         // Armazenar dado na memória
-                        decimalToBinary(sinal->RT, posicao);
+                        decimalToBinary(mem->sinal->RT, posicao);
                         int conteudo = retornoRegs(regs, posicao);
                         char conteudo_bin[9];
                         conteudo_bin[8]='\0';
