@@ -35,27 +35,14 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                     printf("\nEtapa IF: %s", regif->instruc);
                     printf("\n╚═════════════════════════╝");
                     
-                    //Verifica se instrução possui um opcode inexistente
-                    if(decoder(memInst, regif->pc).opcode == 99){
-                        //Não incrementa o program_counter
-                        sinal->bolha = 1;
-                        
-                        //Define valores -1 para int/float e 0 para char
-                        id->readData1 = -1;
-                        id->readData2 = -1;
-                        ex->aluResult = -1;
-                        mem->aluResult = -1;
-                        wb->aluResult = -1;
-                        id->instruc[0] = '\0';
-                        ex->instruc[0] = '\0';
-                        mem->instruc[0] = '\0';
-                        wb->instruc[0] = '\0';
-
+                    //Verifica se recebeu sinal de bolha da etapa ID
+                    if(sinal->bolha == 1){
+                        sinal->bolha = 0; //Reseta o sinal
+                        id->instruc[0] = '\0'; //Invalida a Instrução no ID
                         controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 2, descPilha, backup, NodoPilha, AssemblyInst);
                     }
                     else{
                     increment_PC(program_counter, 1);
-
                     controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 2, descPilha, backup, NodoPilha, AssemblyInst);
                     }
                     break;
@@ -72,14 +59,20 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                         controller(2, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 1, descPilha, backup, NodoPilha, AssemblyInst);  
                     }
                     printf("\nEtapa ID: %s", id->instruc);
-                    //chamo controller pra rodar a primeira etapa, ja que ela esta livre.
-                    controller(2, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 1, descPilha, backup, NodoPilha, AssemblyInst);  
-                
+                    
                     id->sinal = inicializaSinais();
                     instrucoesDecodificadas[id->pc] = decoder(memInst, id->pc); //decodificou
                     id->sinal = AddSinais(instrucoesDecodificadas[id->pc], id->sinal);
 
-                    if (id->sinal->tipo == 1  || id->sinal->tipo == 5)//verifica se é Jump ou beq para gerar sinal de bolha
+                    if(instrucoesDecodificadas[id->pc].opcode == 9){
+                        sinal->bolha = 1; //Envia sinal de bolha para a etapa IF
+
+                        id->instruc[0] = '\0'; //Invalida a instrução no ID
+
+                        controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 1, descPilha, backup, NodoPilha, AssemblyInst);
+                    }
+
+                    else if (id->sinal->tipo == 1  || id->sinal->tipo == 5)//verifica se é Jump ou beq para gerar sinal de bolha
                     {
                         id->sinal->bolha = 1; //gerou sinal de bolha
 
@@ -261,7 +254,11 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                 strcpy(regif->instruc, memInst[regif->pc].instruc);
                 printf("\nEtapa IF: %s", regif->instruc);
                 printf("\n╚═════════════════════════╝");
-                increment_PC(program_counter, 1);
+
+                if(id->sinal->bolha == 1)
+                    break;
+                else
+                    increment_PC(program_counter, 1);
 
                 return 2;
                 break;
@@ -285,9 +282,21 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                 instrucoesDecodificadas[id->pc] = decoder(memInst, id->pc); //decodificou
                 id->sinal = AddSinais(instrucoesDecodificadas[id->pc], id->sinal);
 
+                //Verificação do opcode inexistente
+                if(instrucoesDecodificadas[id->pc].opcode == 9){
+                    id->sinal->bolha = 1; //ativa o sinal da bolha
+                    id->sinal->RS = -1;
+                    id->sinal->RT = -1;
+                    id->sinal->RD = -1;
+                    id->sinal->tipo = -1;
+                    id->readData1 = 0;
+                    id->readData2 = 0;
+                }
+                else{
                 //OPREANDOS LIDOS, SE NECESSARIO:
                 id->readData1 = regs[id->sinal->RS];
                 id->readData2 = regs[id->sinal->RT];
+                }
 
                 return 3;
                 break;
