@@ -10,29 +10,31 @@ void AsmCopy(type_instruc *instrucoesDecodificadas, Assembly *A, int tamLinhas){
     }
 
     for (int i = 0; i < tamLinhas; i++) {
-        // Garante que a string esteja limpa antes de usar
-        memset(A[i].InstructsAssembly, 0, sizeof(A[i].InstructsAssembly));
 
-        // Decodifica rs, rt, rd baseado no conteúdo de rs, rt, rd das instruções
-        strcpy(rs, decode_register(instrucoesDecodificadas[i].rs));
-        strcpy(rt, decode_register(instrucoesDecodificadas[i].rt));
-        strcpy(rd, decode_register(instrucoesDecodificadas[i].rd));
+            // Garante que a string esteja limpa antes de usar
+            memset(A[i].InstructsAssembly, 0, sizeof(A[i].InstructsAssembly));
 
-        // Realiza operações baseadas no opcode
-        if (strcmp(instrucoesDecodificadas[i].opcode, "0000") == 0) {
-            decode_function(instrucoesDecodificadas[i].funct, Opcode);
-            sprintf(A[i].InstructsAssembly, "%s %s, %s, %s", Opcode, rd, rs, rt);
-        } else if (strcmp(instrucoesDecodificadas[i].opcode, "0100") == 0) {
-            sprintf(A[i].InstructsAssembly, "addi %s, %s, %s", rs, rt, instrucoesDecodificadas[i].imm);
-        } else if (strcmp(instrucoesDecodificadas[i].opcode, "1011") == 0) {
-            sprintf(A[i].InstructsAssembly, "lw %s, %s", rt, instrucoesDecodificadas[i].imm);
-        } else if (strcmp(instrucoesDecodificadas[i].opcode, "1111") == 0) {
-            sprintf(A[i].InstructsAssembly, "sw %s, %s", rt, instrucoesDecodificadas[i].imm);
-        } else if (strcmp(instrucoesDecodificadas[i].opcode, "1000") == 0) {
-            sprintf(A[i].InstructsAssembly, "beq %s, %s, %s", rs, rt, instrucoesDecodificadas[i].imm);
-        } else if (strcmp(instrucoesDecodificadas[i].opcode, "0010") == 0) {
-            sprintf(A[i].InstructsAssembly, "j %s", instrucoesDecodificadas[i].addr);
-        }
+            // Decodifica rs, rt, rd baseado no conteúdo de rs, rt, rd das instruções
+            strcpy(rs, decode_register(instrucoesDecodificadas[i].rs));
+            strcpy(rt, decode_register(instrucoesDecodificadas[i].rt));
+            strcpy(rd, decode_register(instrucoesDecodificadas[i].rd));
+
+            // Realiza operações baseadas no opcode
+            if (strcmp(instrucoesDecodificadas[i].opcode, "0000") == 0) {
+                decode_function(instrucoesDecodificadas[i].funct, Opcode);
+                sprintf(A[i].InstructsAssembly, "%s %s, %s, %s", Opcode, rd, rs, rt);
+            } else if (strcmp(instrucoesDecodificadas[i].opcode, "0100") == 0) {
+                sprintf(A[i].InstructsAssembly, "addi %s, %s, %s", rs, rt, instrucoesDecodificadas[i].imm);
+            } else if (strcmp(instrucoesDecodificadas[i].opcode, "1011") == 0) {
+                sprintf(A[i].InstructsAssembly, "lw %s, %s", rt, instrucoesDecodificadas[i].imm);
+            } else if (strcmp(instrucoesDecodificadas[i].opcode, "1111") == 0) {
+                sprintf(A[i].InstructsAssembly, "sw %s, %s", rt, instrucoesDecodificadas[i].imm);
+            } else if (strcmp(instrucoesDecodificadas[i].opcode, "1000") == 0) {
+                sprintf(A[i].InstructsAssembly, "beq %s, %s, %s", rs, rt, instrucoesDecodificadas[i].imm);
+            } else if (strcmp(instrucoesDecodificadas[i].opcode, "0010") == 0) {
+                sprintf(A[i].InstructsAssembly, "j %s", instrucoesDecodificadas[i].addr);
+            }
+        
     }
 }
 
@@ -80,7 +82,11 @@ int SaveASM(Assembly *A, int tamLinhas){
 void imprimirASM(Assembly *A, int tamLinhas){
     /*Realizar Impressão da Struct ASM*/
     for (int i = 0; i<tamLinhas; i++){
-        printf("\nInstrucao em Assembly: %s", A[i].InstructsAssembly);
+        if(A[i].InstructsAssembly[0] == '\0'){
+            //pula
+        }
+        else
+            printf("\nInstrucao em Assembly: %s", A[i].InstructsAssembly);
     }
     printf("\n");
 }

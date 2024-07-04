@@ -3,9 +3,12 @@
 
 void imprimeSimulador(int tamLinhas, type_instruc *instrucoesDecodificadas, instrucao *memInst){
     for(int i=0;i<tamLinhas;i++){
-            printf("\n\nInstrucao %d de %d: [%s]", i+1, tamLinhas, memInst[i].instruc);
-            if (strcmp(instrucoesDecodificadas[i].opcode, "0000") == 0){
+            if(instrucoesDecodificadas[i].opcode[0] == '\0'){
+                break;
+            }
+            else if (strcmp(instrucoesDecodificadas[i].opcode, "0000") == 0){
                 printf("\n======TIPO R=========\n");
+                printf("Instrucao [%s]\n", memInst[i].instruc);
                 printf("opcode[%s]\t", instrucoesDecodificadas[i].opcode);
                 printf("rs[%s]\t\t", instrucoesDecodificadas[i].rs);
                 printf("rt[%s]\t\t", instrucoesDecodificadas[i].rt);
@@ -15,6 +18,7 @@ void imprimeSimulador(int tamLinhas, type_instruc *instrucoesDecodificadas, inst
             }
             else if (strcmp(instrucoesDecodificadas[i].opcode, "0010") == 0){
                 printf("\n========TIPO J========\n");
+                printf("Instrucao [%s]\n", memInst[i].instruc);
                 printf("opcode[%s]\t", instrucoesDecodificadas[i].opcode);
                 printf("addr[%s]\t\t", instrucoesDecodificadas[i].addr);
                 printf("\n======================\n");
@@ -22,11 +26,11 @@ void imprimeSimulador(int tamLinhas, type_instruc *instrucoesDecodificadas, inst
 
             else{
                 printf("\n\n=======TIPO I=========\n");
+                printf("Instrucao [%s]\n", memInst[i].instruc);
                 printf("opcode[%s]\t", instrucoesDecodificadas[i].opcode);
                 printf("rs[%s]\t\t", instrucoesDecodificadas[i].rs);
                 printf("rt[%s]\t\t", instrucoesDecodificadas[i].rt);
                 printf("imm[%s]\t\t", instrucoesDecodificadas[i].imm);
-                
                 printf("\n======================\n");
             }
 
