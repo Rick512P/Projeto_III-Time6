@@ -34,9 +34,30 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                     strcpy(regif->instruc, memInst[regif->pc].instruc);
                     printf("\nEtapa IF: %s", regif->instruc);
                     printf("\n╚═════════════════════════╝");
+                    
+                    //Verifica se instrução possui um opcode inexistente
+                    if(decoder(memInst, regif->pc).opcode == 99){
+                        //Não incrementa o program_counter
+                        sinal->bolha = 1;
+                        
+                        //Define valores -1 para int/float e 0 para char
+                        id->readData1 = -1;
+                        id->readData2 = -1;
+                        ex->aluResult = -1;
+                        mem->aluResult = -1;
+                        wb->aluResult = -1;
+                        id->instruc[0] = '\0';
+                        ex->instruc[0] = '\0';
+                        mem->instruc[0] = '\0';
+                        wb->instruc[0] = '\0';
+
+                        controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 2, descPilha, backup, NodoPilha, AssemblyInst);
+                    }
+                    else{
                     increment_PC(program_counter, 1);
 
                     controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 2, descPilha, backup, NodoPilha, AssemblyInst);
+                    }
                     break;
                 
                 case 2://Etapa ID -> Decodifico as instruções, gero os sinais e Adiciono valores aos registradores auxiliares
