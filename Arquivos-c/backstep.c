@@ -25,7 +25,6 @@ descPilha *PUSH(descPilha *pilha, NodoPilha *nodo){
         pilha->Topo = nodo;
     }
     pilha->tamanho++;
-    //printf("\nItem adicionado ao topo da lista\n");
     return pilha;
 }
 
@@ -61,7 +60,6 @@ descPilha *Realoca(descPilha *pilha, int *regs, MemoriaDados *memDados, IF *regi
     NodoPilha *aux = pilha->Topo;
     pilha->Topo = aux->prox;
 
-
     for(int i = 0; i < 8; i++){
         regs[i] = aux->info->regs[i];
     }
@@ -77,11 +75,8 @@ descPilha *Realoca(descPilha *pilha, int *regs, MemoriaDados *memDados, IF *regi
     *AssemblyInst = aux->info->AssemblyInst;
     *program_counter = aux->info->PC;
     *Etapa = aux->info->Etapa;
-
-    free(aux->info);
-    free(aux);
+    
     pilha->tamanho--;
-
     if (pilha->tamanho == 0) {
         pilha->Fundo = NULL;
     }

@@ -8,7 +8,7 @@ int main(){
 int menu(){
     Assembly *AssemblyInst = NULL;
     MemoriaDados *memDados = NULL;
-    Backup *backup = NULL;
+    Backup *backup = NULL, *backupInicio = NULL;
     NodoPilha *NodoPilha = NULL;
     descPilha *descPilha = NULL;
     char escolha;
@@ -87,6 +87,7 @@ int menu(){
             }
             //FAZ UM "BACKUP" PARA O BACKSTEP   
                 backup = ColetaTudo(regs, memDados, regif, id, ex, mem, wb, sinal, AssemblyInst, &program_counter, &Etapa);
+                backupInicio = ColetaTudo(regs, memDados, regif, id, ex, mem, wb, sinal, AssemblyInst, &program_counter, &Etapa);
                 NodoPilha = inicializaNodo(backup);
                 descPilha = PUSH(descPilha, NodoPilha);
             break;
@@ -179,11 +180,11 @@ int menu(){
         case 'C':
         case 'c': //Chamar função responsável por retornar uma instrução (PC--)
             descPilha = Realoca(descPilha, regs, memDados, regif, id, ex, mem, wb, sinal, AssemblyInst, &program_counter, &Etapa);
-            if(descPilha->Topo != NULL){
-                 printf("Retornamos para:\nIF-Instrucao:[%s]\nID-Instrucao:[%s]\nEX-Instrucao:[%s]\nMEM-Instrucao[%s]\nWB-Instrucao:[%s]\n", regif->instruc, id->instruc, ex->instruc, mem->instruc, wb->instruc);
-            }
-            else{
+            printf("Retornamos para:\nWB-Instrucao:[%s]\nMEM-Instrucao:[%s]\nEX-Instrucao:[%s]\nID-Instrucao[%s]\nIF-Instrucao:[%s]\n", wb->InstrucaoASM.InstructsAssembly, mem->InstrucaoASM.InstructsAssembly, ex->InstrucaoASM.InstructsAssembly, id->InstrucaoASM.InstructsAssembly, regif->InstrucaoASM.InstructsAssembly);
+            if(descPilha->Topo == NULL){
                 printf("Estamos no início do programa.\n");
+                NodoPilha = inicializaNodo(backupInicio);
+                descPilha = PUSH(descPilha, NodoPilha);
             }  
             break;
 
