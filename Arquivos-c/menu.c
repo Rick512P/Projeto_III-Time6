@@ -170,7 +170,6 @@ int menu(){
             Etapa = controller(2, tamLinhas, regs, memInst, memDados, &program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, Etapa, descPilha, backup, NodoPilha, AssemblyInst);
             AsmCopy(instrucoesDecodificadas, AssemblyInst, tamLinhas);
             printf("\n");
-            puts(AssemblyInst[regif->pc].InstructsAssembly);
             //FAZ UM "BACKUP" PARA O BACKSTEP   
                 backup = ColetaTudo(regs, memDados, regif, id, ex, mem, wb, sinal, AssemblyInst, &program_counter, &Etapa);
                 NodoPilha = inicializaNodo(backup);

@@ -75,7 +75,7 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                     
                     if(id->sinal->tipo ==  1 || id->sinal->tipo == 5){ //CRIARA BOLHAS APENAS SE FOR BEQ OU JUMP
                         id->sinal->bolha = 1;
-                        printf("\nBolha gerada na Etapa ID devido à dependência de dados.");
+                        printf(" - Bolha gerada na Etapa ID.");
                         controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 1, descPilha, backup, NodoPilha, AssemblyInst);
                         break;
                     }
@@ -128,8 +128,6 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                         ex->aluResult = ULA(instrucoesDecodificadas, &pc, memDados, regs);
                         if (ex->readData1 == ex->readData2){
                             *program_counter = ex->aluResult;
-                            id->instruc[0] = '\0';//retira a instrução que estava em execução
-                            regif->instruc[0] = '\0';
                         }
                     }
                     controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 4, descPilha, backup, NodoPilha, AssemblyInst);
@@ -254,7 +252,6 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
 
                 if(regif->pc > 1){
                     if(id->sinal->bolha == 1){ //Verifica se a etapa ID precisa de uma bolha
-                        id->sinal->bolha = 0; //Reseta o sinal
                         regif->instruc[0] = '\0'; //INVALIDA UMA INSTRUÇÃO (INSTRUÇÃO VAZIA)
                         printf("\nBolha na etapa IF");
                         printf("\n╚════════════════════════════╝");
@@ -294,7 +291,7 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
 
                 if(id->sinal->tipo ==  1 || id->sinal->tipo == 5){ //CRIARA BOLHAS APENAS SE FOR BEQ OU JUMP
                         id->sinal->bolha = 1;
-                        printf("\nBolha gerada na Etapa ID devido à dependência de dados.");
+                        printf(" - Bolha gerada na Etapa ID.");
                 }
                 //recursao para realizar etapas anteriores:
                 controller(2, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 1, descPilha, backup, NodoPilha, AssemblyInst);
@@ -326,7 +323,7 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                     jump = ULA(instrucoesDecodificadas, &pc, memDados, regs);
                     (*program_counter) = jump;
                     a++;
-                    printf("\ntipo: %d\b", sinal->tipo);
+                    printf("\ntipo: %d\b", ex->sinal->tipo);
                     printf("%d jump/loop concluido.\t\t", a);
                 }
                 
@@ -342,8 +339,6 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                     pc = ex->pc;
                     ex->aluResult = ULA(instrucoesDecodificadas, &pc, memDados, regs);
                     if (ex->readData1 == ex->readData2){
-                        id->instruc[0] = '\0';//retira a instrução que estava em execução
-                        regif->instruc[0] = '\0';
                         *program_counter = ex->aluResult;
                     }
                 }
