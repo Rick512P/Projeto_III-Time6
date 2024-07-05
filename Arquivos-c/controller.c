@@ -3,6 +3,7 @@
 int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaDados *memDados, int *program_counter, type_instruc *instrucoesDecodificadas, IF *regif, ID *id, EX *ex, MEM *mem, WB *wb, Sinais *sinal, int ProxEtapa, descPilha *descPilha, Backup *backup, NodoPilha *NodoPilha, Assembly *AssemblyInst){
     int jump, RD, RT, i, a=0, verifica_fim = 0, immediate, dados, pc;
     char posicao[4];
+    Assembly InstrucaoASM;
 
     switch (op)
     {
@@ -20,7 +21,7 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                     
                     if(regif->pc == NumeroLinhas){ //quando chegar no numero de linhas, encerrará a etapa
                         printf("\nEtapa IF encerrada.");
-                        printf("\n╚═════════════════════════╝");
+                        printf("\n╚════════════════════════════╝");
                         controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 2, descPilha, backup, NodoPilha, AssemblyInst);
                         break;
                     }
@@ -35,8 +36,9 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                         if(id->sinal->bolha == 1){ //Verifica se a etapa ID precisa de uma bolha
                             id->sinal->bolha = 0; //Reseta o sinal
                             regif->instruc[0] = '\0'; //INVALIDA UMA INSTRUÇÃO (INSTRUÇÃO VAZIA)
-                            printf("\nBolha na etapa IF: %s", regif->instruc);
-                            printf("\n╚═════════════════════════╝");
+                            printf("\nBolha na etapa IF");
+                            printf("\n╚════════════════════════════╝");
+                            increment_PC(program_counter, 1);
                             controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 2, descPilha, backup, NodoPilha, AssemblyInst);
                             break;
                         }
@@ -45,7 +47,7 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
 
                     strcpy(regif->instruc, memInst[regif->pc].instruc);
                     printf("\nEtapa IF: %s", regif->instruc);
-                    printf("\n╚═════════════════════════╝");
+                    printf("\n╚════════════════════════════╝");
                     
                     increment_PC(program_counter, 1);
                     controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 2, descPilha, backup, NodoPilha, AssemblyInst);
@@ -58,15 +60,14 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
 
                     if(id->pc == NumeroLinhas){ //quando chegar no numero de linhas, encerrará a etapa
                         printf("\nEtapa ID encerrada.");
-                        printf("\n╚═════════════════════════╝");
+                        printf("\n╚════════════════════════════╝");
                         controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 3, descPilha, backup, NodoPilha, AssemblyInst);
                     }
                     else if(id->instruc[0] == '\0'){
-                        printf("\nBolha na Etapa ID\n");
+                        printf("\nBolha na Etapa ID");
                     }
                     else
-                        printf("\nEtapa ID: %s", id->instruc);
-                    controller(2, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 1, descPilha, backup, NodoPilha, AssemblyInst);  
+                        printf("\nEtapa ID: %s", id->instruc);  
                     
                     id->sinal = inicializaSinais();
                     instrucoesDecodificadas[id->pc] = decoder(memInst, id->pc); //decodificou
@@ -78,7 +79,7 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                         controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 1, descPilha, backup, NodoPilha, AssemblyInst);
                         break;
                     }
-                    
+                    controller(2, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 1, descPilha, backup, NodoPilha, AssemblyInst);
                     //OPREANDOS LIDOS, SE NECESSARIO:
                     id->readData1 = regs[id->sinal->RS];
                     id->readData2 = regs[id->sinal->RT];
@@ -93,11 +94,11 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                     ex->sinal = id->sinal;
                     if(ex->pc == NumeroLinhas){
                         printf("\nEtapa EX encerrada.");
-                        printf("\n╚═════════════════════════╝");
+                        printf("\n╚════════════════════════════╝");
                         controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 4, descPilha, backup, NodoPilha, AssemblyInst);
                     }
                     else if(ex->instruc[0] == '\0'){
-                        printf("\nBolha na Etapa EX\n");
+                        printf("\nBolha na Etapa EX");
                     }
                     else
                         printf("\nEtapa EX: %s", ex->instruc);
@@ -112,8 +113,6 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                         a++;
                         printf("\ntipo: %d\b", sinal->tipo);
                         printf("%d jump/loop concluido.\t\t", a); 
-                        
-                        controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 4, descPilha, backup, NodoPilha, AssemblyInst);
                     }
                     
                     else if (ex->sinal->tipo == 0 || ex->sinal->tipo == 2 || ex->sinal->tipo == 3 || ex->sinal->tipo == 4)
@@ -121,7 +120,6 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                     {
                         pc = ex->pc;
                         ex->aluResult = ULA(instrucoesDecodificadas, &pc, memDados, regs);
-                        controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 4, descPilha, backup, NodoPilha, AssemblyInst);
                     }
                     
                     else if (ex->sinal->tipo == 5)//verifica se é beq
@@ -129,14 +127,12 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                         pc = ex->pc;
                         ex->aluResult = ULA(instrucoesDecodificadas, &pc, memDados, regs);
                         if (ex->readData1 == ex->readData2){
-                            *program_counter = ex->aluResult; 
-                            controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 4, descPilha, backup, NodoPilha, AssemblyInst);
-                        }
-                        else {
-                            controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 4, descPilha, backup, NodoPilha, AssemblyInst);
+                            *program_counter = ex->aluResult;
+                            id->instruc[0] = '\0';//retira a instrução que estava em execução
+                            regif->instruc[0] = '\0';
                         }
                     }
-
+                    controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 4, descPilha, backup, NodoPilha, AssemblyInst);
                     break;
                         
                 case 4: // Se a instrução envolve leitura ou escrita na memória de dados, essa operação é realizada neste estágio
@@ -146,11 +142,11 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                     mem->sinal = ex->sinal;
                     if(mem->pc == NumeroLinhas){
                         printf("\nEtapa MEM encerrada.");
-                        printf("\n╚═════════════════════════╝");
+                        printf("\n╚════════════════════════════╝");
                         controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 5, descPilha, backup, NodoPilha, AssemblyInst);
                     }
                     else if(mem->instruc[0] == '\0'){
-                        printf("\nBolha na Etapa WB\n");
+                        printf("\nBolha na Etapa WB");
                     }
                     else
                         printf("\nEtapa MEM: %s", mem->instruc);
@@ -190,7 +186,7 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                     case 5: //Etapa WB (write back) -> O resultado da operação é escrito de volta no registrador destino no banco de registradores.          
                         wb->pc = mem->pc;
                         strcpy(wb->instruc, mem->instruc);
-                        printf("\n╔═════════════════════════╗");
+                        printf("\n╔═══════════════════════════╗");
                         wb->aluResult = mem->aluResult;
                         wb->sinal = mem->sinal;
                         if(wb->pc == NumeroLinhas){
@@ -200,7 +196,7 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                             break;
                         }
                         else if(wb->instruc[0] == '\0'){
-                            printf("\nBolha na Etapa WB\n");
+                            printf("\nBolha na Etapa WB");
                         }
                         else
                             printf("\nEtapa WB: %s", wb->instruc);
@@ -246,7 +242,7 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                 
                 if(regif->pc == NumeroLinhas){
                     printf("\nEtapa IF encerrada.");
-                    printf("\n╚═════════════════════════╝");
+                    printf("\n╚════════════════════════════╝");
                     return 2;
                 }
 
@@ -260,16 +256,17 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                     if(id->sinal->bolha == 1){ //Verifica se a etapa ID precisa de uma bolha
                         id->sinal->bolha = 0; //Reseta o sinal
                         regif->instruc[0] = '\0'; //INVALIDA UMA INSTRUÇÃO (INSTRUÇÃO VAZIA)
-                        printf("\nBolha na etapa IF: %s", regif->instruc);
-                        printf("\n╚═════════════════════════╝");
+                        printf("\nBolha na etapa IF");
+                        printf("\n╚════════════════════════════╝");
                         return 2;
                         break;
                     }
                 }
                 
                 strcpy(regif->instruc, memInst[regif->pc].instruc);
-                printf("\nEtapa IF: %s", regif->instruc);
-                printf("\n╚═════════════════════════╝");
+                regif->InstrucaoASM = ASMPrintInstruc(memInst, program_counter);
+                printf("\nEtapa IF: %s", regif->InstrucaoASM.InstructsAssembly);
+                printf("\n╚════════════════════════════╝");
 
                 increment_PC(program_counter, 1);
 
@@ -279,16 +276,17 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
             case 2://Etapa ID -> Decodifico as instruções, gero os sinais e Adiciono valores aos registradores auxiliares     
                 strcpy(id->instruc, regif->instruc);
                 id->pc = regif->pc;
+                id->InstrucaoASM = regif->InstrucaoASM;
                 if(id->pc == NumeroLinhas){
                     printf("\nEtapa ID encerrada.");
-                    printf("\n╚═════════════════════════╝");
+                    printf("\n╚════════════════════════════╝");
                     return 3;
                 }
                 else if(id->instruc[0] == '\0'){
-                        printf("\nBolha na Etapa ID\n");
+                        printf("\nBolha na Etapa ID");
                 }
                 else
-                    printf("\nEtapa ID: %s", id->instruc);
+                    printf("\nEtapa ID: %s", id->InstrucaoASM.InstructsAssembly);
                 //DECODIFICAÇÃO E GERAÇÃO DE SINAIS
                     id->sinal = inicializaSinais();
                     instrucoesDecodificadas[id->pc] = decoder(memInst, id->pc); //decodificou
@@ -297,7 +295,6 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                 if(id->sinal->tipo ==  1 || id->sinal->tipo == 5){ //CRIARA BOLHAS APENAS SE FOR BEQ OU JUMP
                         id->sinal->bolha = 1;
                         printf("\nBolha gerada na Etapa ID devido à dependência de dados.");
-                        break;
                 }
                 //recursao para realizar etapas anteriores:
                 controller(2, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 1, descPilha, backup, NodoPilha, AssemblyInst);
@@ -310,16 +307,17 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                 ex->readData1 = id->readData1;
                 ex->readData2 = id->readData2;
                 ex->sinal = id->sinal;
+                ex->InstrucaoASM = id->InstrucaoASM;
                 if(ex->pc == NumeroLinhas){
                     printf("\nEtapa EX encerrada.");
-                    printf("\n╚═════════════════════════╝");
+                    printf("\n╚════════════════════════════╝");
                     return 4;
                 }
                 else if(ex->instruc[0] == '\0'){
-                        printf("\nBolha na Etapa EX\n");
+                        printf("\nBolha na Etapa EX");
                 }
                 else
-                    printf("\nEtapa EX: %s", ex->instruc);
+                    printf("\nEtapa EX: %s", ex->InstrucaoASM.InstructsAssembly);
                 controller(2, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 2, descPilha, backup, NodoPilha, AssemblyInst);
                 
                 if (ex->sinal->tipo == 1)//verifica se é Jump
@@ -344,8 +342,9 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                     pc = ex->pc;
                     ex->aluResult = ULA(instrucoesDecodificadas, &pc, memDados, regs);
                     if (ex->readData1 == ex->readData2){
+                        id->instruc[0] = '\0';//retira a instrução que estava em execução
+                        regif->instruc[0] = '\0';
                         *program_counter = ex->aluResult;
-
                     }
                 }
 
@@ -357,16 +356,17 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                 strcpy(mem->instruc, ex->instruc);  
                 mem->aluResult = ex->aluResult;
                 mem->sinal = ex->sinal;
+                mem->InstrucaoASM = ex->InstrucaoASM;
                 if(mem->pc == NumeroLinhas){
                     printf("\nEtapa MEM encerrada.");
-                    printf("\n╚═════════════════════════╝");
+                    printf("\n╚════════════════════════════╝");
                     return 5;
                 }
                 else if(mem->instruc[0] == '\0'){
-                        printf("\nBolha na Etapa MEM\n");
+                        printf("\nBolha na Etapa MEM");
                 }
                 else
-                    printf("\nEtapa MEM: %s", mem->instruc);
+                    printf("\nEtapa MEM: %s", mem->InstrucaoASM.InstructsAssembly);
 
                 controller(2, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 3, descPilha, backup, NodoPilha, AssemblyInst);
                 
@@ -400,19 +400,20 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                 case 5: //Etapa WB (write back) -> O resultado da operação é escrito de volta no registrador destino no banco de registradores.          
                     wb->pc = mem->pc;
                     strcpy(wb->instruc, mem->instruc);
-                    printf("\n╔═════════════════════════╗");
+                    printf("\n╔════════════════════════════╗");
                     wb->aluResult = mem->aluResult;
                     wb->sinal = mem->sinal;
+                    wb->InstrucaoASM = mem->InstrucaoASM;
                     if(wb->pc == NumeroLinhas){
                         printf("\nEtapa WB encerrada.");
-                        printf("\n╚═════════════════════════╝");
+                        printf("\n╚════════════════════════════╝");
                         return 6;
                     }
                     else if(wb->instruc[0] == '\0'){
-                        printf("\nBolha na Etapa WB\n");
+                        printf("\nBolha na Etapa WB");
                         }
                     else
-                        printf("\nEtapa WB: %s", wb->instruc);
+                        printf("\nEtapa WB: %s", wb->InstrucaoASM.InstructsAssembly);
 
                     controller(2, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 4, descPilha, backup, NodoPilha, AssemblyInst);    
                     

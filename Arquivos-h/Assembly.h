@@ -8,5 +8,6 @@ char* decode_register(const char *reg);
 void decode_function(const char *func, char *opcode);
 int SaveASM(Assembly *A, int tamLinhas);
 void imprimirASM(Assembly *A, int tamLinhas);
-    
+Assembly ASMPrintInstruc(instrucao *memInst, int *program_counter);
+
 #endif

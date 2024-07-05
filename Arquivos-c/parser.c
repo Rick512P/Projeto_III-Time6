@@ -10,7 +10,7 @@ int parser(instrucao *memInst, int *tamanho_linhas){
         scanf("%d", &opcao);
         switch (opcao){
             case 1:
-                arq = fopen("./memoria/inst.mem", "r");
+                arq = fopen("./memoria/InstrucoesCompletas.mem", "r");
                 break;
 
             case 2:

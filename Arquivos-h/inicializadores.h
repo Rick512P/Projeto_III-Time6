@@ -3,6 +3,7 @@
 
 #include "bibliotecas.h"
 #include "bin_to_decimal.h"
+#include "Assembly.h"
 
 instrucao *inicializaMemInst();
 MemoriaDados *inicializaMemDados();

@@ -67,6 +67,7 @@ typedef struct{
 typedef struct {
     unsigned int pc;// Contador de programa (program counter)
     char instruc[17];// Instrução buscada
+    Assembly InstrucaoASM;
 } IF;
 
 
@@ -75,6 +76,7 @@ typedef struct {
     char instruc[17];
     int readData1; // Valor lido do registrador rs
     int readData2; // Valor lido do registrador rt
+    Assembly InstrucaoASM;
     Sinais *sinal;
 } ID;
 
@@ -84,6 +86,7 @@ typedef struct {
     int aluResult; // Resultado da ALU
     int readData1;
     int readData2; // Valor lido do registrador rt (usado para operações de memória)
+    Assembly InstrucaoASM;
     Sinais *sinal;
 } EX;
 
@@ -92,6 +95,7 @@ typedef struct {
     char instruc[17];
     char readData[9];  // Dados lidos da memória
     int aluResult; // Resultado da ALU (se não for operação de memória)
+    Assembly InstrucaoASM;
     Sinais *sinal;
 } MEM;
 
@@ -99,6 +103,7 @@ typedef struct {
     unsigned int pc; 
     char instruc[17];
     int aluResult; // Resultado da ALU (se não for operação de memória)
+    Assembly InstrucaoASM;
     Sinais *sinal;
 } WB;
 

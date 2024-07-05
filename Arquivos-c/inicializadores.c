@@ -27,15 +27,18 @@ PipeRegisters inicializaRegsPipe() {
 
     // Inicializa os structs
     strcpy(pipes.regif->instruc, "\0");
+    strcpy(pipes.regif->InstrucaoASM.InstructsAssembly, "\0");
     pipes.regif->pc = 0;
 
     strcpy(pipes.id->instruc, "\0");
+    strcpy(pipes.id->InstrucaoASM.InstructsAssembly, "\0");
     pipes.id->pc = 0;
     pipes.id->readData1 = 0;
     pipes.id->readData2 = 0;
     pipes.id->sinal = NULL;
 
     strcpy(pipes.ex->instruc, "\0");
+    strcpy(pipes.ex->InstrucaoASM.InstructsAssembly, "\0");
     pipes.ex->pc = 0;
     pipes.ex->sinal = NULL;
     pipes.ex->readData1 = 0;
@@ -43,12 +46,14 @@ PipeRegisters inicializaRegsPipe() {
     pipes.ex->aluResult = 0;
 
     strcpy(pipes.mem->instruc, "\0");
+    strcpy(pipes.mem->InstrucaoASM.InstructsAssembly, "\0");
     pipes.mem->pc = 0;
     pipes.mem->readData[0] = '0';
     pipes.mem->aluResult = 0;
     pipes.mem->sinal = NULL;
 
     strcpy(pipes.wb->instruc, "\0");
+    strcpy(pipes.wb->InstrucaoASM.InstructsAssembly, "\0");
     pipes.wb->pc = 0;
     pipes.wb->aluResult = 0;
     pipes.wb->sinal = NULL;
