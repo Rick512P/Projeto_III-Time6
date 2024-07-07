@@ -219,6 +219,7 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
 
                     case 5: //Etapa WB (write back) -> O resultado da operação é escrito de volta no registrador destino no banco de registradores.          
                         wb->pc = mem->pc;
+                        wb->InstrucaoASM = mem->InstrucaoASM;
                         strcpy(wb->instruc, mem->instruc);
                         printf("\n╔═══════════════════════════╗");
                         wb->aluResult = mem->aluResult;
@@ -233,7 +234,7 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                             printf("\nBolha na Etapa WB");
                         }
                         else
-                            printf("\nEtapa WB: %s", wb->instruc);
+                            printf("\nEtapa WB: %s", wb->InstrucaoASM.InstructsAssembly);
                         controller(2, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 4, descPilha, backup, NodoPilha, AssemblyInst);    
                         
                         if (wb->sinal->tipo == 3){ // lw (load word)
