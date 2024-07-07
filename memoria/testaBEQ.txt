@@ -1,6 +1,6 @@
 0100 000 001 000011 // Adiciona valor 3 no registrador 1
 0100 000 010 000100 // Adiciona valor 4 no registrador 2
-1000 000 000 000010 // se reg 6 = a reg 5 vai para instrução 16
+1000 000 000 000011 // se reg 6 = a reg 5 vai para instrução 5
 0000 100 110 111 000 // Soma reg 4(6) com reg 6(x) e salva em reg 7
 0000 101 100 110 101 // reg 5(7) or reg 4(6) => reg 6(7)
 

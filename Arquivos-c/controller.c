@@ -136,9 +136,8 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                     else if (ex->sinal->tipo == 5)//verifica se é beq
                     {
                         pc = ex->pc;
-                        ex->aluResult = ULA(instrucoesDecodificadas, &pc, memDados, regs);
                         if (ex->readData1 == ex->readData2){
-                            *program_counter = ex->aluResult;
+                            *program_counter = pc + bin_to_decimal(instrucoesDecodificadas[pc].imm);
                         }
                     }
                     controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 4, descPilha, backup, NodoPilha, AssemblyInst);
@@ -358,10 +357,8 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                 else if (ex->sinal->tipo == 5)//verifica se é beq
                 {
                     pc = ex->pc;
-                    ex->aluResult = ULA(instrucoesDecodificadas, &pc, memDados, regs);
-
                     if (ex->readData1 == ex->readData2){
-                        *program_counter = ex->aluResult;
+                        *program_counter = pc + bin_to_decimal(instrucoesDecodificadas[pc].imm);
                     }
                 }
 
