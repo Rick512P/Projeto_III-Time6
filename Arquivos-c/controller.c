@@ -73,11 +73,22 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                     instrucoesDecodificadas[id->pc] = decoder(memInst, id->pc); //decodificou
                     id->sinal = AddSinais(instrucoesDecodificadas[id->pc], id->sinal);
                     
-                    if(id->sinal->tipo ==  1 || id->sinal->tipo == 5){ //CRIARA BOLHAS APENAS SE FOR BEQ OU JUMP
+                    if(id->sinal->tipo ==  1)// CRIARA BOLHAS SE FOR JUMP
+                    {
                         id->sinal->bolha = 1;
-                        printf(" - Bolha gerada na Etapa ID.");
+                        printf(" - Bolha gerada na Etapa ID. J");
                         controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 1, descPilha, backup, NodoPilha, AssemblyInst);
                         break;
+                    }
+                    else if (id->sinal->tipo == 5)// CRIARA BOLHAS SE FOR BEQ Válido
+                    {
+                        if (id->readData1 == id->readData2)
+                        {
+                            id->sinal->bolha = 1;
+                            printf(" - Bolha gerada na Etapa ID.");
+                            controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 1, descPilha, backup, NodoPilha, AssemblyInst);
+                            break;
+                        }                        
                     }
                     controller(2, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 1, descPilha, backup, NodoPilha, AssemblyInst);
                     //OPREANDOS LIDOS, SE NECESSARIO:
@@ -289,9 +300,18 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                     instrucoesDecodificadas[id->pc] = decoder(memInst, id->pc); //decodificou
                     id->sinal = AddSinais(instrucoesDecodificadas[id->pc], id->sinal);
 
-                if(id->sinal->tipo ==  1 || id->sinal->tipo == 5){ //CRIARA BOLHAS APENAS SE FOR BEQ OU JUMP
+                if(id->sinal->tipo ==  1)// CRIARA BOLHAS SE FOR JUMP
+                {
+                    id->sinal->bolha = 1;
+                    printf(" - Bolha gerada na Etapa ID. J");
+                }
+                if (id->sinal->tipo == 5)// CRIARA BOLHAS SE FOR BEQ Válido
+                {
+                    if (id->readData1 == id->readData2)
+                    {
                         id->sinal->bolha = 1;
                         printf(" - Bolha gerada na Etapa ID.");
+                    }                        
                 }
                 //recursao para realizar etapas anteriores:
                 controller(2, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 1, descPilha, backup, NodoPilha, AssemblyInst);
@@ -315,6 +335,7 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                 }
                 else
                     printf("\nEtapa EX: %s", ex->InstrucaoASM.InstructsAssembly);
+
                 controller(2, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 2, descPilha, backup, NodoPilha, AssemblyInst);
                 
                 if (ex->sinal->tipo == 1)//verifica se é Jump
@@ -338,6 +359,7 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                 {
                     pc = ex->pc;
                     ex->aluResult = ULA(instrucoesDecodificadas, &pc, memDados, regs);
+
                     if (ex->readData1 == ex->readData2){
                         *program_counter = ex->aluResult;
                     }

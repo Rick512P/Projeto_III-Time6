@@ -116,6 +116,10 @@ int menu(){
             break;
 
         case '5': //Imprimir estatísticas como: quantas intruc, classes, etc;
+            if (memInst == NULL){
+                printf("Carregue a memoria com instrucoes antes.\n");
+                break;
+            }
             imprimeEstatisticas(memInst, tamLinhas, instrucoesDecodificadas);
             break;
             
