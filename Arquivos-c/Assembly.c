@@ -115,7 +115,7 @@ Assembly ASMPrintInstruc(instrucao *memInst, int *program_counter){
                     sprintf(InstrucaoAssembly.InstructsAssembly, "addi %s, %s, %s", rs, rt, memInst[*program_counter].instruc + 10);
                 } 
                 else if (strncmp("1011", memInst[*program_counter].instruc, 4) == 0) {
-                    sprintf(InstrucaoAssembly.InstructsAssembly, "lw %s, MEM[%s + %s}", rt, rs, memInst[*program_counter].instruc + 10);
+                    sprintf(InstrucaoAssembly.InstructsAssembly, "lw %s, MEM[%s + %s]", rt, rs, memInst[*program_counter].instruc + 10);
                 } 
                 else if (strncmp("1111", memInst[*program_counter].instruc, 4) == 0) {
                     sprintf(InstrucaoAssembly.InstructsAssembly, "sw %s, MEM[%s + %s}", rt, rs, memInst[*program_counter].instruc + 10);
