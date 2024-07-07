@@ -1,0 +1,24 @@
+0100 000 001 000011 // Adiciona valor 3 no registrador 1
+0100 000 010 000100 // Adiciona valor 4 no registrador 2
+0100 000 011 000101 // Adiciona valor 5 no registrador 3
+0100 000 100 000110 // Adiciona valor 6 no registrador 4
+0100 000 101 000111 // Adiciona valor 7 no registrador 5
+1111 000 001 001000 // Salva valor 3 no endereço 8
+1111 000 010 001001 // Salva valor 4 no endereço 9
+1111 000 011 001010 // Salva valor 5 no endereço 10
+1111 000 100 001011 // Salva valor 6 no endereço 11
+1111 000 101 001100 // Salva valor 7 no endereço 12
+0000 011 001 001 000 // Soma reg 3(5) com reg 1(3) e salva em reg 1(8)
+0000 011 010 010 010 // Subtrai reg 2(3) do reg 3(5) e salva em reg 2(2)
+1000 110 101 000011 // se reg 6 = a reg 5 vai para instrução 16
+1011 000 110 001000 // Lê valor 3 no endereço 32 e salva no registrador 6
+1011 000 111 001001 // Lê valor 4 no endereço 33 e salva no registrador 7
+0000 000 000 000 000 // Soma 0 com 0 e salva 0
+0000 100 110 111 000 // Soma reg 4(6) com reg 6(x) e salva em reg 7
+0000 101 100 110 100 // reg 5(7) and reg 4(6) => reg 6(6)
+0000 101 100 110 101 // reg 5(7) or reg 4(6) => reg 6(7)
+1000 111 001 000010 // se reg 7 = a reg 1 vai para instrução 20
+0010 000000001000 // volta para a instrução 8
+1111 111 111 011110 // Salva valor do reg 7(13) no endereço 30 + 13
+
+memoria/InstrucoesCompletas.mem

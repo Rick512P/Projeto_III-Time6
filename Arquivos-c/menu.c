@@ -44,9 +44,9 @@ int menu(){
         printf("                                |7  +    Imprimir todo o simulador   +|\n");
         printf("                                |8  +          Salvar .asm           +|\n");
         printf("                                |9  +          Salvar .dat           +|\n");
-        printf("                                |A +     Executa Programa (run)     +|\n");
-        printf("                                |B +    Executa instrucao (step)    +|\n");
-        printf("                                |C +   Volta uma instrucao (back)   +|\n");
+        printf("                                |A  +     Executa Programa (run)     +|\n");
+        printf("                                |B  +    Executa instrucao (step)    +|\n");
+        printf("                                |C  +   Volta uma instrucao (back)   +|\n");
         printf("                                |0  +              Sair              +|\n");
         scanf(" %c", &escolha);
         switch (escolha)

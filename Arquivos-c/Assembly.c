@@ -26,9 +26,9 @@ void AsmCopy(type_instruc *instrucoesDecodificadas, Assembly *A, int tamLinhas){
             } else if (strcmp(instrucoesDecodificadas[i].opcode, "0100") == 0) {
                 sprintf(A[i].InstructsAssembly, "addi %s, %s, %s", rs, rt, instrucoesDecodificadas[i].imm);
             } else if (strcmp(instrucoesDecodificadas[i].opcode, "1011") == 0) {
-                sprintf(A[i].InstructsAssembly, "lw %s, %s", rt, instrucoesDecodificadas[i].imm);
+                sprintf(A[i].InstructsAssembly, "lw %s, MEM[%s + %s]", rt, rs, instrucoesDecodificadas[i].imm);
             } else if (strcmp(instrucoesDecodificadas[i].opcode, "1111") == 0) {
-                sprintf(A[i].InstructsAssembly, "sw %s, %s", rt, instrucoesDecodificadas[i].imm);
+                sprintf(A[i].InstructsAssembly, "sw %s, MEM[%s + %s]", rt, rs, instrucoesDecodificadas[i].imm);
             } else if (strcmp(instrucoesDecodificadas[i].opcode, "1000") == 0) {
                 sprintf(A[i].InstructsAssembly, "beq %s, %s, %s", rs, rt, instrucoesDecodificadas[i].imm);
             } else if (strcmp(instrucoesDecodificadas[i].opcode, "0010") == 0) {
@@ -115,10 +115,10 @@ Assembly ASMPrintInstruc(instrucao *memInst, int *program_counter){
                     sprintf(InstrucaoAssembly.InstructsAssembly, "addi %s, %s, %s", rs, rt, memInst[*program_counter].instruc + 10);
                 } 
                 else if (strncmp("1011", memInst[*program_counter].instruc, 4) == 0) {
-                    sprintf(InstrucaoAssembly.InstructsAssembly, "lw %s, %s", rt, memInst[*program_counter].instruc + 10);
+                    sprintf(InstrucaoAssembly.InstructsAssembly, "lw %s, MEM[%s + %s}", rt, rs, memInst[*program_counter].instruc + 10);
                 } 
                 else if (strncmp("1111", memInst[*program_counter].instruc, 4) == 0) {
-                    sprintf(InstrucaoAssembly.InstructsAssembly, "sw %s, %s", rt, memInst[*program_counter].instruc + 10);
+                    sprintf(InstrucaoAssembly.InstructsAssembly, "sw %s, MEM[%s + %s}", rt, rs, memInst[*program_counter].instruc + 10);
                 } 
                 else if (strncmp("1000", memInst[*program_counter].instruc, 4) == 0) {
                     sprintf(InstrucaoAssembly.InstructsAssembly, "beq %s, %s, %s", rs, rt, memInst[*program_counter].instruc + 10);

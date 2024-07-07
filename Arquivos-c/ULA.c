@@ -77,7 +77,8 @@ int ULA(type_instruc *instrucoesDecodificadas, int *contador, MemoriaDados *memD
     else if(strcmp(instrucoesDecodificadas[*contador].opcode,"1011") == 0){// lw GRAVA CONTEUDO DA MEMORIA NOS REGISTRADORES
         //$rt = M[$rs + imm]
         int immediate, dados;
-        immediate = bin_to_decimal(instrucoesDecodificadas[*contador].imm);
+        int regSource = retornoRegs(regs, instrucoesDecodificadas[*contador].rs);
+        immediate = bin_to_decimal(instrucoesDecodificadas[*contador].imm) + regSource;
         //Agora sei qual a posicao Immediate em decimal:
         dados = bin_to_decimal(memDados[immediate].dados);
         //Agora sei qual o valor contido na posição 4 da memoria em decimal:
@@ -87,7 +88,8 @@ int ULA(type_instruc *instrucoesDecodificadas, int *contador, MemoriaDados *memD
     else if(strcmp(instrucoesDecodificadas[*contador].opcode,"1111") == 0){// sw Pega o valor do immediate e armazenará na aluResult dos regsPipeline
         //M[$rs + imm] = $rt
         int immediate;
-        immediate = bin_to_decimal(instrucoesDecodificadas[*contador].imm);
+        int regSource = retornoRegs(regs, instrucoesDecodificadas[*contador].rs);
+        immediate = bin_to_decimal(instrucoesDecodificadas[*contador].imm) + regSource;
         return immediate;
     }
 
