@@ -2,6 +2,7 @@
 #define __DATA_H_
 
 #include "bibliotecas.h"
+#include "INST.h"
 
 // Definições das funções para inicializar e finalizar o terminal
 int DATA();

@@ -1,5 +1,7 @@
 #include "../Arquivos-h/ASSEMBLYTERMINAL.h"
 
+AssemblyASM ASSEMBLYASM[32];
+
 int ASSEMBLYTERMINAL() {
     float altura, largura;
     while (TRUE)

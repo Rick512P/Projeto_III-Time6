@@ -1,5 +1,6 @@
 #include "../Arquivos-h/INST.h"
 
+
 int INST() {
     float altura, largura;
     while (TRUE)

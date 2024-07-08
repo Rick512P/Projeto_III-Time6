@@ -2,7 +2,7 @@
 #define __INST_H_
 
 #include "bibliotecas.h"
-
+extern TELA tela;
 // Definições das funções para inicializar e finalizar o terminal
 int INST();
 void inicializaInst();

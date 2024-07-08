@@ -7,7 +7,7 @@
 #include <string.h>
 #include <ncurses.h>//<-LINUX
 //#include <ncurses/ncurses.h>//<-WINDOWS
-//#include <menu.h>
+#include <menu.h>
 
 typedef struct backup Backup;
 typedef struct desc_Pilha descPilha;
@@ -23,8 +23,6 @@ typedef struct {
     WINDOW *content;
     WINDOW *footer;
 } TELA;
-
-TELA tela;
 
 //instrucao da memoria de instruções
 typedef struct{
