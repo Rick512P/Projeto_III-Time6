@@ -32,7 +32,7 @@ int menu(){
     }
     do{
         
-        //escolha = print_menu();
+        /*
         printf("\n\n");
         printf("                                 _____________________________________\n");
         printf("                                |1  +  Carregar memória instruções   +|\n");
@@ -47,8 +47,10 @@ int menu(){
         printf("                                |A  +     Executa Programa (run)     +|\n");
         printf("                                |B  +    Executa instrucao (step)    +|\n");
         printf("                                |C  +   Volta uma instrucao (back)   +|\n");
-        printf("                                |0  +              Sair              +|\n");
-        scanf(" %c", &escolha);
+        printf("                                |0  +              Sair              +|\n");*/
+
+        escolha = terminal();
+        //escolha, tamLinhas, regs, memInst, memDados, &program_counter, mem, wb
         switch (escolha)
         {
         case '0':

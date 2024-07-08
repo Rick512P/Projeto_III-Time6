@@ -13,6 +13,19 @@ typedef struct backup Backup;
 typedef struct desc_Pilha descPilha;
 typedef struct nodo_Pilha NodoPilha;
 
+// Estrutura para o layout dos contêineres
+typedef struct {
+    WINDOW *header;
+    WINDOW *menu;
+    WINDOW *dados;
+    WINDOW *ASM;
+    WINDOW *instrucoes;
+    WINDOW *content;
+    WINDOW *footer;
+} TELA;
+
+TELA tela;
+
 //instrucao da memoria de instruções
 typedef struct{
     char instruc[17];

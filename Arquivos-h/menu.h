@@ -2,12 +2,15 @@
 #define __MENU_H_
 
 #include "Assembly.h"
+//#include "ASSEMBLYTERMINAL.h"
 #include "backstep.h"
 #include "bibliotecas.h"
 #include "carregaMemoriaDados.h"
 #include "controller.h"
+//#include "DATA.h"
 #include "decode.h"
 #include "inicializadores.h"
+//#include "INST.h"
 #include "Memoria_Dados.h"
 #include "parser.h"
 #include "PC.h"

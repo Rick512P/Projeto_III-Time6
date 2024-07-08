@@ -19,7 +19,13 @@
     "estado.h": "c",
     "carrememoriadados.h": "c",
     "carregamemoriadados.h": "c",
-    "decimal_to_bin.h": "c"
+    "decimal_to_bin.h": "c",
+    "terminal.h": "c",
+    "ncurses.h": "c",
+    "data.h": "c",
+    "assemblyterminal.h": "c",
+    "inst.h": "c",
+    "telas.h": "c"
   },
   "C_Cpp_Runner.cCompilerPath": "gcc",
   "C_Cpp_Runner.cppCompilerPath": "g++",
