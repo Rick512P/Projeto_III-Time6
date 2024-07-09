@@ -4,7 +4,8 @@
 int INST(instrucao *memInst) {
     float altura, largura;
     struct TELAINST *telainst = (struct TELAINST *)malloc(sizeof(struct TELAINST));
-    while (TRUE)
+    int ch;
+    while ((ch = getch()) != KEY_F(1))
     {
         inicializaInst();
         desenhaTelaINST(&altura, &largura, telainst);
@@ -112,6 +113,7 @@ void desenhaIsntruct(float largura, instrucao *memInst, struct TELAINST *telains
 
     //FOOTER
     mvwprintw(telainst->footer, 1, largura*2, "AUTORES");
+    mvwprintw(telainst->footer, 1, 2, "Press F1 to quit");
     mvwprintw(telainst->footer, 2, largura, "Erick Santos Matos, Henrique de Lima Bortolomiol, Pedro Afonso Barcelos da Silva Simões Pires");
 
     // Atualização das janelas

@@ -3,7 +3,8 @@
 int ASSEMBLYTERMINAL(Assembly *A) {
     float altura, largura;
     struct TELAASSEMBLY *telaAssembly = (struct TELAASSEMBLY *)malloc(sizeof(struct TELAASSEMBLY)); 
-    while (TRUE)
+    int ch;
+    while ((ch = getch()) != KEY_F(1))
     {
         inicializaASM();
         desenhaTelaASM(telaAssembly, &altura, &largura);
@@ -128,6 +129,7 @@ void desenhaAssembly(struct TELAASSEMBLY *telaAssembly, float largura, Assembly 
 
     //FOOTER
     mvwprintw(telaAssembly->footer, 1, largura*2, "AUTORES");
+    mvwprintw(telaAssembly->footer, 1, 2, "Press F1 to quit");
     mvwprintw(telaAssembly->footer, 2, largura, "Erick Santos Matos, Henrique de Lima Bortolomiol, Pedro Afonso Barcelos da Silva Simões Pires");
 
     // Atualização das janelas

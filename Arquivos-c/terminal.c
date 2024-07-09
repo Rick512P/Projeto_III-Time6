@@ -5,18 +5,13 @@ char terminal(int *program_counter, instrucao *memInst, int tamLinhas, type_inst
     int ch, r, i, j, instLogic, instAri, instDesvio, instAcessoMem;
     char escolha = ' ';
     struct TELA *tela = (struct TELA *)malloc(sizeof(struct TELA));
-    while (escolha == ' ') {
+   
+    //puts("Debug");
+    while (escolha == ' ') 
+    {
+        inicializaTerminal();
         desenhaTelaInicial(tela, &altura, &largura);
-        switch (*program_counter)
-        {
-        case 0:
-            desenhaMenu(tela, program_counter, largura, regs, tamLinhas, r, i, j, instLogic, instAri, instDesvio, instAcessoMem, instrucIF, instrucID, instrucEX, instrucMEM, instrucWB);
-            break;
-        
-        default:
-            imprimeEstatisticasTerminal(tela, program_counter, altura, memInst, tamLinhas, instrucoesDecodificadas, regs, instrucIF, instrucID, instrucEX, instrucMEM, instrucWB);
-            break;
-        }
+        imprimeEstatisticasTerminal(tela, program_counter, altura, memInst, tamLinhas, instrucoesDecodificadas, regs, instrucIF, instrucID, instrucEX, instrucMEM, instrucWB);
 
         ch = getch();
         switch (ch) {
@@ -54,10 +49,13 @@ char terminal(int *program_counter, instrucao *memInst, int tamLinhas, type_inst
                 escolha = 'a';
                 break;
         }
+        //puts(&escolha);
     }
 
+    clear();
     finalizaTerminal();
     free(tela);
+    puts(&escolha);
     return escolha;
 }
 
@@ -69,7 +67,7 @@ void inicializaTerminal() {
     curs_set(0);
 }
 
-void finalizaTerminal() {
+void finalizaTerminal(){
     endwin();
 }
 
@@ -81,7 +79,7 @@ void desenhaTelaInicial(struct TELA *tela, float *altura, float *largura){
     // Define um par de cores (texto branco no fundo preto)
     init_pair(1, COLOR_BLACK, COLOR_WHITE);
 
-
+    //puts("Debug");
     // Criação dos contêineres
     tela->header = newwin(*altura*0.10, *largura*0.5 + *largura*0.5, 0, 0);
     tela->menu = newwin(*altura*0.80, *largura*0.65, *altura*0.10, 0);
@@ -123,7 +121,7 @@ void desenhaMenu(struct TELA *tela, int *program_counter, float largura, int *re
     mvwprintw(tela->menu, 14, largura, "F11    + DESFAZER CICLO (BACK STEP)");
     mvwprintw(tela->menu, 15, largura, "F1     + ENCERRAR SIMULADOR");
 
-    if (program_counter != 0)
+    if (*program_counter != 0)
     {
     
         //CONTENT
@@ -266,35 +264,34 @@ void desenhaMenu(struct TELA *tela, int *program_counter, float largura, int *re
 }
 
 void imprimeEstatisticasTerminal(struct TELA *tela, int *program_counter, float largura, instrucao *memInst, int tamLinhas, type_instruc *instrucoesDecodificadas, int *regs, char *instrucIF, char *instrucID, char *instrucEX, char *instrucMEM, char *instrucWB){
-    if (memInst == NULL) {
-                fprintf(stderr, "Falha ao obter instruções.\n");
-            }
     int r=0, i=0, j=0, instAri=0, instLogic=0, instDesvio=0, instAcessoMem=0;
-    for(int y=0;y<tamLinhas;y++){
-        if (strncmp(memInst[y].instruc, "0000", 4) == 0){ //compara os 4 primeiros numeros de memInst com "0000"
-            r++;
-            if ((strcmp(instrucoesDecodificadas[y].funct, "000")) || (strcmp(instrucoesDecodificadas[y].funct, "010") == 0))
-                instAri++;
-            else
-                instLogic++;
-        }
-        else if (strncmp(memInst[y].instruc, "0100", 4) == 0 || strncmp(memInst[y].instruc, "1011", 4) == 0 || strncmp(memInst[y].instruc, "1111", 4) == 0 || strncmp(memInst[y].instruc, "0110", 4) == 0 || strncmp(memInst[y].instruc, "1000", 4) == 0){
-            i++;
-            if (strncmp(memInst[y].instruc, "0100", 4) == 0)
-                instAri++;
-            else if ((strncmp(memInst[y].instruc, "1011", 4) == 0) || strncmp(memInst[y].instruc, "1111", 4) == 0)
-                instAcessoMem++;
-            else if (strncmp(memInst[y].instruc, "1000", 4) == 0)
+    if (*program_counter != 0){
+        if (memInst == NULL) {
+                    fprintf(stderr, "Falha ao obter instruções.\n");
+                }
+        for(int y=0;y<tamLinhas;y++){
+            if (strncmp(memInst[y].instruc, "0000", 4) == 0){ //compara os 4 primeiros numeros de memInst com "0000"
+                r++;
+                if ((strcmp(instrucoesDecodificadas[y].funct, "000")) || (strcmp(instrucoesDecodificadas[y].funct, "010") == 0))
+                    instAri++;
+                else
+                    instLogic++;
+            }
+            else if (strncmp(memInst[y].instruc, "0100", 4) == 0 || strncmp(memInst[y].instruc, "1011", 4) == 0 || strncmp(memInst[y].instruc, "1111", 4) == 0 || strncmp(memInst[y].instruc, "0110", 4) == 0 || strncmp(memInst[y].instruc, "1000", 4) == 0){
+                i++;
+                if (strncmp(memInst[y].instruc, "0100", 4) == 0)
+                    instAri++;
+                else if ((strncmp(memInst[y].instruc, "1011", 4) == 0) || strncmp(memInst[y].instruc, "1111", 4) == 0)
+                    instAcessoMem++;
+                else if (strncmp(memInst[y].instruc, "1000", 4) == 0)
+                    instDesvio++;
+            }  
+            else if (strncmp(memInst[y].instruc, "0010", 4) == 0){
+                j++;
                 instDesvio++;
-
-
-
-        }  
-        else if (strncmp(memInst[y].instruc, "0010", 4) == 0){
-            j++;
-            instDesvio++;
+            }
+                
         }
-            
     }
 
     desenhaMenu(tela, program_counter, largura, regs, tamLinhas, r, i, j, instLogic, instAri, instDesvio, instAcessoMem, instrucIF, instrucID, instrucEX, instrucMEM, instrucWB);

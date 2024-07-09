@@ -32,26 +32,9 @@ int menu(){
     }
 
     do{
-        
-        /*
-        printf("\n\n");
-        printf("                                 _____________________________________\n");
-        printf("                                |1  +  Carregar memória instruções   +|\n");
-        printf("                                |2  +    Carregar memoria dados      +|\n");
-        printf("                                |3  +        Imprimir memória        +|\n");
-        printf("                                |4  +      Imprimir registradores    +|\n");
-        printf("                                |5  +      Imprimir estatisticas     +|\n");
-        printf("                                |6  +  Imprimir instrucoes Assembly  +|\n");
-        printf("                                |7  +    Imprimir todo o simulador   +|\n");
-        printf("                                |8  +          Salvar .asm           +|\n");
-        printf("                                |9  +          Salvar .dat           +|\n");
-        printf("                                |A  +     Executa Programa (run)     +|\n");
-        printf("                                |B  +    Executa instrucao (step)    +|\n");
-        printf("                                |C  +   Volta uma instrucao (back)   +|\n");
-        printf("                                |0  +              Sair              +|\n");*/
-
+        //getchar();
         escolha = terminal(&program_counter, memInst, tamLinhas, instrucoesDecodificadas, regs, regif->InstrucaoASM.InstructsAssembly, id->InstrucaoASM.InstructsAssembly, ex->InstrucaoASM.InstructsAssembly, mem->InstrucaoASM.InstructsAssembly, wb->InstrucaoASM.InstructsAssembly);
-        //escolha, tamLinhas, regs, memInst, memDados, &program_counter, mem, wb
+
         switch (escolha)
         {
         case '0':
@@ -109,45 +92,27 @@ int menu(){
                 printf("Programa nao deve ja ter sido inicializado.");
             break;
 
-        case '3': //Imprimir memória de instruções e memória de dados
-        
-            imprimeMemInstruc(memInst);
-            imprimeDados(memDados);
+        case '3': //Imprimir memória de instruções
+            INST(memInst);
             break;
 
-        case '4': //Imprimir registradores
-            imprimeRegistradores(regs);
+        case '4': //Imprimir memória de dados
+            DATA(memDados);
             break;
 
-        case '5': //Imprimir estatísticas como: quantas intruc, classes, etc;
-            if (memInst == NULL){
-                printf("Carregue a memoria com instrucoes antes.\n");
-                break;
-            }
-            imprimeEstatisticas(memInst, tamLinhas, instrucoesDecodificadas);
+        case '5': //Imprimir instruções Assembly
+            ASSEMBLYTERMINAL(AssemblyInst);
             break;
             
-        case '6': // Imprimir Assembly
-            imprimirASM(AssemblyInst, tamLinhas);
-            break;
-
-        case '7': //imprimir todo o simulador
-            imprimeSimulador(tamLinhas, instrucoesDecodificadas, memInst);
-            imprimeEstatisticas(memInst, tamLinhas, instrucoesDecodificadas);
-            paineis(memDados, memInst, regs);
-            imprimirASM(AssemblyInst, tamLinhas);
-            break;
-
-        case '8': //salvar arquivo .asm (com as instruções traduzidas para a linguagem intermediária Assembly)
+        case '6': //salvar arquivo .asm (com as instruções traduzidas para a linguagem intermediária Assembly)
             SaveASM(AssemblyInst, tamLinhas);
             break;
 
-        case '9': //Salvar arquivo DATA.dat
+        case '7': //Salvar arquivo DATA.dat
             escreverArquivoMemoria(memDados);
             break;
 
-        case 'A':
-        case 'a': //Chamar função responsável pela execução do programa
+        case '8': //Chamar função responsável pela execução do programa
             if (memInst == NULL){
                 printf("Carregue a memoria com instrucoes antes.\n");
                 break;
@@ -165,8 +130,7 @@ int menu(){
                 descPilha = PUSH(descPilha, NodoPilha);
             break;
 
-        case 'B':
-        case 'b': //Chamar função responsável pela execução do programa passo a passo
+        case '9': //Chamar função responsável pela execução do programa passo a passo
             if (memInst == NULL){
                 printf("Carregue a memoria com instrucoes antes.\n");
                 break;
@@ -184,8 +148,8 @@ int menu(){
                 descPilha = PUSH(descPilha, NodoPilha);
             break;
 
-        case 'C':
-        case 'c': //Chamar função responsável por retornar uma instrução (PC--)
+        case 'A':
+        case 'a': //Chamar função responsável por retornar uma instrução (PC--)
             descPilha = Realoca(descPilha, regs, memDados, regif, id, ex, mem, wb, sinal, AssemblyInst, &program_counter, &Etapa);
             printf("Retornamos para:\nWB-Instrucao:[%s]\nMEM-Instrucao:[%s]\nEX-Instrucao:[%s]\nID-Instrucao[%s]\nIF-Instrucao:[%s]\n", wb->InstrucaoASM.InstructsAssembly, mem->InstrucaoASM.InstructsAssembly, ex->InstrucaoASM.InstructsAssembly, id->InstrucaoASM.InstructsAssembly, regif->InstrucaoASM.InstructsAssembly);
             if(descPilha->Topo == NULL){

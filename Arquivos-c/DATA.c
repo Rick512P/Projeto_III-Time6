@@ -3,7 +3,8 @@
 int DATA(MemoriaDados *mem) {
     float altura, largura;
     struct TELADATA *teladata = (struct TELADATA *)malloc(sizeof(struct TELADATA));
-    while (TRUE)
+    int ch;
+    while ((ch = getch()) != KEY_F(1))
     {
         inicializaData();
         desenhaTelaDATA(teladata, &altura, &largura);
@@ -110,6 +111,7 @@ void desenhaData(struct TELADATA *teladata, float largura, MemoriaDados *memDado
 
     //FOOTER
     mvwprintw(teladata->footer, 1, largura*2, "AUTORES");
+    mvwprintw(teladata->footer, 1, 2, "Press F1 to quit");
     mvwprintw(teladata->footer, 2, largura, "Erick Santos Matos, Henrique de Lima Bortolomiol, Pedro Afonso Barcelos da Silva Simões Pires");
 
     // Atualização das janelas
