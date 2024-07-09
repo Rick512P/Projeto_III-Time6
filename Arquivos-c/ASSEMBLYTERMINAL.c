@@ -2,7 +2,7 @@
 
 int ASSEMBLYTERMINAL(Assembly *A) {
     float altura, largura;
-    struct TELAASSEMBLY *telaAssembly; 
+    struct TELAASSEMBLY *telaAssembly = (struct TELAASSEMBLY *)malloc(sizeof(struct TELAASSEMBLY)); 
     while (TRUE)
     {
         inicializaASM();
@@ -13,7 +13,7 @@ int ASSEMBLYTERMINAL(Assembly *A) {
     }
 
     finalizaASM();
-
+    free(telaAssembly);
     return 0;
 }
 

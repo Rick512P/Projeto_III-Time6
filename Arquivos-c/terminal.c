@@ -4,8 +4,8 @@ char terminal(int *program_counter, instrucao *memInst, int tamLinhas, type_inst
     float altura, largura;
     int ch, r, i, j, instLogic, instAri, instDesvio, instAcessoMem;
     char escolha = ' ';
-    struct TELA *tela;
-    while (TRUE) {
+    struct TELA *tela = (struct TELA *)malloc(sizeof(struct TELA));
+    while (escolha == ' ') {
         desenhaTelaInicial(tela, &altura, &largura);
         switch (*program_counter)
         {
@@ -54,15 +54,10 @@ char terminal(int *program_counter, instrucao *memInst, int tamLinhas, type_inst
                 escolha = 'a';
                 break;
         }
-
-        // Se escolha não estiver mais vazia, saia do loop
-        if (escolha != ' ') {
-            break;
-        }
     }
 
     finalizaTerminal();
-
+    free(tela);
     return escolha;
 }
 

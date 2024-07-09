@@ -3,7 +3,7 @@
 
 int INST(instrucao *memInst) {
     float altura, largura;
-    struct TELAINST *telainst;
+    struct TELAINST *telainst = (struct TELAINST *)malloc(sizeof(struct TELAINST));
     while (TRUE)
     {
         inicializaInst();
@@ -13,7 +13,7 @@ int INST(instrucao *memInst) {
 
     }
     finalizaInst();
-
+    free(telainst);
     return 0;
 }
 

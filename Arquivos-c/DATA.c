@@ -2,7 +2,7 @@
 
 int DATA(MemoriaDados *mem) {
     float altura, largura;
-    struct TELADATA *teladata;
+    struct TELADATA *teladata = (struct TELADATA *)malloc(sizeof(struct TELADATA));
     while (TRUE)
     {
         inicializaData();
@@ -12,7 +12,7 @@ int DATA(MemoriaDados *mem) {
     }
    
     finalizaData();
-
+    free(teladata);
     return 0;
 }
 
