@@ -5,10 +5,10 @@
 #include "INST.h"
 
 // Definições das funções para inicializar e finalizar o terminal
-int DATA();
+int DATA(MemoriaDados **mem);
 void inicializaData();
 void finalizaData();
 void desenhaTelaDATA(float *altura, float *largura);
-void desenhaData(float largura);
+void desenhaData(float largura, MemoriaDados *mem);
 
 #endif

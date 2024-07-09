@@ -10,10 +10,10 @@ typedef struct {
 
 
 // Definições das funções para inicializar e finalizar o terminal
-int ASSEMBLYTERMINAL();
+int ASSEMBLYTERMINAL(Assembly **A);
 void inicializaASM();
 void finalizaASM();
 void desenhaTelaASM(float *altura, float *largura);
-void desenhaAssembly(float largura);
+void desenhaAssembly(float largura, Assembly *A);
 
 #endif
