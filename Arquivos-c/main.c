@@ -51,7 +51,7 @@ int menu(){
         printf("                                |C  +   Volta uma instrucao (back)   +|\n");
         printf("                                |0  +              Sair              +|\n");*/
 
-        escolha = terminal();
+        escolha = terminal(&memInst, tamLinhas, &instrucoesDecodificadas, &regs);
         //escolha, tamLinhas, regs, memInst, memDados, &program_counter, mem, wb
         switch (escolha)
         {
@@ -111,6 +111,7 @@ int menu(){
             break;
 
         case '3': //Imprimir memória de instruções e memória de dados
+        
             imprimeMemInstruc(memInst);
             imprimeDados(memDados);
             break;

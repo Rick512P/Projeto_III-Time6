@@ -1,13 +1,13 @@
 #include "../Arquivos-h/Terminal.h"
 
-char terminal() {
+char terminal(int **program_counter, instrucao **memInst, int tamLinhas, type_instruc **instrucoesDecodificadas, int **regs) {
     float altura, largura;
     int ch;
     char escolha = ' ';
 
     while (TRUE) {
         desenhaTelaInicial(&altura, &largura);
-        desenhaMenu(largura, altura);
+        imprimeEstatisticasTerminal(program_counter, altura, memInst, tamLinhas, instrucoesDecodificadas, regs);
 
         ch = getch();
         switch (ch) {
@@ -97,20 +97,21 @@ void desenhaTelaInicial(float *altura, float *largura){
     wrefresh(tela.footer);
 }
 
-void desenhaMenu(float largura, float altura){
-    int regs[8]={0,1,2,3,4,5,6,7}, i;
+void desenhaMenu(int program_counter, float largura, int *regs, int tamLinhas, int r, int I, int j, int instLogic, int instAri, int instDesvio, int instAcessoMem)
+{
+    int i;
     attron(COLOR_PAIR(1)); // Ativa o par de cores número 1
 
     //HEAR
     mvwprintw(tela.header, 1, largura*1.8, "SIMULADOR MINIMIPS 8BITS PIPELINE");
 
     //MENU
-    mvwprintw(tela.menu, 3, largura*1.3, "=== MENU ===");
-    mvwprintw(tela.menu, 5, largura, "F2     + CARREGAR MEMóRIA DE INSTRUçõES");
-    mvwprintw(tela.menu, 6, largura, "F3     + CARREGAR MEMóRIA DE DADOS");
-    mvwprintw(tela.menu, 7, largura, "F4     + EXIBIR MEMóRIA DE INSTRUçõES");
-    mvwprintw(tela.menu, 8, largura, "F5     + EXIBIR MEMóRIA DE DADOS");
-    mvwprintw(tela.menu, 9, largura, "F6     + EXIBIR INSTRUçõES ASSEMBLY");
+    mvwprintw(tela.menu, 3,  largura*1.3, "=== MENU ===");
+    mvwprintw(tela.menu, 5,  largura, "F2     + CARREGAR MEMóRIA DE INSTRUçõES");
+    mvwprintw(tela.menu, 6,  largura, "F3     + CARREGAR MEMóRIA DE DADOS");
+    mvwprintw(tela.menu, 7,  largura, "F4     + EXIBIR MEMóRIA DE INSTRUçõES");
+    mvwprintw(tela.menu, 8,  largura, "F5     + EXIBIR MEMóRIA DE DADOS");
+    mvwprintw(tela.menu, 9,  largura, "F6     + EXIBIR INSTRUçõES ASSEMBLY");
     mvwprintw(tela.menu, 10, largura, "F7     + SALVAR ARQUIVO .ASM");
     mvwprintw(tela.menu, 11, largura, "F8     + SALVAR ARQUIVO .DAT");
     mvwprintw(tela.menu, 12, largura, "F9     + EXECUTAR PROGRAMA (RUN)");
@@ -143,20 +144,20 @@ void desenhaMenu(float largura, float altura){
     mvwprintw(tela.content, 15,  largura*0.8, "|=== ESTADO ===|");
     mvwprintw(tela.content, 16,  largura*0.8, "|--------------|");
     mvwprintw(tela.content, 17,  largura*0.8, "|Ciclo | %d    |", i);
-    mvwprintw(tela.content, 18,  largura*0.8, "|PC    | %d    |", i);
+    mvwprintw(tela.content, 18,  largura*0.8, "|PC    | %d    |", program_counter);
     mvwprintw(tela.content, 19,  largura*0.8, "|--------------|");
 
     i++;
 
     mvwprintw(tela.content, i+1,  largura/3, "|-----------------------------------|");
-    mvwprintw(tela.content, i+2,  largura/3, "| Total de Instruções      : %d|", i );
-    mvwprintw(tela.content, i+3,  largura/3, "| Tipo R                     : %d|", i );
-    mvwprintw(tela.content, i+4,  largura/3, "| Tipo I                     : %d|", i );
-    mvwprintw(tela.content, i+5,  largura/3, "| Tipo j                     : %d|", i );
-    mvwprintw(tela.content, i+6,  largura/3, "| Classe Lógica             : %d|", i );
-    mvwprintw(tela.content, i+7,  largura/3, "| CLasse Aritmética         : %d|", i );
-    mvwprintw(tela.content, i+8,  largura/3, "| Classe de Desvio           : %d|", i );
-    mvwprintw(tela.content, i+9,  largura/3, "| Classe de Acesso a Memória : %d|", i );
+    mvwprintw(tela.content, i+2,  largura/3, "| Total de Instruções      : %d|", tamLinhas);
+    mvwprintw(tela.content, i+3,  largura/3, "| Tipo R                     : %d|", r);
+    mvwprintw(tela.content, i+4,  largura/3, "| Tipo I                     : %d|", I);
+    mvwprintw(tela.content, i+5,  largura/3, "| Tipo j                     : %d|", j);
+    mvwprintw(tela.content, i+6,  largura/3, "| Classe Lógica             : %d|", instLogic);
+    mvwprintw(tela.content, i+7,  largura/3, "| CLasse Aritmética         : %d|", instAri);
+    mvwprintw(tela.content, i+8,  largura/3, "| Classe de Desvio           : %d|", instDesvio);
+    mvwprintw(tela.content, i+9,  largura/3, "| Classe de Acesso a Memória : %d|", instAcessoMem);
     mvwprintw(tela.content, i+10, largura/3, "|-----------------------------------|");
 
 
@@ -171,4 +172,37 @@ void desenhaMenu(float largura, float altura){
     wrefresh(tela.footer);
 }
 
+void imprimeEstatisticasTerminal(int *program_counter, float largura, instrucao *memInst, int tamLinhas, type_instruc *instrucoesDecodificadas, int *regs){
+    if (memInst == NULL) {
+                fprintf(stderr, "Falha ao obter instruções.\n");
+            }
+    int r=0, i=0, j=0, instAri=0, instLogic=0, instDesvio=0, instAcessoMem=0;
+    for(int y=0;y<tamLinhas;y++){
+        if (strncmp(memInst[y].instruc, "0000", 4) == 0){ //compara os 4 primeiros numeros de memInst com "0000"
+            r++;
+            if ((strcmp(instrucoesDecodificadas[y].funct, "000")) || (strcmp(instrucoesDecodificadas[y].funct, "010") == 0))
+                instAri++;
+            else
+                instLogic++;
+        }
+        else if (strncmp(memInst[y].instruc, "0100", 4) == 0 || strncmp(memInst[y].instruc, "1011", 4) == 0 || strncmp(memInst[y].instruc, "1111", 4) == 0 || strncmp(memInst[y].instruc, "0110", 4) == 0 || strncmp(memInst[y].instruc, "1000", 4) == 0){
+            i++;
+            if (strncmp(memInst[y].instruc, "0100", 4) == 0)
+                instAri++;
+            else if ((strncmp(memInst[y].instruc, "1011", 4) == 0) || strncmp(memInst[y].instruc, "1111", 4) == 0)
+                instAcessoMem++;
+            else if (strncmp(memInst[y].instruc, "1000", 4) == 0)
+                instDesvio++;
 
+
+
+        }  
+        else if (strncmp(memInst[y].instruc, "0010", 4) == 0){
+            j++;
+            instDesvio++;
+        }
+            
+    }
+
+    desenhaMenu(&program_counter, largura, *regs, tamLinhas, r, i, j, instLogic, instAri, instDesvio, instAcessoMem);
+}
