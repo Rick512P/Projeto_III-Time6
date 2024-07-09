@@ -4,16 +4,18 @@
 #include "bibliotecas.h"
 #include "INST.h"
 
-typedef struct {
-    char assembly[256];
-} AssemblyASM;
+struct TELAASSEMBLY{
+    WINDOW *header;
+    WINDOW *ASM;
+    WINDOW *footer;
+};
 
 
 // Definições das funções para inicializar e finalizar o terminal
 int ASSEMBLYTERMINAL(Assembly *A);
 void inicializaASM();
 void finalizaASM();
-void desenhaTelaASM(float *altura, float *largura);
-void desenhaAssembly(float largura, Assembly *A);
+void desenhaTelaASM(struct TELAASSEMBLY *telaAssembly, float *altura, float *largura);
+void desenhaAssembly(struct TELAASSEMBLY *telaAssembly, float largura, Assembly *A);
 
 #endif

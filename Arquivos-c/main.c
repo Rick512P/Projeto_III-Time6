@@ -1,7 +1,5 @@
 #include "../Arquivos-h/menu.h"
 
-TELA tela;
-
 int main(){
     menu();
     return 0;
