@@ -4,7 +4,7 @@
 #include "bibliotecas.h"
 extern TELA tela;
 // Definições das funções para inicializar e finalizar o terminal
-int INST(instrucao **memInst);
+int INST(instrucao *memInst);
 void inicializaInst();
 void finalizaInst();
 void desenhaTelaINST(float *altura, float *largura);

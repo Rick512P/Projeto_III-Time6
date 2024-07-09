@@ -1,13 +1,13 @@
 #include "../Arquivos-h/INST.h"
 
 
-int INST(instrucao **memInst) {
+int INST(instrucao *memInst) {
     float altura, largura;
     while (TRUE)
     {
         inicializaInst();
         desenhaTelaINST(&altura, &largura);
-        desenhaIsntruct(altura, *memInst);
+        desenhaIsntruct(altura, memInst);
         getch();
 
     }
@@ -65,47 +65,47 @@ void desenhaIsntruct(float largura, instrucao *memInst) {
 
     for (i = 0; i<32; i++){
         if (i < 10)
-            mvwprintw(tela.instrucoes, i+2, 1, "INST 00%d: %s", i, memInst[i]);
+            mvwprintw(tela.instrucoes, i+2, 1, "INST 00%d: %s", i, memInst[i].instruc);
         else
-            mvwprintw(tela.instrucoes, i+2, 1, "INST 0%d: %s", i, memInst[i]);
+            mvwprintw(tela.instrucoes, i+2, 1, "INST 0%d: %s", i, memInst[i].instruc);
     }
     linhas = 1;
     for (i; i<64; i++){
         linhas++;
-        mvwprintw(tela.instrucoes, linhas, largura/2, "|INST 0%d: %s", i, memInst[i]);
+        mvwprintw(tela.instrucoes, linhas, largura/2, "|INST 0%d: %s", i, memInst[i].instruc);
     }
     linhas = 1;
     for (i; i<96; i++){
         linhas++;
-        mvwprintw(tela.instrucoes, linhas, largura, "|INST 0%d: %s", i, memInst[i]);
+        mvwprintw(tela.instrucoes, linhas, largura, "|INST 0%d: %s", i, memInst[i].instruc);
     }
     linhas = 1;
     for (i; i<128; i++){
         linhas++;
         if (i < 100)
-            mvwprintw(tela.instrucoes, linhas, largura+largura/2, "|INST 0%d: %s", i, memInst[i]);
+            mvwprintw(tela.instrucoes, linhas, largura+largura/2, "|INST 0%d: %s", i, memInst[i].instruc);
         else
-            mvwprintw(tela.instrucoes, linhas, largura+largura/2, "|INST %d: %s", i, memInst[i]);
+            mvwprintw(tela.instrucoes, linhas, largura+largura/2, "|INST %d: %s", i, memInst[i].instruc);
     }
     linhas = 1;
     for (i; i<160; i++){
         linhas++;
-        mvwprintw(tela.instrucoes, linhas, largura*2, "|INST %d: %s", i, memInst[i]);
+        mvwprintw(tela.instrucoes, linhas, largura*2, "|INST %d: %s", i, memInst[i].instruc);
     }
     linhas = 1;
     for (i; i<192; i++){
         linhas++;
-        mvwprintw(tela.instrucoes, linhas, largura*2+largura/2, "|INST %d: %s", i, memInst[i]);
+        mvwprintw(tela.instrucoes, linhas, largura*2+largura/2, "|INST %d: %s", i, memInst[i].instruc);
     }
     linhas = 1;
     for (i; i<224; i++){
         linhas++;
-        mvwprintw(tela.instrucoes, linhas, largura*3, "|INST %d: %s", i, memInst[i]);
+        mvwprintw(tela.instrucoes, linhas, largura*3, "|INST %d: %s", i, memInst[i].instruc);
     }
     linhas = 1;
     for (i; i<256; i++){
         linhas++;
-        mvwprintw(tela.instrucoes, linhas, largura*3 + largura/2, "|INST %d: %s", i, memInst[i]);
+        mvwprintw(tela.instrucoes, linhas, largura*3 + largura/2, "|INST %d: %s", i, memInst[i].instruc);
     }
 
     //FOOTER

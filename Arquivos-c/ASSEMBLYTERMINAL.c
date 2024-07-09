@@ -2,7 +2,7 @@
 
 AssemblyASM ASSEMBLYASM[32];
 
-int ASSEMBLYTERMINAL(Assembly **A) {
+int ASSEMBLYTERMINAL(Assembly *A) {
     float altura, largura;
     while (TRUE)
     {
@@ -69,23 +69,23 @@ void desenhaAssembly(float largura, Assembly *A) // Adicionar verificação de N
 
     for (i = 0; i<32; i++){
         if (i < 10)
-            mvwprintw(tela.ASM, i+2, 1, "INST 00%d: %s", i, A[i].InstructsAssembly[0]);
+            mvwprintw(tela.ASM, i+2, 1, "INST 00%d: %s", i, A[i].InstructsAssembly);
         else
-            mvwprintw(tela.ASM, i+2, 1, "INST 0%d: %s", i, A[i].InstructsAssembly[0]);
+            mvwprintw(tela.ASM, i+2, 1, "INST 0%d: %s", i, A[i].InstructsAssembly);
     }
     if (sizeof(ASSEMBLYASM)>=32)
     {    
         linhas = 1;
         for (i; i<64; i++){
             linhas++;
-            mvwprintw(tela.ASM, linhas, largura/2, "|INST 0%d: %s", i, A[i].InstructsAssembly[0]);
+            mvwprintw(tela.ASM, linhas, largura/2, "|INST 0%d: %s", i, A[i].InstructsAssembly);
         }
     }
     else if (sizeof(ASSEMBLYASM) >= 64){
         linhas = 1;
         for (i; i<96; i++){
             linhas++;
-            mvwprintw(tela.ASM, linhas, largura, "|INST 0%d: %s", i, A[i].InstructsAssembly[0]);
+            mvwprintw(tela.ASM, linhas, largura, "|INST 0%d: %s", i, A[i].InstructsAssembly);
         }
     }
     else if (sizeof(ASSEMBLYASM) >= 96){
@@ -93,37 +93,37 @@ void desenhaAssembly(float largura, Assembly *A) // Adicionar verificação de N
         for (i; i<128; i++){
             linhas++;
             if (i < 100)
-                mvwprintw(tela.ASM, linhas, largura+largura/2, "|INST 0%d: %s", i, A[i].InstructsAssembly[0]);
+                mvwprintw(tela.ASM, linhas, largura+largura/2, "|INST 0%d: %s", i, A[i].InstructsAssembly);
             else
-                mvwprintw(tela.ASM, linhas, largura+largura/2, "|INST %d: %s", i, A[i].InstructsAssembly[0]);
+                mvwprintw(tela.ASM, linhas, largura+largura/2, "|INST %d: %s", i, A[i].InstructsAssembly);
         }
     }
     else if (sizeof(ASSEMBLYASM) >= 128){
         linhas = 1;
         for (i; i<160; i++){
             linhas++;
-            mvwprintw(tela.ASM, linhas, largura*2, "|INST %d: %s", i, A[i].InstructsAssembly[0]);
+            mvwprintw(tela.ASM, linhas, largura*2, "|INST %d: %s", i, A[i].InstructsAssembly);
         }
     }
     else if (sizeof(ASSEMBLYASM) >= 160){
         linhas = 1;
         for (i; i<192; i++){
             linhas++;
-            mvwprintw(tela.ASM, linhas, largura*2+largura/2, "|INST %d: %s", i, A[i].InstructsAssembly[0]);
+            mvwprintw(tela.ASM, linhas, largura*2+largura/2, "|INST %d: %s", i, A[i].InstructsAssembly);
         }
     }
     else if (sizeof(ASSEMBLYASM) >= 192){
         linhas = 1;
         for (i; i<224; i++){
             linhas++;
-            mvwprintw(tela.ASM, linhas, largura*3, "|INST %d: %s", i, A[i].InstructsAssembly[0]);
+            mvwprintw(tela.ASM, linhas, largura*3, "|INST %d: %s", i, A[i].InstructsAssembly);
         }
     }
     else if (sizeof(ASSEMBLYASM) >= 224){
         linhas = 1;
         for (i; i<256; i++){
             linhas++;
-            mvwprintw(tela.ASM, linhas, largura*3 + largura/2, "|INST %d: %s", i, A[i].InstructsAssembly[0]);
+            mvwprintw(tela.ASM, linhas, largura*3 + largura/2, "|INST %d: %s", i, A[i].InstructsAssembly);
         }
     }
 

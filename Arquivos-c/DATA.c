@@ -1,6 +1,6 @@
 #include "../Arquivos-h/DATA.h"
 
-int DATA(MemoriaDados **mem) {
+int DATA(MemoriaDados *mem) {
     float altura, largura;
     while (TRUE)
     {
@@ -52,7 +52,7 @@ void desenhaTelaDATA(float *altura, float *largura) {
     wrefresh(tela.footer);
 }
 
-void desenhaData(float largura, MemoriaDados *mem) {
+void desenhaData(float largura, MemoriaDados *memDados) {
     int i, linhas;
     attron(COLOR_PAIR(1)); // Ativa o par de cores número 1
 
@@ -64,47 +64,47 @@ void desenhaData(float largura, MemoriaDados *mem) {
 
     for (i = 0; i<32; i++){
         if (i < 10)
-            mvwprintw(tela.dados, i+2, 1, "DADO 00%d: %s", i, mem[i]);
+            mvwprintw(tela.dados, i+2, 1, "DADO 00%d: %s", i, memDados[i].dados);
         else
-            mvwprintw(tela.dados, i+2, 1, "DADO 0%d: %s", i, mem[i]);
+            mvwprintw(tela.dados, i+2, 1, "DADO 0%d: %s", i, memDados[i].dados);
     }
     linhas = 1;
     for (i; i<64; i++){
         linhas++;
-        mvwprintw(tela.dados, linhas, largura/2, "|DADO 0%d: %s", i, mem[i]);
+        mvwprintw(tela.dados, linhas, largura/2, "|DADO 0%d: %s", i, memDados[i].dados);
     }
     linhas = 1;
     for (i; i<96; i++){
         linhas++;
-        mvwprintw(tela.dados, linhas, largura, "|DADO 0%d: %s", i, mem[i]);
+        mvwprintw(tela.dados, linhas, largura, "|DADO 0%d: %s", i, memDados[i].dados);
     }
     linhas = 1;
     for (i; i<128; i++){
         linhas++;
         if (i < 100)
-            mvwprintw(tela.dados, linhas, largura+largura/2, "|DADO 0%d: %s", i, mem[i]);
+            mvwprintw(tela.dados, linhas, largura+largura/2, "|DADO 0%d: %s", i, memDados[i].dados);
         else
-            mvwprintw(tela.dados, linhas, largura+largura/2, "|DADO %d: %s", i, mem[i]);
+            mvwprintw(tela.dados, linhas, largura+largura/2, "|DADO %d: %s", i, memDados[i].dados);
     }
     linhas = 1;
     for (i; i<160; i++){
         linhas++;
-        mvwprintw(tela.dados, linhas, largura*2, "|DADO %d: %s", i, mem[i]);
+        mvwprintw(tela.dados, linhas, largura*2, "|DADO %d: %s", i, memDados[i].dados);
     }
     linhas = 1;
     for (i; i<192; i++){
         linhas++;
-        mvwprintw(tela.dados, linhas, largura*2+largura/2, "|DADO %d: %s", i, mem[i]);
+        mvwprintw(tela.dados, linhas, largura*2+largura/2, "|DADO %d: %s", i, memDados[i].dados);
     }
     linhas = 1;
     for (i; i<224; i++){
         linhas++;
-        mvwprintw(tela.dados, linhas, largura*3, "|DADO %d: %s", i, mem[i]);
+        mvwprintw(tela.dados, linhas, largura*3, "|DADO %d: %s", i, memDados[i].dados);
     }
     linhas = 1;
     for (i; i<256; i++){
         linhas++;
-        mvwprintw(tela.dados, linhas, largura*3 + largura/2, "|DADO %d: %s", i, mem[i]);
+        mvwprintw(tela.dados, linhas, largura*3 + largura/2, "|DADO %d: %s", i, memDados[i].dados);
     }
 
     //FOOTER

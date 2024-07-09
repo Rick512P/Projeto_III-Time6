@@ -32,6 +32,7 @@ int menu(){
     for (i=0;i<8;i++){ //zerando registradores, caso contrario dá números inconsistentes
         regs[i] = 0;
     }
+
     do{
         
         /*
@@ -51,7 +52,7 @@ int menu(){
         printf("                                |C  +   Volta uma instrucao (back)   +|\n");
         printf("                                |0  +              Sair              +|\n");*/
 
-        escolha = terminal(&memInst, tamLinhas, &instrucoesDecodificadas, &regs);
+        escolha = terminal(&program_counter, memInst, tamLinhas, instrucoesDecodificadas, regs, regif->InstrucaoASM.InstructsAssembly, id->InstrucaoASM.InstructsAssembly, ex->InstrucaoASM.InstructsAssembly, mem->InstrucaoASM.InstructsAssembly, wb->InstrucaoASM.InstructsAssembly);
         //escolha, tamLinhas, regs, memInst, memDados, &program_counter, mem, wb
         switch (escolha)
         {

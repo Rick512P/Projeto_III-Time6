@@ -1,13 +1,13 @@
 #include "../Arquivos-h/Terminal.h"
 
-char terminal(int **program_counter, instrucao **memInst, int tamLinhas, type_instruc **instrucoesDecodificadas, int **regs) {
+char terminal(int *program_counter, instrucao *memInst, int tamLinhas, type_instruc *instrucoesDecodificadas, int *regs, char *instrucIF, char *instrucID, char *instrucEX, char *instrucMEM, char *instrucWB) {
     float altura, largura;
     int ch;
     char escolha = ' ';
 
     while (TRUE) {
         desenhaTelaInicial(&altura, &largura);
-        imprimeEstatisticasTerminal(program_counter, altura, memInst, tamLinhas, instrucoesDecodificadas, regs);
+        imprimeEstatisticasTerminal(program_counter, altura, memInst, tamLinhas, instrucoesDecodificadas, regs, instrucIF, instrucID, instrucEX, instrucMEM, instrucWB);
 
         ch = getch();
         switch (ch) {
@@ -97,7 +97,7 @@ void desenhaTelaInicial(float *altura, float *largura){
     wrefresh(tela.footer);
 }
 
-void desenhaMenu(int program_counter, float largura, int *regs, int tamLinhas, int r, int I, int j, int instLogic, int instAri, int instDesvio, int instAcessoMem)
+void desenhaMenu(int *program_counter, float largura, int *regs, int tamLinhas, int r, int I, int j, int instLogic, int instAri, int instDesvio, int instAcessoMem, char *instrucIF, char *instrucID, char *instrucEX, char *instrucMEM, char *instrucWB)
 {
     int i;
     attron(COLOR_PAIR(1)); // Ativa o par de cores número 1
@@ -125,11 +125,33 @@ void desenhaMenu(int program_counter, float largura, int *regs, int tamLinhas, i
 
     mvwprintw(tela.content, 3, largura*0.70, "ETAPA");
     mvwprintw(tela.content, 4,  5, "|-----------------------------------------------------|");
-    mvwprintw(tela.content, 5,  5, "|ETAPA WB: ");
-    mvwprintw(tela.content, 6,  5, "|ETAPA MEM: ");
-    mvwprintw(tela.content, 7,  5, "|ETAPA EX: ");
-    mvwprintw(tela.content, 8,  5, "|ETAPA ID: ");
-    mvwprintw(tela.content, 9,  5, "|ETAPA IF: ");
+    
+    //PRECISA SER DIFERENTE DE NULL SE NAO IRÁ CRASHAR
+    if(instrucWB)
+        mvwprintw(tela.content, 5,  5, "|ETAPA WB: %s", instrucWB);
+    else
+       mvwprintw(tela.content, 5,  5, "|ETAPA WB: " );
+
+    if(instrucMEM)
+        mvwprintw(tela.content, 6,  5, "|ETAPA MEM: %s", instrucMEM);
+    else
+        mvwprintw(tela.content, 6,  5, "|ETAPA MEM: ");
+
+    if(instrucEX)
+        mvwprintw(tela.content, 7,  5, "|ETAPA EX: %s", instrucEX);
+    else
+        mvwprintw(tela.content, 7,  5, "|ETAPA EX: ");
+
+    if(instrucID)
+        mvwprintw(tela.content, 8,  5, "|ETAPA ID: %s", instrucID);
+    else
+        mvwprintw(tela.content, 8,  5, "|ETAPA ID: ");
+
+    if(instrucIF)
+        mvwprintw(tela.content, 9,  5, "|ETAPA IF: %s", instrucIF);
+    else
+        mvwprintw(tela.content, 9,  5, "|ETAPA IF: ");
+
     mvwprintw(tela.content, 10, 5, "|-----------------------------------------------------|");
 
 
@@ -144,7 +166,7 @@ void desenhaMenu(int program_counter, float largura, int *regs, int tamLinhas, i
     mvwprintw(tela.content, 15,  largura*0.8, "|=== ESTADO ===|");
     mvwprintw(tela.content, 16,  largura*0.8, "|--------------|");
     mvwprintw(tela.content, 17,  largura*0.8, "|Ciclo | %d    |", i);
-    mvwprintw(tela.content, 18,  largura*0.8, "|PC    | %d    |", program_counter);
+    mvwprintw(tela.content, 18,  largura*0.8, "|PC    | %d    |", *program_counter);
     mvwprintw(tela.content, 19,  largura*0.8, "|--------------|");
 
     i++;
@@ -172,7 +194,7 @@ void desenhaMenu(int program_counter, float largura, int *regs, int tamLinhas, i
     wrefresh(tela.footer);
 }
 
-void imprimeEstatisticasTerminal(int *program_counter, float largura, instrucao *memInst, int tamLinhas, type_instruc *instrucoesDecodificadas, int *regs){
+void imprimeEstatisticasTerminal(int *program_counter, float largura, instrucao *memInst, int tamLinhas, type_instruc *instrucoesDecodificadas, int *regs, char *instrucIF, char *instrucID, char *instrucEX, char *instrucMEM, char *instrucWB){
     if (memInst == NULL) {
                 fprintf(stderr, "Falha ao obter instruções.\n");
             }
@@ -204,5 +226,5 @@ void imprimeEstatisticasTerminal(int *program_counter, float largura, instrucao 
             
     }
 
-    desenhaMenu(&program_counter, largura, *regs, tamLinhas, r, i, j, instLogic, instAri, instDesvio, instAcessoMem);
+    desenhaMenu(program_counter, largura, regs, tamLinhas, r, i, j, instLogic, instAri, instDesvio, instAcessoMem, instrucIF, instrucID, instrucEX, instrucMEM, instrucWB);
 }
