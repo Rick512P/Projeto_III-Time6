@@ -2,12 +2,21 @@
 
 char terminal(int *program_counter, instrucao *memInst, int tamLinhas, type_instruc *instrucoesDecodificadas, int *regs, char *instrucIF, char *instrucID, char *instrucEX, char *instrucMEM, char *instrucWB) {
     float altura, largura;
-    int ch;
+    int ch, r, i, j, instLogic, instAri, instDesvio, instAcessoMem;
     char escolha = ' ';
 
     while (TRUE) {
         desenhaTelaInicial(&altura, &largura);
-        imprimeEstatisticasTerminal(program_counter, altura, memInst, tamLinhas, instrucoesDecodificadas, regs, instrucIF, instrucID, instrucEX, instrucMEM, instrucWB);
+        switch (*program_counter)
+        {
+        case 0:
+            desenhaMenu(program_counter, largura, regs, tamLinhas, r, i, j, instLogic, instAri, instDesvio, instAcessoMem, instrucIF, instrucID, instrucEX, instrucMEM, instrucWB);
+            break;
+        
+        default:
+            imprimeEstatisticasTerminal(program_counter, altura, memInst, tamLinhas, instrucoesDecodificadas, regs, instrucIF, instrucID, instrucEX, instrucMEM, instrucWB);
+            break;
+        }
 
         ch = getch();
         switch (ch) {
@@ -119,69 +128,136 @@ void desenhaMenu(int *program_counter, float largura, int *regs, int tamLinhas, 
     mvwprintw(tela.menu, 14, largura, "F11    + DESFAZER CICLO (BACK STEP)");
     mvwprintw(tela.menu, 15, largura, "F1     + ENCERRAR SIMULADOR");
 
-    //CONTENT
-    mvwprintw(tela.content, 1, largura/2, "=== ESTATíSTICAS ===");
-    mvwprintw(tela.content, 2, largura/2, "--------------------");
-
-    mvwprintw(tela.content, 3, largura*0.70, "ETAPA");
-    mvwprintw(tela.content, 4,  5, "|-----------------------------------------------------|");
+    if (program_counter != 0)
+    {
     
-    //PRECISA SER DIFERENTE DE NULL SE NAO IRÁ CRASHAR
-    if(instrucWB)
-        mvwprintw(tela.content, 5,  5, "|ETAPA WB: %s", instrucWB);
-    else
-       mvwprintw(tela.content, 5,  5, "|ETAPA WB: " );
+        //CONTENT
+        mvwprintw(tela.content, 1, largura/2, "=== ESTATíSTICAS ===");
+        mvwprintw(tela.content, 2, largura/2, "--------------------");
 
-    if(instrucMEM)
-        mvwprintw(tela.content, 6,  5, "|ETAPA MEM: %s", instrucMEM);
-    else
-        mvwprintw(tela.content, 6,  5, "|ETAPA MEM: ");
+        mvwprintw(tela.content, 3, largura*0.70, "ETAPA");
+        mvwprintw(tela.content, 4,  5, "|-----------------------------------------------------|");
+        
+        //PRECISA SER DIFERENTE DE NULL SE NAO IRÁ CRASHAR
+        if(instrucWB)
+            mvwprintw(tela.content, 5,  5, "|ETAPA WB: %s", instrucWB);
+        else
+            mvwprintw(tela.content, 5,  5, "|ETAPA WB: " );
 
-    if(instrucEX)
-        mvwprintw(tela.content, 7,  5, "|ETAPA EX: %s", instrucEX);
-    else
-        mvwprintw(tela.content, 7,  5, "|ETAPA EX: ");
+        if(instrucMEM)
+            mvwprintw(tela.content, 6,  5, "|ETAPA MEM: %s", instrucMEM);
+        else
+            mvwprintw(tela.content, 6,  5, "|ETAPA MEM: ");
 
-    if(instrucID)
-        mvwprintw(tela.content, 8,  5, "|ETAPA ID: %s", instrucID);
-    else
-        mvwprintw(tela.content, 8,  5, "|ETAPA ID: ");
+        if(instrucEX)
+            mvwprintw(tela.content, 7,  5, "|ETAPA EX: %s", instrucEX);
+        else
+            mvwprintw(tela.content, 7,  5, "|ETAPA EX: ");
 
-    if(instrucIF)
-        mvwprintw(tela.content, 9,  5, "|ETAPA IF: %s", instrucIF);
-    else
-        mvwprintw(tela.content, 9,  5, "|ETAPA IF: ");
+        if(instrucID)
+            mvwprintw(tela.content, 8,  5, "|ETAPA ID: %s", instrucID);
+        else
+            mvwprintw(tela.content, 8,  5, "|ETAPA ID: ");
 
-    mvwprintw(tela.content, 10, 5, "|-----------------------------------------------------|");
+        if(instrucIF)
+            mvwprintw(tela.content, 9,  5, "|ETAPA IF: %s", instrucIF);
+        else
+            mvwprintw(tela.content, 9,  5, "|ETAPA IF: ");
+
+        mvwprintw(tela.content, 10, 5, "|-----------------------------------------------------|");
 
 
-    mvwprintw(tela.content, 12, largura/3, "-------------");
-    for (i = 0; i < 8; i++){
-        mvwprintw(tela.content, i+13, largura/3, "|REG [  %d  ]|", regs[i]);
+        mvwprintw(tela.content, 12, largura/3, "-------------");
+        for (i = 0; i < 8; i++){
+            mvwprintw(tela.content, i+13, largura/3, "|REG [  %d  ]|", regs[i]);
+        }
+        i = i + 13;
+        mvwprintw(tela.content, i, largura/3, "-------------");
+        
+        mvwprintw(tela.content, 14,  largura*0.8, "|--------------|");
+        mvwprintw(tela.content, 15,  largura*0.8, "|=== ESTADO ===|");
+        mvwprintw(tela.content, 16,  largura*0.8, "|--------------|");
+        mvwprintw(tela.content, 17,  largura*0.8, "|Ciclo | %d    |", i);
+        mvwprintw(tela.content, 18,  largura*0.8, "|PC    | %d    |", *program_counter);
+        mvwprintw(tela.content, 19,  largura*0.8, "|--------------|");
+
+        i++;
+
+        mvwprintw(tela.content, i+1,  largura/3, "|-----------------------------------|");
+        mvwprintw(tela.content, i+2,  largura/3, "| Total de Instruções      : %d|", tamLinhas);
+        mvwprintw(tela.content, i+3,  largura/3, "| Tipo R                     : %d|", r);
+        mvwprintw(tela.content, i+4,  largura/3, "| Tipo I                     : %d|", I);
+        mvwprintw(tela.content, i+5,  largura/3, "| Tipo j                     : %d|", j);
+        mvwprintw(tela.content, i+6,  largura/3, "| Classe Lógica             : %d|", instLogic);
+        mvwprintw(tela.content, i+7,  largura/3, "| CLasse Aritmética         : %d|", instAri);
+        mvwprintw(tela.content, i+8,  largura/3, "| Classe de Desvio           : %d|", instDesvio);
+        mvwprintw(tela.content, i+9,  largura/3, "| Classe de Acesso a Memória : %d|", instAcessoMem);
+        mvwprintw(tela.content, i+10, largura/3, "|-----------------------------------|");
     }
-    i = i + 13;
-    mvwprintw(tela.content, i, largura/3, "-------------");
-    
-    mvwprintw(tela.content, 14,  largura*0.8, "|--------------|");
-    mvwprintw(tela.content, 15,  largura*0.8, "|=== ESTADO ===|");
-    mvwprintw(tela.content, 16,  largura*0.8, "|--------------|");
-    mvwprintw(tela.content, 17,  largura*0.8, "|Ciclo | %d    |", i);
-    mvwprintw(tela.content, 18,  largura*0.8, "|PC    | %d    |", *program_counter);
-    mvwprintw(tela.content, 19,  largura*0.8, "|--------------|");
+    else{
+        //CONTENT
+        mvwprintw(tela.content, 1, largura/2, "=== ESTATíSTICAS ===");
+        mvwprintw(tela.content, 2, largura/2, "--------------------");
 
-    i++;
+        mvwprintw(tela.content, 3, largura*0.70, "ETAPA");
+        mvwprintw(tela.content, 4,  5, "|-----------------------------------------------------|");
+        
+        //PRECISA SER DIFERENTE DE NULL SE NAO IRÁ CRASHAR
+        if(instrucWB)
+            mvwprintw(tela.content, 5,  5, "|ETAPA WB:");
+        else
+            mvwprintw(tela.content, 5,  5, "|ETAPA WB:");
 
-    mvwprintw(tela.content, i+1,  largura/3, "|-----------------------------------|");
-    mvwprintw(tela.content, i+2,  largura/3, "| Total de Instruções      : %d|", tamLinhas);
-    mvwprintw(tela.content, i+3,  largura/3, "| Tipo R                     : %d|", r);
-    mvwprintw(tela.content, i+4,  largura/3, "| Tipo I                     : %d|", I);
-    mvwprintw(tela.content, i+5,  largura/3, "| Tipo j                     : %d|", j);
-    mvwprintw(tela.content, i+6,  largura/3, "| Classe Lógica             : %d|", instLogic);
-    mvwprintw(tela.content, i+7,  largura/3, "| CLasse Aritmética         : %d|", instAri);
-    mvwprintw(tela.content, i+8,  largura/3, "| Classe de Desvio           : %d|", instDesvio);
-    mvwprintw(tela.content, i+9,  largura/3, "| Classe de Acesso a Memória : %d|", instAcessoMem);
-    mvwprintw(tela.content, i+10, largura/3, "|-----------------------------------|");
+        if(instrucMEM)
+            mvwprintw(tela.content, 6,  5, "|ETAPA MEM:");
+        else
+            mvwprintw(tela.content, 6,  5, "|ETAPA MEM:");
 
+        if(instrucEX)
+            mvwprintw(tela.content, 7,  5, "|ETAPA EX:");
+        else
+            mvwprintw(tela.content, 7,  5, "|ETAPA EX: ");
+
+        if(instrucID)
+            mvwprintw(tela.content, 8,  5, "|ETAPA ID:");
+        else
+            mvwprintw(tela.content, 8,  5, "|ETAPA ID:");
+
+        if(instrucIF)
+            mvwprintw(tela.content, 9,  5, "|ETAPA IF:");
+        else
+            mvwprintw(tela.content, 9,  5, "|ETAPA IF:");
+
+        mvwprintw(tela.content, 10, 5, "|-----------------------------------------------------|");
+
+
+        mvwprintw(tela.content, 12, largura/3, "-------------");
+        for (i = 0; i < 8; i++){
+            mvwprintw(tela.content, i+13, largura/3, "|REG [     ]|");
+        }
+        i = i + 13;
+        mvwprintw(tela.content, i, largura/3, "-------------");
+        
+        mvwprintw(tela.content, 14,  largura*0.8, "|--------------|");
+        mvwprintw(tela.content, 15,  largura*0.8, "|=== ESTADO ===|");
+        mvwprintw(tela.content, 16,  largura*0.8, "|--------------|");
+        mvwprintw(tela.content, 17,  largura*0.8, "|Ciclo |   0   |");
+        mvwprintw(tela.content, 18,  largura*0.8, "|PC    |   0   |");
+        mvwprintw(tela.content, 19,  largura*0.8, "|--------------|");
+
+        i++;
+
+        mvwprintw(tela.content, i+1,  largura/3, "|-----------------------------------|");
+        mvwprintw(tela.content, i+2,  largura/3, "| Total de Instruções      : |");
+        mvwprintw(tela.content, i+3,  largura/3, "| Tipo R                     : |");
+        mvwprintw(tela.content, i+4,  largura/3, "| Tipo I                     : |");
+        mvwprintw(tela.content, i+5,  largura/3, "| Tipo j                     : |");
+        mvwprintw(tela.content, i+6,  largura/3, "| Classe Lógica             : |");
+        mvwprintw(tela.content, i+7,  largura/3, "| CLasse Aritmética         : |");
+        mvwprintw(tela.content, i+8,  largura/3, "| Classe de Desvio           : |");
+        mvwprintw(tela.content, i+9,  largura/3, "| Classe de Acesso a Memória : |");
+        mvwprintw(tela.content, i+10, largura/3, "|-----------------------------------|");
+    }
 
     //FOOTER
     mvwprintw(tela.footer, 1, largura*2, "AUTORES");
