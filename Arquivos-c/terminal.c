@@ -1,6 +1,6 @@
 #include "../Arquivos-h/Terminal.h"
 
-char terminal(int *program_counter, instrucao *memInst, int tamLinhas, type_instruc *instrucoesDecodificadas, int *regs, char *instrucIF, char *instrucID, char *instrucEX, char *instrucMEM, char *instrucWB) {
+char terminal(int *program_counter, instrucao *memInst, int tamLinhas, type_instruc *instrucoesDecodificadas, int *regs, IF *instrucIF, ID *instrucID, EX *instrucEX, MEM *instrucMEM, WB *instrucWB) {
     float altura, largura;
     int ch, r, i, j, instLogic, instAri, instDesvio, instAcessoMem;
     char escolha = ' ';
@@ -99,7 +99,7 @@ void desenhaTelaInicial(struct TELA *tela, float *altura, float *largura){
     wrefresh(tela->footer);
 }
 
-void desenhaMenu(struct TELA *tela, int *program_counter, float largura, int *regs, int tamLinhas, int r, int I, int j, int instLogic, int instAri, int instDesvio, int instAcessoMem, char *instrucIF, char *instrucID, char *instrucEX, char *instrucMEM, char *instrucWB)
+void desenhaMenu(struct TELA *tela, int *program_counter, float largura, int *regs, int tamLinhas, int r, int I, int j, int instLogic, int instAri, int instDesvio, int instAcessoMem, IF *instrucIF, ID *instrucID, EX *instrucEX, MEM *instrucMEM, WB *instrucWB)
 {
     int i;
     attron(COLOR_PAIR(1)); // Ativa o par de cores número 1
@@ -133,27 +133,27 @@ void desenhaMenu(struct TELA *tela, int *program_counter, float largura, int *re
         
         //PRECISA SER DIFERENTE DE NULL SE NAO IRÁ CRASHAR
         if(instrucWB)
-            mvwprintw(tela->content, 5,  5, "|ETAPA WB: %s", instrucWB);
+            mvwprintw(tela->content, 5,  5, "|ETAPA WB: %s", instrucWB->InstrucaoASM.InstructsAssembly);
         else
             mvwprintw(tela->content, 5,  5, "|ETAPA WB: " );
 
         if(instrucMEM)
-            mvwprintw(tela->content, 6,  5, "|ETAPA MEM: %s", instrucMEM);
+            mvwprintw(tela->content, 6,  5, "|ETAPA MEM: %s", instrucMEM->InstrucaoASM.InstructsAssembly);
         else
             mvwprintw(tela->content, 6,  5, "|ETAPA MEM: ");
 
         if(instrucEX)
-            mvwprintw(tela->content, 7,  5, "|ETAPA EX: %s", instrucEX);
+            mvwprintw(tela->content, 7,  5, "|ETAPA EX: %s", instrucEX->InstrucaoASM.InstructsAssembly);
         else
             mvwprintw(tela->content, 7,  5, "|ETAPA EX: ");
 
         if(instrucID)
-            mvwprintw(tela->content, 8,  5, "|ETAPA ID: %s", instrucID);
+            mvwprintw(tela->content, 8,  5, "|ETAPA ID: %s", instrucID->InstrucaoASM.InstructsAssembly);
         else
             mvwprintw(tela->content, 8,  5, "|ETAPA ID: ");
 
         if(instrucIF)
-            mvwprintw(tela->content, 9,  5, "|ETAPA IF: %s", instrucIF);
+            mvwprintw(tela->content, 9,  5, "|ETAPA IF: %s", instrucIF->InstrucaoASM.InstructsAssembly);
         else
             mvwprintw(tela->content, 9,  5, "|ETAPA IF: ");
 
@@ -263,7 +263,7 @@ void desenhaMenu(struct TELA *tela, int *program_counter, float largura, int *re
     wrefresh(tela->footer);
 }
 
-void imprimeEstatisticasTerminal(struct TELA *tela, int *program_counter, float largura, instrucao *memInst, int tamLinhas, type_instruc *instrucoesDecodificadas, int *regs, char *instrucIF, char *instrucID, char *instrucEX, char *instrucMEM, char *instrucWB){
+void imprimeEstatisticasTerminal(struct TELA *tela, int *program_counter, float largura, instrucao *memInst, int tamLinhas, type_instruc *instrucoesDecodificadas, int *regs, IF *instrucIF, ID *instrucID, EX *instrucEX, MEM *instrucMEM, WB *instrucWB){
     int r=0, i=0, j=0, instAri=0, instLogic=0, instDesvio=0, instAcessoMem=0;
     if (*program_counter != 0){
         if (memInst == NULL) {

@@ -33,7 +33,7 @@ int menu(){
 
     do{
         //getchar();
-        escolha = terminal(&program_counter, memInst, tamLinhas, instrucoesDecodificadas, regs, regif->InstrucaoASM.InstructsAssembly, id->InstrucaoASM.InstructsAssembly, ex->InstrucaoASM.InstructsAssembly, mem->InstrucaoASM.InstructsAssembly, wb->InstrucaoASM.InstructsAssembly);
+        escolha = terminal(&program_counter, memInst, tamLinhas, instrucoesDecodificadas, regs, regif, id, ex, mem, wb);
 
         switch (escolha)
         {

@@ -148,7 +148,6 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                         jump = ULA(instrucoesDecodificadas, &pc, memDados, regs);
                         (*program_counter) = jump;
                         a++;
-                        printf("\ntipo: %d\b", sinal->tipo);
                         printf("%d jump/loop concluido.\t\t", a); 
                     }
                     
