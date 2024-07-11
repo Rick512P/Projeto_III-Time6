@@ -47,7 +47,9 @@ void escreverArquivoMemoria(MemoriaDados *memDados) {
 	arquivo = fopen("./DATA.dat", "w");
 	
 	if(arquivo==NULL){
+		system("clear");
 		fprintf(stderr, "Erro ao abrir o arquivo DATA.dat\n");
+		sleep(2);
 	}
 	
 	for (int i=0; i<256; i++){

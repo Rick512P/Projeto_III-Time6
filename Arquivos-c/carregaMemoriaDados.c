@@ -6,7 +6,7 @@ char* carregamemDados(MemoriaDados *memDados){
     char linha[1024];
     char* nome_arquivo = (char*)malloc(300 * sizeof(char));
     int contador_de_linhas = 0, opcao, error = 0;
-    strcpy(nome_arquivo,"../memoria/md.dat");
+    strcpy(nome_arquivo,"./memoria/md.dat");
         printf("Digite 1 para utilizar o diretorio padrao ou 2 para entrar com o diretorio do arquivo: ");
         setbuf(stdin, NULL);
         scanf("%d", &opcao);
@@ -32,7 +32,9 @@ char* carregamemDados(MemoriaDados *memDados){
         //primeiro, conto quantas linhas de dados terei no arquivo
         while(fgets(linha, sizeof(linha), setmemDados) != NULL){
             if (strlen(linha) > 8){
+                system("clear");
                 fprintf(stderr, "OVERFLOW. Linha %d tem mais de 8 caracteres: %s\n", contador_de_linhas, linha); //FLAG OVERFLOW
+                sleep(2);
                 error=1;
             }
                 
@@ -56,8 +58,11 @@ char* carregamemDados(MemoriaDados *memDados){
         printf("Arquivo lido com sucesso!\n");
         
     }
-    else
+    else{
+        system("clear");
         fprintf(stderr, "Erro ao abrir arquivo da Memoria de Dados\n");
+        sleep(2);
+    }
     if (error == 0)
         return nome_arquivo;
     else{

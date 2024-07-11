@@ -19,7 +19,9 @@ int ULA(type_instruc *instrucoesDecodificadas, int *contador, MemoriaDados *memD
         if (strcmp(instrucoesDecodificadas[*contador].funct, "000") == 0 ){
             rd = rs + rt;
             if (rd > 127 || rd < -128){
+                system("clear");
                 fprintf(stderr, "Overflow. Registrador RD com numero de bits maior que a capacidade suportada.\n");
+                sleep(2);
             }
             int local_decimal = rd;
 
@@ -30,7 +32,9 @@ int ULA(type_instruc *instrucoesDecodificadas, int *contador, MemoriaDados *memD
             //"sub -> rs - rt = rd";
             rd = rs - rt;
             if (rd > 127 || rd < -128){
+                system("clear");
                 fprintf(stderr, "Overflow. Registrador RD com numero de bits maior que a capacidade suportada.\n");
+                sleep(2);
                 return -1;
             }
 
@@ -44,7 +48,9 @@ int ULA(type_instruc *instrucoesDecodificadas, int *contador, MemoriaDados *memD
             AND(Source, Target, Dest);
             rd = bin_to_decimal(Dest);
             if (rd > 127 || rd < -128){
+                system("clear");
                 fprintf(stderr, "Overflow. Registrador RD com numero de bits maior que a capacidade suportada.\n");
+                sleep(2);
                 return -1;
             }
             return rd;
@@ -57,7 +63,9 @@ int ULA(type_instruc *instrucoesDecodificadas, int *contador, MemoriaDados *memD
             OR(Source, Target, Dest);
             rd = bin_to_decimal(Dest);
             if (rd > 127 || rd < -128){
+                system("clear");
                 fprintf(stderr, "Overflow. Registrador RD com numero de bits maior que a capacidade suportada.\n");
+                sleep(2);
                 return -1;
             }
             return rd;
@@ -69,7 +77,9 @@ int ULA(type_instruc *instrucoesDecodificadas, int *contador, MemoriaDados *memD
         immediate = bin_to_decimal(instrucoesDecodificadas[*contador].imm);
         rs = retornoRegs(regs, instrucoesDecodificadas[*contador].rs);
         if ((immediate + rs) > 127 || (immediate + rs) < -128){
+                system("clear");
                 fprintf(stderr, "Overflow. Registrador RD com numero de bits maior que a capacidade suportada.\n");
+                sleep(2);
         }
         return (immediate + rs); //RETORNA PARA O CONTROLLER O INTEIRO PARA O MESMO ARMAZENAR NO REGISTRADOR
     }
@@ -100,7 +110,9 @@ int ULA(type_instruc *instrucoesDecodificadas, int *contador, MemoriaDados *memD
         }
 
         if(((*contador+1)+address) > 255){
+            system("clear");
             fprintf(stderr, "OVERFLOW. Salto para posicao de memoria inexistente.\n");
+            sleep(2);
             return -1;
         }
         return address;
@@ -116,7 +128,9 @@ int ULA(type_instruc *instrucoesDecodificadas, int *contador, MemoriaDados *memD
         }
         if (reg1 == reg2){
             if(((*contador+1) + immediate) > 255){
+                system("clear");
                 fprintf(stderr, "OVERFLOW. PC ultrapassou limite de espaços de memória.\n");
+                sleep(2);
                 return -1;
             }
                 return ((*contador) += immediate);
@@ -127,7 +141,9 @@ int ULA(type_instruc *instrucoesDecodificadas, int *contador, MemoriaDados *memD
 
 
     else{
+        system("clear");
         fprintf(stderr, "OPCODE ERROR!");
+        sleep(2);
     }
 }
 

@@ -47,7 +47,9 @@ int menu(){
             
         case '1': //Carregar memória de Instruções e inicializa tudo
             if(memInst != NULL){
+                system("clear");
                 printf("Memoria ja preenchida\n");
+                sleep(2);
                 break;
             }
             memInst = inicializaMemInst(); //inicializa memoria de instruções
@@ -62,14 +64,18 @@ int menu(){
             descPilha = inicializaBackup();
             instrucoesDecodificadas = calloc(tamLinhas, sizeof(type_instruc));
             if (instrucoesDecodificadas == NULL) {
+                system("clear");
                 fprintf(stderr, "Falha ao alocar memória para instruções decodificadas.\n");
+                sleep(2);
                 return -1;
             }
             
             AssemblyInst = calloc((tamLinhas + 1), sizeof(Assembly));
             
             if (AssemblyInst == NULL) {
+                system("clear");
                 fprintf(stderr, "Falha ao alocar memória para instrucoes assembly.\n");
+                sleep(2);
                 return -1;
             }
             //FAZ UM "BACKUP" PARA O BACKSTEP   
@@ -89,8 +95,11 @@ int menu(){
                     cont = 1;
                 }
             }
-            else 
-                printf("Programa nao deve ja ter sido inicializado.");
+            else {
+                system("clear");
+                printf("Programa nao deve ja ter sido inicializado.\n");
+                sleep(2);
+            }
             break;
 
         case '3': //Imprimir memória de instruções
@@ -115,11 +124,15 @@ int menu(){
 
         case '8': //Chamar função responsável pela execução do programa
             if (memInst == NULL){
+                system("clear");
                 printf("Carregue a memoria com instrucoes antes.\n");
+                sleep(2);
                 break;
             }
             if(Etapa == 6){
+                system("clear");
                 printf("MIPS ja executou as instrucoes\n");
+                sleep(2);
                 break;
             }
             program_counter = 0;
@@ -133,11 +146,15 @@ int menu(){
 
         case '9': //Chamar função responsável pela execução do programa passo a passo
             if (memInst == NULL){
+                system("clear");
                 printf("Carregue a memoria com instrucoes antes.\n");
+                sleep(2);
                 break;
             }
             if(Etapa == 6){
+                system("clear");
                 printf("MIPS ja executou as instrucoes\n");
+                sleep(2);
                 break;
             }
             Etapa = controller(&contadorCiclo, 2, tamLinhas, regs, memInst, memDados, &program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, Etapa, descPilha, backup, NodoPilha, AssemblyInst);
@@ -156,7 +173,7 @@ int menu(){
             if(descPilha->Topo == NULL){
                 system("clear");
                 printf("Estamos no início do programa.\n");
-                sleep(3);
+                sleep(2);
                 NodoPilha = inicializaNodo(backupInicio);
                 descPilha = PUSH(descPilha, NodoPilha);
                 contadorCiclo = 0;

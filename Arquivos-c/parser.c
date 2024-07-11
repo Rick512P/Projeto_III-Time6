@@ -30,7 +30,9 @@ int parser(instrucao *memInst, int *tamanho_linhas){
         //primeiro, conto quantas linhas de instruçoes terei no arquivo
         while(fgets(linha, sizeof(linha), arq) != NULL){
             if (strlen(linha) > 17){
+                system("clear");
                 fprintf(stderr, "OVERFLOW. Numero de bits maior que 16."); //FLAG OVERFLOW
+                sleep(2);
                 return -1;
             }
             contador_de_linhas++;
@@ -41,7 +43,9 @@ int parser(instrucao *memInst, int *tamanho_linhas){
         *tamanho_linhas = contador_de_linhas;
 
         if (!memInst) { //se memInst nao ter nada alocado, dará erro.
+            system("clear");
             fprintf(stderr, "Falha na alocação de memória para instruções.\n"); //stderr envia mensagem de erro
+            sleep(2);
             //separadamente do fluxo principal de saída de um programa
             return 1;
         }
@@ -74,8 +78,9 @@ int parser(instrucao *memInst, int *tamanho_linhas){
     
 
     else{
+        system("clear");
         fprintf(stderr, "Erro ao abrir arquivo de instrucoes.");
-        
+        sleep(2);
     }
 }
 
