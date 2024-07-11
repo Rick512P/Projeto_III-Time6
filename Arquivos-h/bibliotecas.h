@@ -68,6 +68,7 @@ typedef struct {
     unsigned int pc;// Contador de programa (program counter)
     char instruc[17];// Instrução buscada
     Assembly InstrucaoASM;
+    Sinais *sinal;
 } IF;
 
 

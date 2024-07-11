@@ -151,10 +151,10 @@ int menu(){
         case 'A':
         case 'a': //Chamar função responsável por retornar uma instrução (PC--)
             descPilha = Realoca(descPilha, regs, memDados, regif, id, ex, mem, wb, sinal, AssemblyInst, &program_counter, &Etapa);
-            printw("Retornamos para:\nWB-Instrucao:[%s]\nMEM-Instrucao:[%s]\nEX-Instrucao:[%s]\nID-Instrucao[%s]\nIF-Instrucao:[%s]\n", wb->InstrucaoASM.InstructsAssembly, mem->InstrucaoASM.InstructsAssembly, ex->InstrucaoASM.InstructsAssembly, id->InstrucaoASM.InstructsAssembly, regif->InstrucaoASM.InstructsAssembly);
-            sleep(2);
             if(descPilha->Topo == NULL){
+                system("clear");
                 printf("Estamos no início do programa.\n");
+                sleep(3);
                 NodoPilha = inicializaNodo(backupInicio);
                 descPilha = PUSH(descPilha, NodoPilha);
                 contadorCiclo = 0;

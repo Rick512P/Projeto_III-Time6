@@ -23,6 +23,7 @@ int controller(int *contadorCiclo, int op, int NumeroLinhas, int *regs, instruca
                     if(regif->pc == NumeroLinhas){ //quando chegar no numero de linhas, encerrará a etapa
                         printf("\nEtapa IF encerrada.");
                         printf("\n╚════════════════════════════╝");
+                        regif->sinal->bolha = -1;
                         controller(contadorCiclo, 1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 2, descPilha, backup, NodoPilha, AssemblyInst);
                         break;
                     }
@@ -36,6 +37,7 @@ int controller(int *contadorCiclo, int op, int NumeroLinhas, int *regs, instruca
                     if(regif->pc > 1){
                         if(id->sinal->bolha == 1){ //Verifica se a etapa ID precisa de uma bolha
                             id->sinal->bolha = 0; //Reseta o sinal
+                            regif->sinal->bolha = 0;
                             regif->instruc[0] = '\0'; //INVALIDA UMA INSTRUÇÃO (INSTRUÇÃO VAZIA)
                             printf("\nBolha na etapa IF");
                             printf("\n╚════════════════════════════╝");
@@ -73,6 +75,7 @@ int controller(int *contadorCiclo, int op, int NumeroLinhas, int *regs, instruca
                     if(id->pc == NumeroLinhas){ //quando chegar no numero de linhas, encerrará a etapa
                         printf("\nEtapa ID encerrada.");
                         printf("\n╚════════════════════════════╝");
+                        id->sinal->bolha = -1;
                         controller(contadorCiclo, 1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 3, descPilha, backup, NodoPilha, AssemblyInst);
                     }
                     else if(id->instruc[0] == '\0'){
@@ -95,6 +98,7 @@ int controller(int *contadorCiclo, int op, int NumeroLinhas, int *regs, instruca
                     {
                         if(strcmp(id->instruc, "\0") != 0){
                             id->sinal->bolha = 1;
+                            regif->sinal->bolha = 1;
                             printf(" - Bolha gerada na Etapa ID para Jump");
                             controller(contadorCiclo, 1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 1, descPilha, backup, NodoPilha, AssemblyInst);
                             break;
@@ -109,6 +113,7 @@ int controller(int *contadorCiclo, int op, int NumeroLinhas, int *regs, instruca
                         if (id->readData1 == id->readData2 && (strcmp(id->instruc, "\0") != 0))
                         {
                             id->sinal->bolha = 1;
+                            regif->sinal->bolha = 1;
                             printf(" - Bolha gerada na Etapa ID para BEQ");
                             controller(contadorCiclo, 1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 1, descPilha, backup, NodoPilha, AssemblyInst);
                             break;
@@ -133,6 +138,7 @@ int controller(int *contadorCiclo, int op, int NumeroLinhas, int *regs, instruca
                     if(ex->pc == NumeroLinhas){
                         printf("\nEtapa EX encerrada.");
                         printf("\n╚════════════════════════════╝");
+                        ex->sinal->bolha = -1;
                         controller(contadorCiclo, 1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 4, descPilha, backup, NodoPilha, AssemblyInst);
                     }
                     else if(ex->instruc[0] == '\0'){
@@ -177,6 +183,7 @@ int controller(int *contadorCiclo, int op, int NumeroLinhas, int *regs, instruca
                     if(mem->pc == NumeroLinhas){
                         printf("\nEtapa MEM encerrada.");
                         printf("\n╚════════════════════════════╝");
+                        mem->sinal->bolha = -1;
                         controller(contadorCiclo, 1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 5, descPilha, backup, NodoPilha, AssemblyInst);
                     }
                     else if(mem->instruc[0] == '\0'){
@@ -227,6 +234,7 @@ int controller(int *contadorCiclo, int op, int NumeroLinhas, int *regs, instruca
                         if(wb->pc == NumeroLinhas){
                             printf("\nEtapa WB encerrada.");
                             printf("\n╚═════════════════════════╝");
+                            wb->sinal->bolha = -1;
                             return 6;
                             break;
                         }
@@ -277,6 +285,7 @@ int controller(int *contadorCiclo, int op, int NumeroLinhas, int *regs, instruca
 
                 if(regif->pc == NumeroLinhas){
                     printf("\nEtapa IF encerrada.");
+                    regif->sinal->bolha = -1;
                     printf("\n╚════════════════════════════╝");
                     return 2;
                 }
@@ -292,9 +301,11 @@ int controller(int *contadorCiclo, int op, int NumeroLinhas, int *regs, instruca
                         regif->instruc[0] = '\0'; //INVALIDA UMA INSTRUÇÃO (INSTRUÇÃO VAZIA).
                         printf("\nBolha na etapa IF");
                         printf("\n╚════════════════════════════╝");
+                        //regif->sinal->bolha = 0;
                         return 2;
                         break;
                     }
+
                     //se id estiver na bolha, quer dizer que: ou o beq é verdadeiro ou teremos um jump. Logo, a execução da instrução ja estara na etapa EX
                     //entao preciso excluir a instrução que estava por vir para que ela nao execute e atrapalhe a sequencia
                         else if(id->instruc[0] == '\0' && (ex->sinal->tipo == 5 || ex->sinal->tipo == 1)){ 
@@ -309,6 +320,7 @@ int controller(int *contadorCiclo, int op, int NumeroLinhas, int *regs, instruca
                 
                 strcpy(regif->instruc, memInst[regif->pc].instruc);
 
+                regif->sinal = inicializaSinais();
                 regif->InstrucaoASM = ASMPrintInstruc(memInst, program_counter); //transforma a instrucao binaria para assembly
                 printf("\nEtapa IF: %s", regif->InstrucaoASM.InstructsAssembly);
                 printf("\n╚════════════════════════════╝");
@@ -325,6 +337,7 @@ int controller(int *contadorCiclo, int op, int NumeroLinhas, int *regs, instruca
                 if(id->pc == NumeroLinhas){
                     printf("\nEtapa ID encerrada.");
                     printf("\n╚════════════════════════════╝");
+                    id->sinal->bolha = -1;
                     return 3;
                 }
                 else if(id->instruc[0] == '\0'){
@@ -347,6 +360,7 @@ int controller(int *contadorCiclo, int op, int NumeroLinhas, int *regs, instruca
                         if(strcmp(id->instruc, "\0") != 0){ //preciso desse if pois estou gerando sinais mesmo se a instrução for vazia
                             //se instrucao id for diferente de vazia:
                             id->sinal->bolha = 1;
+                            regif->sinal->bolha = 1;
                             printf(" - Bolha gerada na Etapa ID para Jump");
                         }
                         else{//se instrucao estiver vazia, quer dizer que estou na bolha, entao preciso "anular" o sinal para que a instrução de if seja coletada corretamente
@@ -358,6 +372,7 @@ int controller(int *contadorCiclo, int op, int NumeroLinhas, int *regs, instruca
                         if ((id->readData1 == id->readData2) && (strcmp(id->instruc, "\0") != 0))
                         {
                             id->sinal->bolha = 1;
+                            regif->sinal->bolha = 1;
                             printf(" - Bolha gerada na Etapa ID para BEQ");
                         }         
                         else{
@@ -379,6 +394,7 @@ int controller(int *contadorCiclo, int op, int NumeroLinhas, int *regs, instruca
                 if(ex->pc == NumeroLinhas){
                     printf("\nEtapa EX encerrada.");
                     printf("\n╚════════════════════════════╝");
+                    ex->sinal->bolha = -1;
                     return 4;
                 }
                 else if(ex->instruc[0] == '\0'){
@@ -426,6 +442,7 @@ int controller(int *contadorCiclo, int op, int NumeroLinhas, int *regs, instruca
                 if(mem->pc == NumeroLinhas){
                     printf("\nEtapa MEM encerrada.");
                     printf("\n╚════════════════════════════╝");
+                    mem->sinal->bolha = -1;
                     return 5;
                 }
                 else if(mem->instruc[0] == '\0'){
@@ -473,6 +490,7 @@ int controller(int *contadorCiclo, int op, int NumeroLinhas, int *regs, instruca
                     if(wb->pc == NumeroLinhas){
                         printf("\nEtapa WB encerrada.");
                         printf("\n╚════════════════════════════╝");
+                        wb->sinal->bolha = -1;
                         return 6;
                     }
                     else if(wb->instruc[0] == '\0'){
