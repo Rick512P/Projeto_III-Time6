@@ -134,97 +134,91 @@ void desenhaMenu(int *contadorCiclo, struct TELA *tela, int *program_counter, fl
         mvwprintw(tela->content, 3, largura*0.70, "ETAPA");
         mvwprintw(tela->content, 4,  5, "|-----------------------------------------------------|");
         
-        //PRECISA SER DIFERENTE DE NULL SE NAO IRÁ CRASHAR
-        if(instrucWB != NULL){
-            if (instrucWB->sinal != NULL)
-            {
-                if(instrucWB->sinal->bolha != 0){
-                    if(instrucWB->sinal->bolha == 1)
-                        mvwprintw(tela->content, 5,  5, "|ETAPA WB: Bolha Gerada" );
-                    if(instrucWB->sinal->bolha == -1)
-                        mvwprintw(tela->content, 5,  5, "|ETAPA WB: ENCERRADA" );
-                }
-                else
-                    mvwprintw(tela->content, 5,  5, "|ETAPA WB: %s", instrucWB->InstrucaoASM.InstructsAssembly);
-            }
-            else
-                mvwprintw(tela->content, 5,  5, "|ETAPA WB: " );
+        //IMPRESSAO DA ETAPA WB
+        if(instrucWB->pc == 0)
+                mvwprintw(tela->content, 5,  5, "|ETAPA EX: %s", instrucWB->InstrucaoASM.InstructsAssembly);
+        else if(instrucWB != NULL){
+            if(instrucWB->pc == tamLinhas)
+                    mvwprintw(tela->content, 5,  5, "|ETAPA EX:  ENCERRADA");
+                
+                else if(instrucWB->instruc[0] == '\0')
+                    mvwprintw(tela->content, 5,  5, "|ETAPA EX:  Bolha Gerada");
+
+                else 
+                    mvwprintw(tela->content, 5,  5, "|ETAPA EX: %s", instrucWB->InstrucaoASM.InstructsAssembly);
         }
         else
             mvwprintw(tela->content, 5,  5, "|ETAPA WB: " );
 
-        if(instrucMEM != NULL){
-            if (instrucMEM->sinal != NULL)
-            {           
-                if(instrucMEM->sinal->bolha != 0){
-                    if(instrucMEM->sinal->bolha == 1)    
-                        mvwprintw(tela->content, 6,  5, "|ETAPA MEM: Bolha Gerada");
-                    if(instrucMEM->sinal->bolha == -1)
-                        mvwprintw(tela->content, 6,  5, "|ETAPA MEM: ENCERRADA");
-                }
-                else
-                    mvwprintw(tela->content, 6,  5, "|ETAPA MEM: %s", instrucMEM->InstrucaoASM.InstructsAssembly);
-            }
-            else
-                mvwprintw(tela->content, 6,  5, "|ETAPA MEM: ");
+        //IMPRESSAO DA ETAPA MEM
+        if(instrucMEM->pc == 0)
+                mvwprintw(tela->content, 6,  5, "|ETAPA EX: %s", instrucMEM->InstrucaoASM.InstructsAssembly);
+        else if(instrucMEM != NULL){
+            if(instrucMEM->pc == tamLinhas)
+                    mvwprintw(tela->content, 6,  5, "|ETAPA EX:  ENCERRADA");
+                
+                else if(instrucMEM->instruc[0] == '\0')
+                    mvwprintw(tela->content, 6,  5, "|ETAPA EX:  Bolha Gerada");
+
+                else 
+                    mvwprintw(tela->content, 6,  5, "|ETAPA EX: %s", instrucMEM->InstrucaoASM.InstructsAssembly);
         }
         else
             mvwprintw(tela->content, 6,  5, "|ETAPA MEM: ");
 
-        if(instrucEX != NULL){
-            if (instrucEX->sinal != NULL)
-            {
-                if (instrucEX->sinal->bolha != 0){
-                    if (instrucEX->sinal->bolha == 1)
-                        mvwprintw(tela->content, 7,  5, "|ETAPA EX:  Bolha Gerada");
-                    else if (instrucEX->sinal->bolha == -1)
-                        mvwprintw(tela->content, 7,  5, "|ETAPA EX:  ENCERRADA");
-                }
+        //IMPRESSAO DA ETAPA EX
+            if(instrucEX->pc == 0)
+                mvwprintw(tela->content, 7,  5, "|ETAPA EX: %s", instrucEX->InstrucaoASM.InstructsAssembly);
+
+            else if(instrucEX != NULL){
+                if(instrucEX->pc == tamLinhas)
+                    mvwprintw(tela->content, 7,  5, "|ETAPA EX:  ENCERRADA");
+                
+                else if(instrucEX->instruc[0] == '\0')
+                    mvwprintw(tela->content, 7,  5, "|ETAPA EX:  Bolha Gerada");
+
                 else 
                     mvwprintw(tela->content, 7,  5, "|ETAPA EX: %s", instrucEX->InstrucaoASM.InstructsAssembly);
             }
             else
                 mvwprintw(tela->content, 7,  5, "|ETAPA EX: ");
-        }
-        else
-            mvwprintw(tela->content, 7,  5, "|ETAPA EX: ");
 
-        if(instrucID != NULL){
-            if (instrucID->sinal != NULL)
-            {
-                if (instrucID->sinal->bolha != 0){            
-                    if (instrucID->sinal->bolha == 1)
-                        mvwprintw(tela->content, 8,  5, "|ETAPA ID:  Bolha Gerada");
-                    if (instrucID->sinal->bolha == -1)
-                        mvwprintw(tela->content, 8,  5, "|ETAPA ID:  ENCERRADA");
-                }
+        //IMPRESSAO DA ETAPA ID
+            if(instrucID->pc == 0)
+                mvwprintw(tela->content, 8,  5, "|ETAPA ID: %s", instrucID->InstrucaoASM.InstructsAssembly);
+
+            else if(instrucID != NULL){
+                if(instrucID->pc == tamLinhas)
+                    mvwprintw(tela->content, 8,  5, "|ETAPA ID:  ENCERRADA");
+                
+                else if(instrucID->instruc[0] == '\0')
+                    mvwprintw(tela->content, 8,  5, "|ETAPA ID:  Bolha Gerada");
+
                 else
                     mvwprintw(tela->content, 8,  5, "|ETAPA ID: %s", instrucID->InstrucaoASM.InstructsAssembly);
             }
             else
                 mvwprintw(tela->content, 8,  5, "|ETAPA ID: ");
-        }
-        else
-            mvwprintw(tela->content, 8,  5, "|ETAPA ID: ");
 
-        if(instrucIF != NULL){
-            if (instrucIF->sinal != NULL)
-            {
-                if (instrucIF->sinal->bolha != 0)
-                {
-                    if(instrucIF->sinal->bolha == 1)
-                        mvwprintw(tela->content, 9,  5, "|ETAPA IF:  Bolha Gerada");
-                    if(instrucIF->sinal->bolha == -1)
+        //IMPRESSAO DA ETAPA IF
+            if(instrucIF != NULL){
+
+                if(instrucIF->pc == tamLinhas)
                         mvwprintw(tela->content, 9,  5, "|ETAPA IF:  ENCERRADA");
+
+                else if(instrucIF->pc > 1){
+                    if(instrucID->sinal->bolha == 1 || (instrucID->instruc[0] == '\0' && (instrucEX->sinal->tipo == 5 || instrucEX->sinal->tipo == 1))){
+                        mvwprintw(tela->content, 9,  5, "|ETAPA IF:  Bolha Gerada");
+                    }
+                    else
+                        mvwprintw(tela->content, 9,  5, "|ETAPA IF: %s", instrucIF->InstrucaoASM.InstructsAssembly);
                 }
                 else
-                    mvwprintw(tela->content, 9,  5, "|ETAPA IF: %s", instrucIF->InstrucaoASM.InstructsAssembly);       
-            }     
+                    mvwprintw(tela->content, 9,  5, "|ETAPA IF: %s", instrucIF->InstrucaoASM.InstructsAssembly);
+    
+            }
             else
-                mvwprintw(tela->content, 9,  5, "|ETAPA IF:  "); 
-        }
-        else
-            mvwprintw(tela->content, 9,  5, "|ETAPA IF:  ");            
+                mvwprintw(tela->content, 9,  5, "|ETAPA IF:  ");            
 
         mvwprintw(tela->content, 10, 5, "|-----------------------------------------------------|");
 
