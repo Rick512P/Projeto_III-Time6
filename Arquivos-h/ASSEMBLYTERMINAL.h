@@ -12,10 +12,10 @@ struct TELAASSEMBLY{
 
 
 // Definições das funções para inicializar e finalizar o terminal
-int ASSEMBLYTERMINAL(Assembly *A);
+int ASSEMBLYTERMINAL(Assembly *A, int tamLinhas);
 void inicializaASM();
 void finalizaASM();
 void desenhaTelaASM(struct TELAASSEMBLY *telaAssembly, float *altura, float *largura);
-void desenhaAssembly(struct TELAASSEMBLY *telaAssembly, float largura, Assembly *A);
+void desenhaAssembly(struct TELAASSEMBLY *telaAssembly, float largura, Assembly *A, int tamLinhas);
 
 #endif

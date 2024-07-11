@@ -1,6 +1,6 @@
 #include "../Arquivos-h/ASSEMBLYTERMINAL.h"
 
-int ASSEMBLYTERMINAL(Assembly *A) {
+int ASSEMBLYTERMINAL(Assembly *A, int tamLinhas) {
     float altura, largura;
     struct TELAASSEMBLY *telaAssembly = (struct TELAASSEMBLY *)malloc(sizeof(struct TELAASSEMBLY)); 
     int ch;
@@ -8,7 +8,7 @@ int ASSEMBLYTERMINAL(Assembly *A) {
     {
         inicializaASM();
         desenhaTelaASM(telaAssembly, &altura, &largura);
-        desenhaAssembly(telaAssembly, altura, A);
+        desenhaAssembly(telaAssembly, altura, A, tamLinhas);
         getch();
 
     }
@@ -57,7 +57,7 @@ void desenhaTelaASM(struct TELAASSEMBLY *telaAssembly, float *altura, float *lar
     wrefresh(telaAssembly->footer);
 }
 
-void desenhaAssembly(struct TELAASSEMBLY *telaAssembly, float largura, Assembly *A) // Adicionar verificação de NULL, para deixarm em branco quando não houver mais instruções
+void desenhaAssembly(struct TELAASSEMBLY *telaAssembly, float largura, Assembly *A, int tamLinhas) // Adicionar verificação de NULL, para deixarm em branco quando não houver mais instruções
 {
     int i, linhas;
     attron(COLOR_PAIR(1)); // Ativa o par de cores número 1
@@ -68,7 +68,7 @@ void desenhaAssembly(struct TELAASSEMBLY *telaAssembly, float largura, Assembly 
     //Data
     mvwprintw(telaAssembly->ASM, 1, largura*1.9, "=== Instruções AssembLy ===");
 
-    for (i = 0; i<32; i++){
+    for (i = 0; i<tamLinhas; i++){
         if (i < 10)
             mvwprintw(telaAssembly->ASM, i+2, 1, "INST 00%d: %s", i, A[i].InstructsAssembly);
         else

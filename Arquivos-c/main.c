@@ -101,7 +101,7 @@ int menu(){
             break;
 
         case '5': //Imprimir instruções Assembly
-            ASSEMBLYTERMINAL(AssemblyInst);
+            ASSEMBLYTERMINAL(AssemblyInst, tamLinhas);
             break;
             
         case '6': //salvar arquivo .asm (com as instruções traduzidas para a linguagem intermediária Assembly)
