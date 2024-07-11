@@ -223,17 +223,17 @@ void desenhaMenu(int *contadorCiclo, struct TELA *tela, int *program_counter, fl
         mvwprintw(tela->content, 10, 5, "|-----------------------------------------------------|");
 
 
-        mvwprintw(tela->content, 12, largura/3, "-------------");
+        mvwprintw(tela->content, 12, largura/3, "----------------");
         for (i = 0; i < 8; i++){
             if (regs[i]<10)
-                mvwprintw(tela->content, i+13, largura/3, "|REG [  00%d ]|", regs[i]);
+                mvwprintw(tela->content, i+13, largura/3, "|REG %d [  00%d ]|",i, regs[i]);
             else if (regs[i]<100)
-                mvwprintw(tela->content, i+13, largura/3, "|REG [  0%d ]|", regs[i]);
+                mvwprintw(tela->content, i+13, largura/3, "|REG %d [  0%d ]|",i, regs[i]);
             else
-                mvwprintw(tela->content, i+13, largura/3, "|REG [  %d ]|", regs[i]);
+                mvwprintw(tela->content, i+13, largura/3, "|REG %d [  %d ]|",i, regs[i]);
         }
         i = i + 13;
-        mvwprintw(tela->content, i, largura/3, "-------------");
+        mvwprintw(tela->content, i, largura/3, "----------------");
         
         mvwprintw(tela->content, 14,  largura*0.8, "|--------------|");
         mvwprintw(tela->content, 15,  largura*0.8, "|=== ESTADO ===|");
@@ -313,12 +313,12 @@ void desenhaMenu(int *contadorCiclo, struct TELA *tela, int *program_counter, fl
         mvwprintw(tela->content, 10, 5, "|-----------------------------------------------------|");
 
 
-        mvwprintw(tela->content, 12, largura/3, "-------------");
+        mvwprintw(tela->content, 12, largura/3, "---------------");
         for (i = 0; i < 8; i++){
-            mvwprintw(tela->content, i+13, largura/3, "|REG [     ]|");
+            mvwprintw(tela->content, i+13, largura/3, "|REG %d [     ]|", i);
         }
         i = i + 13;
-        mvwprintw(tela->content, i, largura/3, "-------------");
+        mvwprintw(tela->content, i, largura/3, "---------------");
         
         mvwprintw(tela->content, 14,  largura*0.8, "|--------------|");
         mvwprintw(tela->content, 15,  largura*0.8, "|=== ESTADO ===|");
