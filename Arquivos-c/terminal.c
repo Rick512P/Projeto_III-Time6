@@ -135,7 +135,7 @@ void desenhaMenu(struct TELA *tela, int *program_counter, float largura, int *re
         
         //PRECISA SER DIFERENTE DE NULL SE NAO IRÁ CRASHAR
         if(instrucWB != NULL)
-            mvwprintw(tela->content, 5,  5, "|ETAPA WB: %s", instrucWB->InstrucaoASM.InstructsAssembly[0]);
+            mvwprintw(tela->content, 5,  5, "|ETAPA WB: %s", instrucWB->InstrucaoASM.InstructsAssembly);
         else
             mvwprintw(tela->content, 5,  5, "|ETAPA WB: " );
 
@@ -164,11 +164,11 @@ void desenhaMenu(struct TELA *tela, int *program_counter, float largura, int *re
 
         mvwprintw(tela->content, 12, largura/3, "-------------");
         for (i = 0; i < 8; i++){
-            if (i<10)
+            if (regs[i]<10)
                 mvwprintw(tela->content, i+13, largura/3, "|REG [  00%d ]|", regs[i]);
-            else if (i<100)
+            else if (regs[i]<100)
                 mvwprintw(tela->content, i+13, largura/3, "|REG [  0%d ]|", regs[i]);
-            else if (i<1000)
+            else if (regs[i]<1000)
                 mvwprintw(tela->content, i+13, largura/3, "|REG [  %d ]|", regs[i]);
         }
         i = i + 13;
