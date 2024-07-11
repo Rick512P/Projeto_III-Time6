@@ -28,6 +28,16 @@ descPilha *PUSH(descPilha *pilha, NodoPilha *nodo){
     return pilha;
 }
 
+
+MemoriaDados *copiaMemDados(MemoriaDados *orig) {
+    if (orig == NULL) return NULL;
+    MemoriaDados *copia = malloc(256 * sizeof(MemoriaDados));
+    for (int i = 0; i < 256; i++) {
+        strcpy(copia[i].dados, orig[i].dados);
+    }
+    return copia;
+}
+
 Backup *ColetaTudo(int *regs, MemoriaDados *memDados, IF *regif, ID *id, EX *ex, MEM *mem, WB *wb, Sinais *sinal, Assembly *AssemblyInst, int *program_counter, int *Etapa) {
     Backup *coleta = (Backup*) malloc(sizeof(Backup));
 
@@ -40,7 +50,7 @@ Backup *ColetaTudo(int *regs, MemoriaDados *memDados, IF *regif, ID *id, EX *ex,
     coleta->ex = *ex;
     coleta->mem = *mem;
     coleta->wb = *wb;
-    coleta->memDados = *memDados;
+    coleta->memDados = copiaMemDados(memDados);
     coleta->AssemblyInst = *AssemblyInst;
     if(sinal != NULL){
         coleta->sinal = *sinal;
@@ -63,7 +73,9 @@ descPilha *Realoca(descPilha *pilha, int *regs, MemoriaDados *memDados, IF *regi
     for(int i = 0; i < 8; i++){
         regs[i] = aux->info->regs[i];
     }
-    *memDados = aux->info->memDados;
+    for (int i = 0; i < 256; i++) {
+        strcpy(memDados[i].dados, aux->info->memDados[i].dados);
+    }
     *regif = aux->info->regif;
     *id = aux->info->id;
     *ex = aux->info->ex;

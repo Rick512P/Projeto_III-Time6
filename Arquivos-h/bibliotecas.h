@@ -118,7 +118,7 @@ typedef struct {
 
 struct backup{
     int regs[8];
-    MemoriaDados memDados;
+    MemoriaDados *memDados;
     IF regif;
     ID id;
     EX ex;
