@@ -1,6 +1,7 @@
 #include "../Arquivos-h/menu.h"
 
 int main(){
+    system("wmctrl -r :ACTIVE: -b add,maximized_vert,maximized_horz");
     menu();
     return 0;
 }
@@ -33,6 +34,7 @@ int menu(){
 
     do{
         //getchar();
+        system("clear");
         escolha = terminal(&contadorCiclo, &program_counter, memInst, tamLinhas, instrucoesDecodificadas, regs, regif, id, ex, mem, wb);
 
         switch (escolha)

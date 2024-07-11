@@ -8,9 +8,9 @@ int controller(int *contadorCiclo, int op, int NumeroLinhas, int *regs, instruca
     switch (op)
     {
         case 1:
+            *contadorCiclo = *contadorCiclo + 1;
             while (*program_counter <= (NumeroLinhas))
             {        
-                *contadorCiclo++;
                 backup = ColetaTudo(regs, memDados, regif, id, ex, mem, wb, sinal, AssemblyInst, program_counter, &ProxEtapa);
                 NodoPilha = inicializaNodo(backup);
                 descPilha = PUSH(descPilha, NodoPilha);

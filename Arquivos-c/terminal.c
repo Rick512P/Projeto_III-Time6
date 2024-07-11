@@ -240,18 +240,18 @@ void desenhaMenu(int *contadorCiclo, struct TELA *tela, int *program_counter, fl
         mvwprintw(tela->content, 16,  largura*0.8, "|--------------|");
 
         if (*contadorCiclo<10)
-            mvwprintw(tela->content, 17,  largura*0.8, "|Ciclo | 00%d   |", *contadorCiclo);
+            mvwprintw(tela->content, 17,  largura*0.8, "|Ciclo |  00%d  |", *contadorCiclo);
         else if (*contadorCiclo<100)
             mvwprintw(tela->content, 17,  largura*0.8, "|Ciclo |  0%d  |", *contadorCiclo);
         else
-            mvwprintw(tela->content, 17,  largura*0.8, "|Ciclo | %d   |", *contadorCiclo);
+            mvwprintw(tela->content, 17,  largura*0.8, "|Ciclo |  %d  |", *contadorCiclo);
         
         if (*program_counter<10)
-            mvwprintw(tela->content, 18,  largura*0.8, "|PC    | 00%d   |", *program_counter);
+            mvwprintw(tela->content, 18,  largura*0.8, "|PC    |  00%d  |", *program_counter);
         else if (*program_counter<100)
             mvwprintw(tela->content, 18,  largura*0.8, "|PC    |  0%d  |", *program_counter);
         else
-            mvwprintw(tela->content, 18,  largura*0.8, "|PC    | %d   |", *program_counter);
+            mvwprintw(tela->content, 18,  largura*0.8, "|PC    |  %d  |", *program_counter);
         mvwprintw(tela->content, 19,  largura*0.8, "|--------------|");
 
         i++;
