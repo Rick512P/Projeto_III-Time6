@@ -1,6 +1,6 @@
 #include "../Arquivos-h/controller.h"
 
-int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaDados *memDados, int *program_counter, type_instruc *instrucoesDecodificadas, IF *regif, ID *id, EX *ex, MEM *mem, WB *wb, Sinais *sinal, int ProxEtapa, descPilha *descPilha, Backup *backup, NodoPilha *NodoPilha, Assembly *AssemblyInst){
+int controller(int *contadorCiclo, int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaDados *memDados, int *program_counter, type_instruc *instrucoesDecodificadas, IF *regif, ID *id, EX *ex, MEM *mem, WB *wb, Sinais *sinal, int ProxEtapa, descPilha *descPilha, Backup *backup, NodoPilha *NodoPilha, Assembly *AssemblyInst){
     int jump, RD, RT, i, a=0, verifica_fim = 0, immediate, dados, pc;
     char posicao[4];
     Assembly InstrucaoASM;
@@ -10,6 +10,7 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
         case 1:
             while (*program_counter <= (NumeroLinhas))
             {        
+                *contadorCiclo++;
                 backup = ColetaTudo(regs, memDados, regif, id, ex, mem, wb, sinal, AssemblyInst, program_counter, &ProxEtapa);
                 NodoPilha = inicializaNodo(backup);
                 descPilha = PUSH(descPilha, NodoPilha);
@@ -22,13 +23,13 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                     if(regif->pc == NumeroLinhas){ //quando chegar no numero de linhas, encerrará a etapa
                         printf("\nEtapa IF encerrada.");
                         printf("\n╚════════════════════════════╝");
-                        controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 2, descPilha, backup, NodoPilha, AssemblyInst);
+                        controller(contadorCiclo, 1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 2, descPilha, backup, NodoPilha, AssemblyInst);
                         break;
                     }
 
                     if(memInst[regif->pc].instruc[0] == '\0'){ //se tiver um endereço sem instrução, ele pulara para o proximo
                         increment_PC(program_counter, 1);
-                        controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 1, descPilha, backup, NodoPilha, AssemblyInst);
+                        controller(contadorCiclo, 1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 1, descPilha, backup, NodoPilha, AssemblyInst);
                         break;
                     }
                     
@@ -39,7 +40,7 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                             printf("\nBolha na etapa IF");
                             printf("\n╚════════════════════════════╝");
                             increment_PC(program_counter, 1);
-                            controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 2, descPilha, backup, NodoPilha, AssemblyInst);
+                            controller(contadorCiclo, 1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 2, descPilha, backup, NodoPilha, AssemblyInst);
                             break;
                         }
                         //se id estiver na bolha, quer dizer que: ou o beq é verdadeiro ou teremos um jump. Logo, a execução da instrução ja estara na etapa EX
@@ -61,7 +62,7 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                     printf("\n╚════════════════════════════╝");
                     
                     increment_PC(program_counter, 1);
-                    controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 2, descPilha, backup, NodoPilha, AssemblyInst);
+                    controller(contadorCiclo, 1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 2, descPilha, backup, NodoPilha, AssemblyInst);
 
                     break;
                 
@@ -72,7 +73,7 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                     if(id->pc == NumeroLinhas){ //quando chegar no numero de linhas, encerrará a etapa
                         printf("\nEtapa ID encerrada.");
                         printf("\n╚════════════════════════════╝");
-                        controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 3, descPilha, backup, NodoPilha, AssemblyInst);
+                        controller(contadorCiclo, 1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 3, descPilha, backup, NodoPilha, AssemblyInst);
                     }
                     else if(id->instruc[0] == '\0'){
                         printf("\nBolha na Etapa ID");
@@ -95,7 +96,7 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                         if(strcmp(id->instruc, "\0") != 0){
                             id->sinal->bolha = 1;
                             printf(" - Bolha gerada na Etapa ID para Jump");
-                            controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 1, descPilha, backup, NodoPilha, AssemblyInst);
+                            controller(contadorCiclo, 1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 1, descPilha, backup, NodoPilha, AssemblyInst);
                             break;
                         }
                         else{
@@ -109,18 +110,18 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                         {
                             id->sinal->bolha = 1;
                             printf(" - Bolha gerada na Etapa ID para BEQ");
-                            controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 1, descPilha, backup, NodoPilha, AssemblyInst);
+                            controller(contadorCiclo, 1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 1, descPilha, backup, NodoPilha, AssemblyInst);
                             break;
                         }
                         else{
                             id->sinal->tipo = -1;
                         }                        
                     }
-                    controller(2, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 1, descPilha, backup, NodoPilha, AssemblyInst);
+                    controller(contadorCiclo, 2, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 1, descPilha, backup, NodoPilha, AssemblyInst);
                     //OPREANDOS LIDOS, SE NECESSARIO:
                     id->readData1 = regs[id->sinal->RS];
                     id->readData2 = regs[id->sinal->RT];
-                    controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 3, descPilha, backup, NodoPilha, AssemblyInst);
+                    controller(contadorCiclo, 1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 3, descPilha, backup, NodoPilha, AssemblyInst);
                     break;
                     
                 case 3: //Etapa EX --> Executa tipo R e Addi, Calcula Endereço LW e SW 
@@ -132,7 +133,7 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                     if(ex->pc == NumeroLinhas){
                         printf("\nEtapa EX encerrada.");
                         printf("\n╚════════════════════════════╝");
-                        controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 4, descPilha, backup, NodoPilha, AssemblyInst);
+                        controller(contadorCiclo, 1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 4, descPilha, backup, NodoPilha, AssemblyInst);
                     }
                     else if(ex->instruc[0] == '\0'){
                         printf("\nBolha na Etapa EX");
@@ -140,7 +141,7 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                     else
                         printf("\nEtapa EX: %s", ex->instruc);
                     //recursao para realizar etapas anteriores:
-                    controller(2, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 2, descPilha, backup, NodoPilha, AssemblyInst);
+                    controller(contadorCiclo, 2, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 2, descPilha, backup, NodoPilha, AssemblyInst);
                     
                     if (ex->sinal->tipo == 1)//verifica se é Jump
                     {
@@ -165,7 +166,7 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                             *program_counter = pc + bin_to_decimal(instrucoesDecodificadas[pc].imm);
                         }
                     }
-                    controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 4, descPilha, backup, NodoPilha, AssemblyInst);
+                    controller(contadorCiclo, 1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 4, descPilha, backup, NodoPilha, AssemblyInst);
                     break;
                         
                 case 4: // Se a instrução envolve leitura ou escrita na memória de dados, essa operação é realizada neste estágio
@@ -176,7 +177,7 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                     if(mem->pc == NumeroLinhas){
                         printf("\nEtapa MEM encerrada.");
                         printf("\n╚════════════════════════════╝");
-                        controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 5, descPilha, backup, NodoPilha, AssemblyInst);
+                        controller(contadorCiclo, 1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 5, descPilha, backup, NodoPilha, AssemblyInst);
                     }
                     else if(mem->instruc[0] == '\0'){
                         printf("\nBolha na Etapa WB");
@@ -184,14 +185,14 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                     else
                         printf("\nEtapa MEM: %s", mem->instruc);
                     //recursao para realizar etapas anteriores:
-                    controller(2, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 3, descPilha, backup, NodoPilha, AssemblyInst);
+                    controller(contadorCiclo, 2, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 3, descPilha, backup, NodoPilha, AssemblyInst);
                     
                     if (mem->sinal->tipo == 3) // lw (load word)
                     {
                         // Carregar dado da memória
                         strcpy(mem->readData, memDados[mem->aluResult].dados); //copio para o registrador de dados, o dado da memoria
                         
-                        controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 5, descPilha, backup, NodoPilha, AssemblyInst);
+                        controller(contadorCiclo, 1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 5, descPilha, backup, NodoPilha, AssemblyInst);
                     }
                     else if (mem->sinal->tipo == 4) // sw (store word)
                     {
@@ -211,9 +212,9 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                         }
                         decimalToBinary(conteudo, conteudo_bin);
                         escreveDado(memDados, mem->aluResult, conteudo_bin);
-                        controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 5, descPilha, backup, NodoPilha, AssemblyInst);
+                        controller(contadorCiclo, 1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 5, descPilha, backup, NodoPilha, AssemblyInst);
                     }
-                    controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 5, descPilha, backup, NodoPilha, AssemblyInst);
+                    controller(contadorCiclo, 1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 5, descPilha, backup, NodoPilha, AssemblyInst);
                     break;
 
                     case 5: //Etapa WB (write back) -> O resultado da operação é escrito de volta no registrador destino no banco de registradores.          
@@ -234,7 +235,7 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                         }
                         else
                             printf("\nEtapa WB: %s", wb->InstrucaoASM.InstructsAssembly);
-                        controller(2, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 4, descPilha, backup, NodoPilha, AssemblyInst);    
+                        controller(contadorCiclo, 2, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 4, descPilha, backup, NodoPilha, AssemblyInst);    
                         
                         if (wb->sinal->tipo == 3){ // lw (load word)
                             decimalToBinary(wb->sinal->RT, posicao);
@@ -252,7 +253,7 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                             decimalToBinary(wb->sinal->RT, posicao);
                             escritaRegistradores(regs, wb->aluResult, posicao);                               
                         }
-                        controller(1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 5, descPilha, backup, NodoPilha, AssemblyInst);
+                        controller(contadorCiclo, 1, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 5, descPilha, backup, NodoPilha, AssemblyInst);
                         break;
                         
                     default:
@@ -282,7 +283,7 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
 
                 if(memInst[regif->pc].instruc[0] == '\0'){
                         increment_PC(program_counter, 1);
-                        controller(2, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 1, descPilha, backup, NodoPilha, AssemblyInst);
+                        controller(contadorCiclo, 2, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 1, descPilha, backup, NodoPilha, AssemblyInst);
                         break;
                 }
 
@@ -364,7 +365,7 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                         }               
                     }
                 //recursao para realizar etapas anteriores:
-                controller(2, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 1, descPilha, backup, NodoPilha, AssemblyInst);
+                controller(contadorCiclo, 2, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 1, descPilha, backup, NodoPilha, AssemblyInst);
                 return 3;
                 break;
                     
@@ -412,7 +413,7 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                         }
                     }
                 }
-                controller(2, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 2, descPilha, backup, NodoPilha, AssemblyInst);
+                controller(contadorCiclo, 2, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 2, descPilha, backup, NodoPilha, AssemblyInst);
                 return 4;
                 break;
                     
@@ -458,7 +459,7 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                             escreveDado(memDados, mem->aluResult, conteudo_bin);
                     }
                 }
-                controller(2, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 3, descPilha, backup, NodoPilha, AssemblyInst);
+                controller(contadorCiclo, 2, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 3, descPilha, backup, NodoPilha, AssemblyInst);
                 return 5;
                 break;
 
@@ -498,7 +499,7 @@ int controller(int op, int NumeroLinhas, int *regs, instrucao *memInst, MemoriaD
                             escritaRegistradores(regs, wb->aluResult, posicao);                               
                         }
                     }
-                    controller(2, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 4, descPilha, backup, NodoPilha, AssemblyInst);
+                    controller(contadorCiclo, 2, NumeroLinhas, regs, memInst, memDados, program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, 4, descPilha, backup, NodoPilha, AssemblyInst);
                     return 5;
                     break;
                 }

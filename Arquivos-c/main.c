@@ -12,7 +12,7 @@ int menu(){
     NodoPilha *NodoPilha = NULL;
     descPilha *descPilha = NULL;
     char escolha;
-    unsigned int tamLinhas, program_counter = 0, cont = 0; //UNSIGNED IMPOSSIBILITA QUE PROGRAM_COUNTER CHEGUE A MENOR QUE 0
+    unsigned int tamLinhas, program_counter = 0, contadorCiclo = 0, cont = 0; //UNSIGNED IMPOSSIBILITA QUE PROGRAM_COUNTER CHEGUE A MENOR QUE 0
     int Etapa = 1, i, auxiliar;
     Sinais *sinal = NULL;
     PipeRegisters pipes;
@@ -33,7 +33,7 @@ int menu(){
 
     do{
         //getchar();
-        escolha = terminal(&program_counter, memInst, tamLinhas, instrucoesDecodificadas, regs, regif, id, ex, mem, wb);
+        escolha = terminal(&contadorCiclo, &program_counter, memInst, tamLinhas, instrucoesDecodificadas, regs, regif, id, ex, mem, wb);
 
         switch (escolha)
         {
@@ -122,7 +122,7 @@ int menu(){
                 break;
             }
             program_counter = 0;
-            Etapa = controller(1, tamLinhas, regs, memInst, memDados, &program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, Etapa, descPilha, backup, NodoPilha, AssemblyInst);
+            Etapa = controller(&contadorCiclo, 1, tamLinhas, regs, memInst, memDados, &program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, Etapa, descPilha, backup, NodoPilha, AssemblyInst);
             AsmCopy(instrucoesDecodificadas, AssemblyInst, tamLinhas);
             //FAZ UM "BACKUP" PARA O BACKSTEP   
                 backup = ColetaTudo(regs, memDados, regif, id, ex, mem, wb, sinal, AssemblyInst, &program_counter, &Etapa);
@@ -139,24 +139,29 @@ int menu(){
                 printf("MIPS ja executou as instrucoes\n");
                 break;
             }
-            Etapa = controller(2, tamLinhas, regs, memInst, memDados, &program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, Etapa, descPilha, backup, NodoPilha, AssemblyInst);
+            Etapa = controller(&contadorCiclo, 2, tamLinhas, regs, memInst, memDados, &program_counter, instrucoesDecodificadas, regif, id, ex, mem, wb, sinal, Etapa, descPilha, backup, NodoPilha, AssemblyInst);
             AsmCopy(instrucoesDecodificadas, AssemblyInst, tamLinhas);
             printf("\n");
             //FAZ UM "BACKUP" PARA O BACKSTEP   
                 backup = ColetaTudo(regs, memDados, regif, id, ex, mem, wb, sinal, AssemblyInst, &program_counter, &Etapa);
                 NodoPilha = inicializaNodo(backup);
                 descPilha = PUSH(descPilha, NodoPilha);
+            contadorCiclo++;
             break;
 
         case 'A':
         case 'a': //Chamar função responsável por retornar uma instrução (PC--)
             descPilha = Realoca(descPilha, regs, memDados, regif, id, ex, mem, wb, sinal, AssemblyInst, &program_counter, &Etapa);
-            printf("Retornamos para:\nWB-Instrucao:[%s]\nMEM-Instrucao:[%s]\nEX-Instrucao:[%s]\nID-Instrucao[%s]\nIF-Instrucao:[%s]\n", wb->InstrucaoASM.InstructsAssembly, mem->InstrucaoASM.InstructsAssembly, ex->InstrucaoASM.InstructsAssembly, id->InstrucaoASM.InstructsAssembly, regif->InstrucaoASM.InstructsAssembly);
+            printw("Retornamos para:\nWB-Instrucao:[%s]\nMEM-Instrucao:[%s]\nEX-Instrucao:[%s]\nID-Instrucao[%s]\nIF-Instrucao:[%s]\n", wb->InstrucaoASM.InstructsAssembly, mem->InstrucaoASM.InstructsAssembly, ex->InstrucaoASM.InstructsAssembly, id->InstrucaoASM.InstructsAssembly, regif->InstrucaoASM.InstructsAssembly);
+            sleep(2);
             if(descPilha->Topo == NULL){
                 printf("Estamos no início do programa.\n");
                 NodoPilha = inicializaNodo(backupInicio);
                 descPilha = PUSH(descPilha, NodoPilha);
-            }  
+                contadorCiclo = 0;
+                break;
+            } 
+            contadorCiclo--;
             break;
 
         default:

@@ -1,16 +1,17 @@
 #include "../Arquivos-h/Terminal.h"
-char terminal(int *program_counter, instrucao *memInst, int tamLinhas, type_instruc *instrucoesDecodificadas, int *regs, IF *instrucIF, ID *instrucID, EX *instrucEX, MEM *instrucMEM, WB *instrucWB) {
+char terminal(int *contadorCiclo, int *program_counter, instrucao *memInst, int tamLinhas, type_instruc *instrucoesDecodificadas, int *regs, IF *instrucIF, ID *instrucID, EX *instrucEX, MEM *instrucMEM, WB *instrucWB) {
     float altura, largura;
     int ch, r, i, j, instLogic, instAri, instDesvio, instAcessoMem;
     char escolha = ' ';
     struct TELA *tela = (struct TELA *)malloc(sizeof(struct TELA));
    
     //puts("Debug");
+    clear();
     while (escolha == ' ') 
     {
         inicializaTerminal();
         desenhaTelaInicial(tela, &altura, &largura);
-        imprimeEstatisticasTerminal(tela, program_counter, altura, memInst, tamLinhas, instrucoesDecodificadas, regs, instrucIF, instrucID, instrucEX, instrucMEM, instrucWB);
+        imprimeEstatisticasTerminal(contadorCiclo,tela, program_counter, altura, memInst, tamLinhas, instrucoesDecodificadas, regs, instrucIF, instrucID, instrucEX, instrucMEM, instrucWB);
 
         ch = getch();
         switch (ch) {
@@ -101,7 +102,7 @@ void desenhaTelaInicial(struct TELA *tela, float *altura, float *largura){
     wrefresh(tela->footer);
 }
 
-void desenhaMenu(struct TELA *tela, int *program_counter, float largura, int *regs, int tamLinhas, int r, int I, int j, int instLogic, int instAri, int instDesvio, int instAcessoMem, IF *instrucIF, ID *instrucID, EX *instrucEX, MEM *instrucMEM, WB *instrucWB)
+void desenhaMenu(int *contadorCiclo, struct TELA *tela, int *program_counter, float largura, int *regs, int tamLinhas, int r, int I, int j, int instLogic, int instAri, int instDesvio, int instAcessoMem, IF *instrucIF, ID *instrucID, EX *instrucEX, MEM *instrucMEM, WB *instrucWB)
 {
     int i;
     attron(COLOR_PAIR(1)); // Ativa o par de cores número 1
@@ -168,7 +169,7 @@ void desenhaMenu(struct TELA *tela, int *program_counter, float largura, int *re
                 mvwprintw(tela->content, i+13, largura/3, "|REG [  00%d ]|", regs[i]);
             else if (regs[i]<100)
                 mvwprintw(tela->content, i+13, largura/3, "|REG [  0%d ]|", regs[i]);
-            else if (regs[i]<1000)
+            else
                 mvwprintw(tela->content, i+13, largura/3, "|REG [  %d ]|", regs[i]);
         }
         i = i + 13;
@@ -177,13 +178,18 @@ void desenhaMenu(struct TELA *tela, int *program_counter, float largura, int *re
         mvwprintw(tela->content, 14,  largura*0.8, "|--------------|");
         mvwprintw(tela->content, 15,  largura*0.8, "|=== ESTADO ===|");
         mvwprintw(tela->content, 16,  largura*0.8, "|--------------|");
-        if (i<10)
-            mvwprintw(tela->content, 17,  largura*0.8, "|Ciclo | 0%d   |", i);
+
+        if (*contadorCiclo<10)
+            mvwprintw(tela->content, 17,  largura*0.8, "|Ciclo | 00%d   |", *contadorCiclo);
+        else if (*contadorCiclo<100)
+            mvwprintw(tela->content, 17,  largura*0.8, "|Ciclo |  0%d  |", *contadorCiclo);
         else
-            mvwprintw(tela->content, 17,  largura*0.8, "|Ciclo | %d   |", i);
+            mvwprintw(tela->content, 17,  largura*0.8, "|Ciclo | %d   |", *contadorCiclo);
         
         if (*program_counter<10)
-            mvwprintw(tela->content, 18,  largura*0.8, "|PC    | 0%d   |", *program_counter);
+            mvwprintw(tela->content, 18,  largura*0.8, "|PC    | 00%d   |", *program_counter);
+        else if (*program_counter<100)
+            mvwprintw(tela->content, 18,  largura*0.8, "|PC    |  0%d  |", *program_counter);
         else
             mvwprintw(tela->content, 18,  largura*0.8, "|PC    | %d   |", *program_counter);
         mvwprintw(tela->content, 19,  largura*0.8, "|--------------|");
@@ -286,7 +292,7 @@ void desenhaMenu(struct TELA *tela, int *program_counter, float largura, int *re
     wrefresh(tela->footer);
 }
 
-void imprimeEstatisticasTerminal(struct TELA *tela, int *program_counter, float largura, instrucao *memInst, int tamLinhas, type_instruc *instrucoesDecodificadas, int *regs, IF *instrucIF, ID *instrucID, EX *instrucEX, MEM *instrucMEM, WB *instrucWB){
+void imprimeEstatisticasTerminal(int *contadorCiclo, struct TELA *tela, int *program_counter, float largura, instrucao *memInst, int tamLinhas, type_instruc *instrucoesDecodificadas, int *regs, IF *instrucIF, ID *instrucID, EX *instrucEX, MEM *instrucMEM, WB *instrucWB){
     int r=0, i=0, j=0, instAri=0, instLogic=0, instDesvio=0, instAcessoMem=0;
     if (*program_counter != 0){
         if (memInst == NULL) {
@@ -317,5 +323,5 @@ void imprimeEstatisticasTerminal(struct TELA *tela, int *program_counter, float 
         }
     }
 
-    desenhaMenu(tela, program_counter, largura, regs, tamLinhas, r, i, j, instLogic, instAri, instDesvio, instAcessoMem, instrucIF, instrucID, instrucEX, instrucMEM, instrucWB);
+    desenhaMenu(contadorCiclo, tela, program_counter, largura, regs, tamLinhas, r, i, j, instLogic, instAri, instDesvio, instAcessoMem, instrucIF, instrucID, instrucEX, instrucMEM, instrucWB);
 }
