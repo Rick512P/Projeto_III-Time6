@@ -51,12 +51,11 @@ int menu(){
             memInst = inicializaMemInst(); //inicializa memoria de instruções
             parser(memInst, &tamLinhas);
             pipes = inicializaRegsPipe();
-            IF *regif = pipes.regif;
-            ID *id = pipes.id;
-            EX *ex = pipes.ex;
-            MEM *mem = pipes.mem;
-            WB *wb = pipes.wb;
-            inicializaRegsPipe(regif, id, ex, mem, wb);
+            regif = pipes.regif;
+            id = pipes.id;
+            ex = pipes.ex;
+            mem = pipes.mem;
+            wb = pipes.wb;
             memDados = inicializaMemDados(); //inicializa memoria de dados
             descPilha = inicializaBackup();
             instrucoesDecodificadas = calloc(tamLinhas, sizeof(type_instruc));
