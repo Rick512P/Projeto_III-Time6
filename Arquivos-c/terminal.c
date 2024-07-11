@@ -1,5 +1,4 @@
 #include "../Arquivos-h/Terminal.h"
-
 char terminal(int *program_counter, instrucao *memInst, int tamLinhas, type_instruc *instrucoesDecodificadas, int *regs, IF *instrucIF, ID *instrucID, EX *instrucEX, MEM *instrucMEM, WB *instrucWB) {
     float altura, largura;
     int ch, r, i, j, instLogic, instAri, instDesvio, instAcessoMem;
@@ -39,13 +38,16 @@ char terminal(int *program_counter, instrucao *memInst, int tamLinhas, type_inst
             case KEY_F(8):
                 escolha = '7';
                 break;
-            case KEY_F(9):
+            case 'r':
+            case 'R':
                 escolha = '8';
                 break;
-            case KEY_F(10):
+            case 's':
+            case 'S':
                 escolha = '9';
                 break;
-            case KEY_F(11):
+            case 'b':
+            case 'B':
                 escolha = 'a';
                 break;
         }
@@ -116,9 +118,9 @@ void desenhaMenu(struct TELA *tela, int *program_counter, float largura, int *re
     mvwprintw(tela->menu, 9,  largura, "F6     + EXIBIR INSTRUçõES ASSEMBLY");
     mvwprintw(tela->menu, 10, largura, "F7     + SALVAR ARQUIVO .ASM");
     mvwprintw(tela->menu, 11, largura, "F8     + SALVAR ARQUIVO .DAT");
-    mvwprintw(tela->menu, 12, largura, "F9     + EXECUTAR PROGRAMA (RUN)");
-    mvwprintw(tela->menu, 13, largura, "F10    + EXECUTAR CICLO (STEP)");
-    mvwprintw(tela->menu, 14, largura, "F11    + DESFAZER CICLO (BACK STEP)");
+    mvwprintw(tela->menu, 12, largura, "R     + EXECUTAR PROGRAMA (RUN)");
+    mvwprintw(tela->menu, 13, largura, "S      + EXECUTAR CICLO (STEP)");
+    mvwprintw(tela->menu, 14, largura, "B      + DESFAZER CICLO (BACK STEP)");
     mvwprintw(tela->menu, 15, largura, "F1     + ENCERRAR SIMULADOR");
 
     if (*program_counter != 0)
@@ -132,27 +134,27 @@ void desenhaMenu(struct TELA *tela, int *program_counter, float largura, int *re
         mvwprintw(tela->content, 4,  5, "|-----------------------------------------------------|");
         
         //PRECISA SER DIFERENTE DE NULL SE NAO IRÁ CRASHAR
-        if(instrucWB)
-            mvwprintw(tela->content, 5,  5, "|ETAPA WB: %s", instrucWB->InstrucaoASM.InstructsAssembly);
+        if(instrucWB != NULL)
+            mvwprintw(tela->content, 5,  5, "|ETAPA WB: %s", instrucWB->InstrucaoASM.InstructsAssembly[0]);
         else
             mvwprintw(tela->content, 5,  5, "|ETAPA WB: " );
 
-        if(instrucMEM)
+        if(instrucMEM != NULL)
             mvwprintw(tela->content, 6,  5, "|ETAPA MEM: %s", instrucMEM->InstrucaoASM.InstructsAssembly);
         else
             mvwprintw(tela->content, 6,  5, "|ETAPA MEM: ");
 
-        if(instrucEX)
+        if(instrucEX != NULL)
             mvwprintw(tela->content, 7,  5, "|ETAPA EX: %s", instrucEX->InstrucaoASM.InstructsAssembly);
         else
             mvwprintw(tela->content, 7,  5, "|ETAPA EX: ");
 
-        if(instrucID)
+        if(instrucID != NULL)
             mvwprintw(tela->content, 8,  5, "|ETAPA ID: %s", instrucID->InstrucaoASM.InstructsAssembly);
         else
             mvwprintw(tela->content, 8,  5, "|ETAPA ID: ");
 
-        if(instrucIF)
+        if(instrucIF != NULL)
             mvwprintw(tela->content, 9,  5, "|ETAPA IF: %s", instrucIF->InstrucaoASM.InstructsAssembly);
         else
             mvwprintw(tela->content, 9,  5, "|ETAPA IF: ");
@@ -162,7 +164,12 @@ void desenhaMenu(struct TELA *tela, int *program_counter, float largura, int *re
 
         mvwprintw(tela->content, 12, largura/3, "-------------");
         for (i = 0; i < 8; i++){
-            mvwprintw(tela->content, i+13, largura/3, "|REG [  %d  ]|", regs[i]);
+            if (i<10)
+                mvwprintw(tela->content, i+13, largura/3, "|REG [  00%d ]|", regs[i]);
+            else if (i<100)
+                mvwprintw(tela->content, i+13, largura/3, "|REG [  0%d ]|", regs[i]);
+            else if (i<1000)
+                mvwprintw(tela->content, i+13, largura/3, "|REG [  %d ]|", regs[i]);
         }
         i = i + 13;
         mvwprintw(tela->content, i, largura/3, "-------------");
@@ -170,21 +177,52 @@ void desenhaMenu(struct TELA *tela, int *program_counter, float largura, int *re
         mvwprintw(tela->content, 14,  largura*0.8, "|--------------|");
         mvwprintw(tela->content, 15,  largura*0.8, "|=== ESTADO ===|");
         mvwprintw(tela->content, 16,  largura*0.8, "|--------------|");
-        mvwprintw(tela->content, 17,  largura*0.8, "|Ciclo | %d    |", i);
-        mvwprintw(tela->content, 18,  largura*0.8, "|PC    | %d    |", *program_counter);
+        if (i<10)
+            mvwprintw(tela->content, 17,  largura*0.8, "|Ciclo | 0%d   |", i);
+        else
+            mvwprintw(tela->content, 17,  largura*0.8, "|Ciclo | %d   |", i);
+        
+        if (*program_counter<10)
+            mvwprintw(tela->content, 18,  largura*0.8, "|PC    | 0%d   |", *program_counter);
+        else
+            mvwprintw(tela->content, 18,  largura*0.8, "|PC    | %d   |", *program_counter);
         mvwprintw(tela->content, 19,  largura*0.8, "|--------------|");
 
         i++;
 
         mvwprintw(tela->content, i+1,  largura/3, "|-----------------------------------|");
-        mvwprintw(tela->content, i+2,  largura/3, "| Total de Instruções      : %d|", tamLinhas);
-        mvwprintw(tela->content, i+3,  largura/3, "| Tipo R                     : %d|", r);
-        mvwprintw(tela->content, i+4,  largura/3, "| Tipo I                     : %d|", I);
-        mvwprintw(tela->content, i+5,  largura/3, "| Tipo j                     : %d|", j);
-        mvwprintw(tela->content, i+6,  largura/3, "| Classe Lógica             : %d|", instLogic);
-        mvwprintw(tela->content, i+7,  largura/3, "| CLasse Aritmética         : %d|", instAri);
-        mvwprintw(tela->content, i+8,  largura/3, "| Classe de Desvio           : %d|", instDesvio);
-        mvwprintw(tela->content, i+9,  largura/3, "| Classe de Acesso a Memória : %d|", instAcessoMem);
+        if (tamLinhas<10)
+            mvwprintw(tela->content, i+2,  largura/3, "| Total de Instruções      : 0%d|", tamLinhas);
+        else
+            mvwprintw(tela->content, i+2,  largura/3, "| Total de Instruções      : %d|", tamLinhas);
+        if (r<10)
+            mvwprintw(tela->content, i+3,  largura/3, "| Tipo R                     : 0%d|", r);
+        else
+            mvwprintw(tela->content, i+3,  largura/3, "| Tipo R                     : %d|", r);
+        if (I<10)
+            mvwprintw(tela->content, i+4,  largura/3, "| Tipo I                     : 0%d|", I);
+        else
+            mvwprintw(tela->content, i+4,  largura/3, "| Tipo I                     : %d|", I);
+        if (j<10)
+            mvwprintw(tela->content, i+5,  largura/3, "| Tipo j                     : 0%d|", j);
+        else
+            mvwprintw(tela->content, i+5,  largura/3, "| Tipo j                     : %d|", j);
+        if (instLogic<10)
+            mvwprintw(tela->content, i+6,  largura/3, "| Classe Lógica             : 0%d|", instLogic);
+        else
+            mvwprintw(tela->content, i+6,  largura/3, "| Classe Lógica             : %d|", instLogic);
+        if (instAri<10)
+            mvwprintw(tela->content, i+7,  largura/3, "| CLasse Aritmética         : 0%d|", instAri);
+        else
+            mvwprintw(tela->content, i+7,  largura/3, "| CLasse Aritmética         : %d|", instAri);
+        if (instDesvio<10)
+            mvwprintw(tela->content, i+8,  largura/3, "| Classe de Desvio           : 0%d|", instDesvio);
+        else
+            mvwprintw(tela->content, i+8,  largura/3, "| Classe de Desvio           : %d|", instDesvio);
+        if (instAcessoMem<10)
+            mvwprintw(tela->content, i+9,  largura/3, "| Classe de Acesso a Memória : 0%d|", instAcessoMem);
+        else
+            mvwprintw(tela->content, i+9,  largura/3, "| Classe de Acesso a Memória : %d|", instAcessoMem);
         mvwprintw(tela->content, i+10, largura/3, "|-----------------------------------|");
     }
     else{
@@ -196,30 +234,15 @@ void desenhaMenu(struct TELA *tela, int *program_counter, float largura, int *re
         mvwprintw(tela->content, 4,  5, "|-----------------------------------------------------|");
         
         //PRECISA SER DIFERENTE DE NULL SE NAO IRÁ CRASHAR
-        if(instrucWB)
-            mvwprintw(tela->content, 5,  5, "|ETAPA WB:");
-        else
-            mvwprintw(tela->content, 5,  5, "|ETAPA WB:");
+        mvwprintw(tela->content, 5,  5, "|ETAPA WB:");
 
-        if(instrucMEM)
-            mvwprintw(tela->content, 6,  5, "|ETAPA MEM:");
-        else
-            mvwprintw(tela->content, 6,  5, "|ETAPA MEM:");
+        mvwprintw(tela->content, 6,  5, "|ETAPA MEM:");
 
-        if(instrucEX)
-            mvwprintw(tela->content, 7,  5, "|ETAPA EX:");
-        else
-            mvwprintw(tela->content, 7,  5, "|ETAPA EX: ");
+        mvwprintw(tela->content, 7,  5, "|ETAPA EX: ");
 
-        if(instrucID)
-            mvwprintw(tela->content, 8,  5, "|ETAPA ID:");
-        else
-            mvwprintw(tela->content, 8,  5, "|ETAPA ID:");
+        mvwprintw(tela->content, 8,  5, "|ETAPA ID:");
 
-        if(instrucIF)
-            mvwprintw(tela->content, 9,  5, "|ETAPA IF:");
-        else
-            mvwprintw(tela->content, 9,  5, "|ETAPA IF:");
+        mvwprintw(tela->content, 9,  5, "|ETAPA IF:");
 
         mvwprintw(tela->content, 10, 5, "|-----------------------------------------------------|");
 

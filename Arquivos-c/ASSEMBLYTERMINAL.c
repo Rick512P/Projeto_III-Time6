@@ -15,6 +15,7 @@ int ASSEMBLYTERMINAL(Assembly *A) {
 
     finalizaASM();
     free(telaAssembly);
+    clear();
     return 0;
 }
 

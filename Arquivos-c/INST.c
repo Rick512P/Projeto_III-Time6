@@ -15,6 +15,7 @@ int INST(instrucao *memInst) {
     }
     finalizaInst();
     free(telainst);
+    clear();
     return 0;
 }
 

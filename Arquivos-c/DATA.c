@@ -14,6 +14,7 @@ int DATA(MemoriaDados *mem) {
    
     finalizaData();
     free(teladata);
+    clear();
     return 0;
 }
 
