@@ -136,32 +136,32 @@ void desenhaMenu(int *contadorCiclo, struct TELA *tela, int *program_counter, fl
         
         //IMPRESSAO DA ETAPA WB
         if(instrucWB->pc == 0)
-                mvwprintw(tela->content, 5,  5, "|ETAPA EX: %s", instrucWB->InstrucaoASM.InstructsAssembly);
+                mvwprintw(tela->content, 5,  5, "|ETAPA WB: %s", instrucWB->InstrucaoASM.InstructsAssembly);
         else if(instrucWB != NULL){
             if(instrucWB->pc == tamLinhas)
-                    mvwprintw(tela->content, 5,  5, "|ETAPA EX:  ENCERRADA");
+                    mvwprintw(tela->content, 5,  5, "|ETAPA WB:  ENCERRADA");
                 
                 else if(instrucWB->instruc[0] == '\0')
-                    mvwprintw(tela->content, 5,  5, "|ETAPA EX:  Bolha Gerada");
+                    mvwprintw(tela->content, 5,  5, "|ETAPA WB:  Bolha Gerada");
 
                 else 
-                    mvwprintw(tela->content, 5,  5, "|ETAPA EX: %s", instrucWB->InstrucaoASM.InstructsAssembly);
+                    mvwprintw(tela->content, 5,  5, "|ETAPA WB: %s", instrucWB->InstrucaoASM.InstructsAssembly);
         }
         else
             mvwprintw(tela->content, 5,  5, "|ETAPA WB: " );
 
         //IMPRESSAO DA ETAPA MEM
         if(instrucMEM->pc == 0)
-                mvwprintw(tela->content, 6,  5, "|ETAPA EX: %s", instrucMEM->InstrucaoASM.InstructsAssembly);
+                mvwprintw(tela->content, 6,  5, "|ETAPA MEM: %s", instrucMEM->InstrucaoASM.InstructsAssembly);
         else if(instrucMEM != NULL){
             if(instrucMEM->pc == tamLinhas)
-                    mvwprintw(tela->content, 6,  5, "|ETAPA EX:  ENCERRADA");
+                    mvwprintw(tela->content, 6,  5, "|ETAPA MEM:  ENCERRADA");
                 
                 else if(instrucMEM->instruc[0] == '\0')
-                    mvwprintw(tela->content, 6,  5, "|ETAPA EX:  Bolha Gerada");
+                    mvwprintw(tela->content, 6,  5, "|ETAPA MEM:  Bolha Gerada");
 
                 else 
-                    mvwprintw(tela->content, 6,  5, "|ETAPA EX: %s", instrucMEM->InstrucaoASM.InstructsAssembly);
+                    mvwprintw(tela->content, 6,  5, "|ETAPA MEM: %s", instrucMEM->InstrucaoASM.InstructsAssembly);
         }
         else
             mvwprintw(tela->content, 6,  5, "|ETAPA MEM: ");
