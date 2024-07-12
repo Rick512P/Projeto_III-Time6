@@ -2,7 +2,9 @@
 
 int main(){
     system("wmctrl -r :ACTIVE: -b add,maximized_vert,maximized_horz");
+
     menu();
+
     return 0;
 }
 

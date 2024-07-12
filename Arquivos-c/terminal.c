@@ -1,4 +1,5 @@
 #include "../Arquivos-h/Terminal.h"
+
 char terminal(int *contadorCiclo, int *program_counter, instrucao *memInst, int tamLinhas, type_instruc *instrucoesDecodificadas, int *regs, IF *instrucIF, ID *instrucID, EX *instrucEX, MEM *instrucMEM, WB *instrucWB) {
     float altura, largura;
     int ch, r, i, j, instLogic, instAri, instDesvio, instAcessoMem;
@@ -111,18 +112,18 @@ void desenhaMenu(int *contadorCiclo, struct TELA *tela, int *program_counter, fl
     mvwprintw(tela->header, 1, largura*1.8, "SIMULADOR MINIMIPS 8BITS PIPELINE");
 
     //MENU
-    mvwprintw(tela->menu, 3,  largura*1.3, "=== MENU ===");
-    mvwprintw(tela->menu, 5,  largura, "F2     + CARREGAR MEMóRIA DE INSTRUçõES");
-    mvwprintw(tela->menu, 6,  largura, "F3     + CARREGAR MEMóRIA DE DADOS");
-    mvwprintw(tela->menu, 7,  largura, "F4     + EXIBIR MEMóRIA DE INSTRUçõES");
-    mvwprintw(tela->menu, 8,  largura, "F5     + EXIBIR MEMóRIA DE DADOS");
-    mvwprintw(tela->menu, 9,  largura, "F6     + EXIBIR INSTRUçõES ASSEMBLY");
-    mvwprintw(tela->menu, 10, largura, "F7     + SALVAR ARQUIVO .ASM");
-    mvwprintw(tela->menu, 11, largura, "F8     + SALVAR ARQUIVO .DAT");
-    mvwprintw(tela->menu, 12, largura, "R     + EXECUTAR PROGRAMA (RUN)");
-    mvwprintw(tela->menu, 13, largura, "S      + EXECUTAR CICLO (STEP)");
-    mvwprintw(tela->menu, 14, largura, "B      + DESFAZER CICLO (BACK STEP)");
-    mvwprintw(tela->menu, 15, largura, "F1     + ENCERRAR SIMULADOR");
+    mvwprintw(tela->menu, 8,  largura*1.3, "=== MENU ===");
+    mvwprintw(tela->menu, 10,  largura, "F2     + CARREGAR MEMóRIA DE INSTRUçõES");
+    mvwprintw(tela->menu, 11,  largura, "F3     + CARREGAR MEMóRIA DE DADOS");
+    mvwprintw(tela->menu, 12,  largura, "F4     + EXIBIR MEMóRIA DE INSTRUçõES");
+    mvwprintw(tela->menu, 13,  largura, "F5     + EXIBIR MEMóRIA DE DADOS");
+    mvwprintw(tela->menu, 14,  largura, "F6     + EXIBIR INSTRUçõES ASSEMBLY");
+    mvwprintw(tela->menu, 15, largura, "F7     + SALVAR ARQUIVO .ASM");
+    mvwprintw(tela->menu, 16, largura, "F8     + SALVAR ARQUIVO .DAT");
+    mvwprintw(tela->menu, 17, largura, "R      + EXECUTAR PROGRAMA (RUN)");
+    mvwprintw(tela->menu, 18, largura, "S      + EXECUTAR CICLO (STEP)");
+    mvwprintw(tela->menu, 19, largura, "B      + DESFAZER CICLO (BACK STEP)");
+    mvwprintw(tela->menu, 20, largura, "F1     + ENCERRAR SIMULADOR");
 
     if (*program_counter != 0)
     {
