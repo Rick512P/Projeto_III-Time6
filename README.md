@@ -26,7 +26,11 @@ Universidade Federal do Pampa - UNIPAMPA Campus Bagé
 
 ### Licença
 
-Este projeto está licenciado sob a Licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
+Este projeto está licenciado sob a Licença MIT. Veja o arquivo [`LICENSE`](LICENSE) para mais detalhes.
+
+### Formato de Instrução
+
+Para maiores detalhes sobre o formato e tipos de intruções reconhecidas pelo simulador, acesse ['Formato_Intruções'](Formato_Instrucoes.txt)
 
 ---
 
