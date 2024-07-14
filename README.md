@@ -30,7 +30,7 @@ Este projeto está licenciado sob a Licença MIT. Veja o arquivo [`LICENSE`](LIC
 
 ### Formato de Instrução
 
-Para maiores detalhes sobre o formato e tipos de intruções reconhecidas pelo simulador, acesse ['Formato_Intruções'](Formato_Instrucoes.md)
+Para maiores detalhes sobre o formato e tipos de intruções reconhecidas pelo simulador, acesse ['Formato_Instrucoes'](Formato_Instrucoes.md)
 
 ---
 
