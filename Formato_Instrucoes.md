@@ -20,6 +20,7 @@ Opcode RS RT RD Funct -> onde:
     RD: de 000 até 111
     Funct: ADD: 000; SUB: 010; AND: 100; OR: 101
     Exemplo: 0000101010011100 -> Opcode: 0000; RS: 101; RT: 010; RD: 011; Funct: 100
+
 ---
 
 ### Intruções Tipo I
